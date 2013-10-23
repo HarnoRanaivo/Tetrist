@@ -1,6 +1,22 @@
+# Java class files
 *.class
 
 # Package Files #
 *.jar
 *.war
 *.ear
+
+# Vim files
+*.swp
+
+# Misc.
+*.old
+*~
+
+# Tags
+tags
+.tags
+
+# Various dirs.
+doc/
+bytecode/
