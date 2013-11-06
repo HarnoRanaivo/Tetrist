@@ -7,7 +7,7 @@ Récupérer Tetrist
 -----------------
 Pour récupérer le projet :
 ```bash
-$ git glone https://github.com/remove/Tetrist.git
+$ git clone https://github.com/remove/Tetrist.git
 ```
 Pour récupérer les derniers changements, s'il y en a :
 ```bash
