@@ -14,7 +14,6 @@ import java.util.TimerTask;
 
 class Tetris
 {
-    static Matrice matrice;
     static Draw draw;
     static Game game;
 
@@ -56,8 +55,7 @@ class Tetris
         try
         {
             game = new Game();
-            matrice = game.grid();
-            Naming.rebind("matrice", matrice) ;
+            Naming.rebind("matrice", game);
         }
         catch (RemoteException re)
         {

@@ -6,6 +6,7 @@ import java.awt.Dimension;
 public class Draw extends JPanel
 {
     protected Game game;
+    protected int scale = 24;
     static final Color[] rainbow =
         {
             Color.red, Color.orange, Color.yellow, Color.green, Color.blue,
@@ -23,11 +24,11 @@ public class Draw extends JPanel
     public void paint(Graphics g)
     {
         super.paint(g);
-        for (int y = 0; y < 20; y++)
-            for (int x = 0; x < 10; x++)
+        for (int y = 0; y < Grid.height; y++)
+            for (int x = 0; x < Grid.width; x++)
             {
                 g.setColor(int_to_color(game.grid.get(x, y)));
-                g.fillRect(x << 4, (game.grid.height - 1 - y) << 4, 16, 16);
+                g.fillRect(x * scale, (game.grid.height - 1 - y) * scale, scale, scale);
             }
 
         g.setColor(int_to_color(game.current.id));
@@ -35,20 +36,20 @@ public class Draw extends JPanel
         {
             int x = game.current.abcissae[i];
             int y = game.current.ordinates[i];
-            g.fillRect(x << 4, (game.grid.height - 1 - y) << 4, 16, 16);
+            g.fillRect(x * scale, (game.grid.height - 1 - y) * scale, scale, scale);
         }
     }
 
     public void refresh()
     {
-        game.grid.refresh();
+        game.refresh();
         repaint(getVisibleRect());
     }
 
     public Draw(Game g)
     {
         super();
-        setPreferredSize(new Dimension(160, 320));
+        setPreferredSize(new Dimension(Grid.width * scale, Grid.height * scale));
         game = g;
     }
 }

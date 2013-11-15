@@ -1,13 +1,13 @@
 class Piece
 {
-    static int[][][][] pieces_set;
+    protected static int[][][][] pieces_set;
 
-    public final int id;
-    public int abcissae[];
-    public int ordinates[];
+    final int id;
     protected int rotation;
+    int abcissae[];
+    int ordinates[];
 
-    public Piece(int n, int x, int y)
+    Piece(int n, int x, int y)
     {
         this(n);
 
@@ -152,6 +152,4 @@ class Piece
                 face[i][j][1] = face[h][j][0];
             }
     }
-
-
 }
