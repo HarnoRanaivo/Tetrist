@@ -24,13 +24,23 @@ public class Draw extends JPanel
     public void paint(Graphics g)
     {
         super.paint(g);
+
+        paint_grid(g);
+        paint_piece(g);
+    }
+
+    protected void paint_grid(Graphics g)
+    {
         for (int y = 0; y < Grid.height; y++)
             for (int x = 0; x < Grid.width; x++)
             {
                 g.setColor(int_to_color(game.grid.get(x, y)));
                 g.fillRect(x * scale, (game.grid.height - 1 - y) * scale, scale, scale);
             }
+    }
 
+    protected void paint_piece(Graphics g)
+    {
         g.setColor(int_to_color(game.current.id));
         for (int i = 0; i < 4; i++)
         {
