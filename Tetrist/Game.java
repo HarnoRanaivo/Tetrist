@@ -8,6 +8,7 @@ class Game extends UnicastRemoteObject implements MatriceInterface
 
     Grid grid;
     Piece current;
+    Piece next;
     int points;
 
     protected int[] temp_x;
@@ -17,6 +18,8 @@ class Game extends UnicastRemoteObject implements MatriceInterface
     protected boolean is_busy;
     protected boolean matrice_IA[][];
 
+    protected Piece pieces[];
+
     Game() throws RemoteException
     {
         super();
@@ -24,10 +27,15 @@ class Game extends UnicastRemoteObject implements MatriceInterface
         temp_x = new int[4];
         temp_y = new int[4];
         matrice_IA = new boolean[Grid.width][Grid.height];
-        Piece.fill_pieces_set();
         grid = new Grid();
         generator = new Random();
         points = 0;
+        pieces = new Piece[7];
+        for (int i = 0; i < 7; i++)
+            pieces[i] = new Piece(i, Grid.width/2, Grid.height-2);
+        int id = generator.nextInt(7);
+        next = pieces[id];
+        next.reset();
         new_piece();
     }
 
@@ -60,8 +68,10 @@ class Game extends UnicastRemoteObject implements MatriceInterface
 
     public void new_piece()
     {
+        current = next;
         int id = generator.nextInt(7);
-        current = new Piece(id, grid.width/2, grid.height-2);
+        next = pieces[id];
+        next.reset();
     }
 
     public void fall()

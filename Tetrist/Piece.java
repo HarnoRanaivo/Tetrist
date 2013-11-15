@@ -1,29 +1,19 @@
 class Piece
 {
-    protected static int[][][][] pieces_set;
-
     final int id;
     protected int rotation;
+    protected final int face[][][];
     int abcissae[];
     int ordinates[];
+    int spawn_x;
+    int spawn_y;
 
     Piece(int n, int x, int y)
     {
         this(n);
-
-        int center_x = pieces_set[id][rotation][0][0];
-        for (int i = 0; i < abcissae.length; i++)
-        {
-            int i_x = pieces_set[id][rotation][i][0];
-            abcissae[i] = x + i_x - center_x;
-        }
-
-        int center_y = pieces_set[id][rotation][0][1];
-        for (int i = 0; i < ordinates.length; i++)
-        {
-            int i_y = pieces_set[id][rotation][i][1];
-            ordinates[i] = y + i_y - center_y;
-        }
+        spawn_x = x;
+        spawn_y = y;
+        reset();
     }
 
     protected Piece(int n)
@@ -32,6 +22,26 @@ class Piece
         rotation = 1;
         abcissae = new int[4];
         ordinates = new int[4];
+        face = load_face(id);
+    }
+
+    public void reset()
+    {
+        rotation = 1;
+        int center_x = face[rotation][0][0];
+        for (int i = 0; i < abcissae.length; i++)
+        {
+            int i_x = face[rotation][i][0];
+            abcissae[i] = spawn_x + i_x - center_x;
+        }
+
+        int center_y = face[rotation][0][1];
+        for (int i = 0; i < ordinates.length; i++)
+        {
+            int i_y = face[rotation][i][1];
+            ordinates[i] = spawn_y + i_y - center_y;
+        }
+
     }
 
     public void fall()
@@ -67,10 +77,10 @@ class Piece
 
             for (int i = 1; i < 4; i++)
             {
-                int center_x = pieces_set[id][rotation][0][0];
-                int center_y = pieces_set[id][rotation][0][1];
-                int i_x = pieces_set[id][rotation][i][0];
-                int i_y = pieces_set[id][rotation][i][1];
+                int center_x = face[rotation][0][0];
+                int center_y = face[rotation][0][1];
+                int i_x = face[rotation][i][0];
+                int i_y = face[rotation][i][1];
                 abcissae[i] = abcissae[0] + i_x - center_x;
                 ordinates[i] = ordinates[0] + i_y - center_y;
             }
@@ -118,15 +128,9 @@ class Piece
         rotate();
     }
 
-    public static void fill_pieces_set()
+    protected static int[][][] load_face(int p)
     {
-        pieces_set = new int[7][4][4][2];
-        for (int i = 0; i < pieces_set.length; i++)
-            load_face(i, pieces_set[i]);
-    }
-
-    protected static void load_face(int p, int[][][] face)
-    {
+        int[][][] face = new int[4][4][2];
         /* Centre de rotation. */
         for (int i = 0; i < face.length; i++)
         {
@@ -151,5 +155,7 @@ class Piece
                 face[i][j][0] = -face[h][j][1];
                 face[i][j][1] = face[h][j][0];
             }
+
+        return face;
     }
 }
