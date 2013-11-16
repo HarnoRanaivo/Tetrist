@@ -1,3 +1,5 @@
+package Basic;
+
 class Piece
 {
     final int id;

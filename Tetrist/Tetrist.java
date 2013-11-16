@@ -12,7 +12,10 @@ import java.awt.event.KeyEvent;
 import java.util.Timer;
 import java.util.TimerTask;
 
-class Tetris
+import Basic.Draw;
+import Basic.Game;
+
+class Tetrist
 {
     static Draw draw;
     static Game game;

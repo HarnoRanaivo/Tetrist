@@ -1,15 +1,17 @@
+package Basic;
+
 import java.rmi.server.UnicastRemoteObject;
 import java.rmi.RemoteException;
 import java.util.Random;
 
-class Game extends UnicastRemoteObject implements MatriceInterface
+public class Game extends UnicastRemoteObject implements MatrixInterface
 {
     protected static int[] points_scale = { 0, 40, 100, 300, 1200 };
 
     Grid grid;
     Piece current;
     Piece next;
-    int points;
+    public int points;
 
     protected int[] temp_x;
     protected int[] temp_y;
@@ -20,7 +22,7 @@ class Game extends UnicastRemoteObject implements MatriceInterface
 
     protected Piece pieces[];
 
-    Game() throws RemoteException
+    public Game() throws RemoteException
     {
         super();
 
