@@ -13,11 +13,11 @@ import Component.Game;
 public class Draw extends JPanel
 {
     protected static final int block_size = 24;
-    protected static final Color[] rainbow =
-        {
-            Color.red, Color.orange, Color.yellow, Color.green, Color.blue,
-            Color.cyan, Color.pink
-        };
+    protected static final Color[] ugly_colors =
+    {
+        Color.red, Color.white, Color.orange, Color.pink, Color.cyan,
+        Color.blue, Color.green
+    };
 
     protected final Game game;
     protected final int grid_width;
@@ -25,10 +25,10 @@ public class Draw extends JPanel
 
     protected static Color color_of_int(int x)
     {
-        if (x < 0 || x > 6)
+        if (x < 0 || x >= Piece.cardinal)
             return Color.black;
         else
-            return rainbow[x];
+            return ugly_colors[x];
     }
 
     public void paint(Graphics g)
@@ -49,22 +49,27 @@ public class Draw extends JPanel
                 int x = i * block_size;
                 int y = (grid_height - 1 - j) * block_size;
 
-                g.setColor(color_of_int(grid.get(i, j)));
-                g.fillRect(x, y, block_size, block_size);
+                paint_block(g, x, y, grid.get(i, j));
             }
     }
 
     protected void paint_piece(Graphics g)
     {
         Piece current = game.current_piece();
+        int id = current.id();
 
-        g.setColor(color_of_int(current.id()));
         for (Point point : current.coordinates())
         {
             int x = point.abcissa() * block_size;
             int y = (grid_height -1 - point.ordinate()) * block_size;
-            g.fillRect(x, y, block_size, block_size);
+            paint_block(g, x, y, id);
         }
+    }
+
+    protected void paint_block(Graphics g, int x, int y, int value)
+    {
+        g.setColor(color_of_int(value));
+        g.fillRect(x, y, block_size, block_size);
     }
 
     public void refresh()

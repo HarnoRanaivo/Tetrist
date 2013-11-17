@@ -1,0 +1,21 @@
+#!/bin/bash
+
+DIR=$(pwd)
+
+if [[ $# -eq 1 ]]; then
+    if [[ -d $1 ]]; then
+        DIR=$1
+    else
+        echo "Error: invalid directory." >&2
+        exit 65
+    fi
+elif [[ $# -ne 0 ]]; then
+    echo "Usage: $0 [directory]" >&2
+    exit 64
+fi
+
+for SVG in $(ls $DIR/*.svg); do
+    PNG=${SVG/\.svg/\.png}
+    rm -f "$PNG"
+    inkscape -C -e "$PNG" "$SVG"
+done
