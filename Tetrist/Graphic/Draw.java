@@ -12,15 +12,18 @@ import Component.Game;
 
 public class Draw extends JPanel
 {
-    protected Game game;
-    protected int scale = 24;
-    static final Color[] rainbow =
+    protected static final int block_size = 24;
+    protected static final Color[] rainbow =
         {
             Color.red, Color.orange, Color.yellow, Color.green, Color.blue,
             Color.cyan, Color.pink
         };
 
-    protected static Color int_to_color(int x)
+    protected final Game game;
+    protected final int grid_width;
+    protected final int grid_height;
+
+    protected static Color color_of_int(int x)
     {
         if (x < 0 || x > 6)
             return Color.black;
@@ -38,23 +41,29 @@ public class Draw extends JPanel
 
     protected void paint_grid(Graphics g)
     {
-        for (int y = 0; y < game.grid().height(); y++)
-            for (int x = 0; x < game.grid().width(); x++)
+        Grid grid = game.grid();
+
+        for (int i = 0; i < grid_width; i++)
+            for (int j = 0; j < grid_height; j++)
             {
-                g.setColor(int_to_color(game.grid().get(x, y)));
-                g.fillRect(x * scale, (game.grid().height() - 1 - y) * scale, scale, scale);
+                int x = i * block_size;
+                int y = (grid_height - 1 - j) * block_size;
+
+                g.setColor(color_of_int(grid.get(i, j)));
+                g.fillRect(x, y, block_size, block_size);
             }
     }
 
     protected void paint_piece(Graphics g)
     {
         Piece current = game.current_piece();
-        g.setColor(int_to_color(current.id()));
+
+        g.setColor(color_of_int(current.id()));
         for (Point point : current.coordinates())
         {
-            int x = point.abcissa();
-            int y = point.ordinate();
-            g.fillRect(x * scale, (game.grid().height() - 1 - y) * scale, scale, scale);
+            int x = point.abcissa() * block_size;
+            int y = (grid_height -1 - point.ordinate()) * block_size;
+            g.fillRect(x, y, block_size, block_size);
         }
     }
 
@@ -68,6 +77,8 @@ public class Draw extends JPanel
     {
         super();
         game = g;
-        setPreferredSize(new Dimension(game.grid().width() * scale, game.grid().height() * scale));
+        grid_width = g.grid().width();
+        grid_height = g.grid().height();
+        setPreferredSize(new Dimension(grid_width * block_size, grid_height * block_size));
     }
 }
