@@ -12,7 +12,10 @@ import java.awt.event.KeyEvent;
 import java.util.Timer;
 import java.util.TimerTask;
 
-class Tetris
+import Graphic.Draw;
+import Component.Game;
+
+class Tetrist
 {
     static Draw draw;
     static Game game;
@@ -44,7 +47,7 @@ class Tetris
         draw.refresh();
         if (game.game_is_over())
         {
-            System.out.println("Score : " + game.points);
+            System.out.println("Score : " + game.score());
             System.exit(0);
         }
     }
