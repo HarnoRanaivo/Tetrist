@@ -37,8 +37,8 @@ public class DrawImage extends Draw
 
     private Image block;
 
-    protected static final Color black1 = new Color(10, 10, 10);
-    protected static final Color black2 = new Color(20, 20, 20);
+    protected static final Color black1 = new Color(0, 0, 0);
+    protected static final Color black2 = new Color(0, 0, 0);
 
     public DrawImage(Game g)
     {
