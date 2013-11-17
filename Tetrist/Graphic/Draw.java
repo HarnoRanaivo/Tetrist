@@ -1,9 +1,14 @@
-package Basic;
+package Graphic;
 
 import java.awt.Color;
 import java.awt.Graphics;
 import javax.swing.JPanel;
 import java.awt.Dimension;
+
+import Component.Point;
+import Component.Piece;
+import Component.Grid;
+import Component.Game;
 
 public class Draw extends JPanel
 {
@@ -33,22 +38,23 @@ public class Draw extends JPanel
 
     protected void paint_grid(Graphics g)
     {
-        for (int y = 0; y < Grid.height; y++)
-            for (int x = 0; x < Grid.width; x++)
+        for (int y = 0; y < game.grid().height(); y++)
+            for (int x = 0; x < game.grid().width(); x++)
             {
-                g.setColor(int_to_color(game.grid.get(x, y)));
-                g.fillRect(x * scale, (game.grid.height - 1 - y) * scale, scale, scale);
+                g.setColor(int_to_color(game.grid().get(x, y)));
+                g.fillRect(x * scale, (game.grid().height() - 1 - y) * scale, scale, scale);
             }
     }
 
     protected void paint_piece(Graphics g)
     {
-        g.setColor(int_to_color(game.current.id));
-        for (int i = 0; i < 4; i++)
+        Piece current = game.current_piece();
+        g.setColor(int_to_color(current.id()));
+        for (Point point : current.coordinates())
         {
-            int x = game.current.abcissae[i];
-            int y = game.current.ordinates[i];
-            g.fillRect(x * scale, (game.grid.height - 1 - y) * scale, scale, scale);
+            int x = point.abcissa();
+            int y = point.ordinate();
+            g.fillRect(x * scale, (game.grid().height() - 1 - y) * scale, scale, scale);
         }
     }
 
@@ -61,7 +67,7 @@ public class Draw extends JPanel
     public Draw(Game g)
     {
         super();
-        setPreferredSize(new Dimension(Grid.width * scale, Grid.height * scale));
         game = g;
+        setPreferredSize(new Dimension(game.grid().width() * scale, game.grid().height() * scale));
     }
 }

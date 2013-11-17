@@ -1,163 +1,192 @@
-package Basic;
+package Component;
 
-class Piece
+public class Piece
 {
-    final int id;
-    protected int rotation;
-    protected final int face[][][];
-    int abcissae[];
-    int ordinates[];
-    int spawn_x;
-    int spawn_y;
+    public static final int cardinal = 7;
 
-    Piece(int n, int x, int y)
-    {
-        this(n);
-        spawn_x = x;
-        spawn_y = y;
-        reset();
-    }
+    protected static final int move_down = 0;
+    protected static final int move_left = 1;
+    protected static final int move_right = 2;
 
-    protected Piece(int n)
+    protected final int id;
+    protected final Point[][] face;
+
+    private final int spawn_abcissa;
+    private final int spawn_ordinate;
+    private final int spawn_rotation;
+
+    private int rotation;
+    private Point[] coordinates;
+
+    public Piece(int n, int x, int y)
     {
         id = n;
-        rotation = 1;
-        abcissae = new int[4];
-        ordinates = new int[4];
+        spawn_rotation = 3;
+        spawn_abcissa = x;
+        spawn_ordinate = y;
         face = load_face(id);
+        coordinates = new Point[4];
+        for (int i = 0; i < coordinates.length; i++)
+            coordinates[i] = new Point();
+
+        reset();
     }
 
     public void reset()
     {
-        rotation = 1;
-        int center_x = face[rotation][0][0];
-        for (int i = 0; i < abcissae.length; i++)
+        rotation = spawn_rotation;
+
+        int center_x = face[rotation][0].abcissa();
+        int center_y = face[rotation][0].ordinate();
+
+        for (int i = 0; i < coordinates.length; i++)
         {
-            int i_x = face[rotation][i][0];
-            abcissae[i] = spawn_x + i_x - center_x;
+            Point current = coordinates[i];
+            int i_x = face[rotation][i].abcissa();
+            int i_y = face[rotation][i].ordinate();
+            current.set_abcissa(spawn_abcissa + i_x - center_x);
+            current.set_ordinate(spawn_ordinate + i_y - center_y);
         }
-
-        int center_y = face[rotation][0][1];
-        for (int i = 0; i < ordinates.length; i++)
-        {
-            int i_y = face[rotation][i][1];
-            ordinates[i] = spawn_y + i_y - center_y;
-        }
-
     }
 
-    public void fall()
+    public int rotation()
     {
-        move(ordinates, -1);
+        return rotation;
     }
 
-    public void left()
+    public Point[] coordinates()
     {
-        move(abcissae, -1);
+        return coordinates;
     }
 
-    public void right()
+    public int id()
     {
-        move(abcissae, 1);
+        return id;
     }
 
-    protected void move(int[] axis, int shift)
-    {
-        for (int i = 0; i < axis.length; i++)
-            axis[i] += shift;
-    }
-
-    void rotate()
+    public void rotate()
     {
         if (id != 5)
         {
-            rotation++;
+            rotation += 3;
             if (id == 0 || id == 4 || id == 6)
-                rotation = rotation % 2;
+                rotation = 2 + rotation % 2;
             else
                 rotation = rotation % 4;
 
             for (int i = 1; i < 4; i++)
             {
-                int center_x = face[rotation][0][0];
-                int center_y = face[rotation][0][1];
-                int i_x = face[rotation][i][0];
-                int i_y = face[rotation][i][1];
-                abcissae[i] = abcissae[0] + i_x - center_x;
-                ordinates[i] = ordinates[0] + i_y - center_y;
+                int center_x = face[rotation][0].abcissa();
+                int center_y = face[rotation][0].ordinate();
+                int i_x = face[rotation][i].abcissa();
+                int i_y = face[rotation][i].ordinate();
+                Point current = coordinates[i];
+
+                current.set(coordinates[0]);
+                current.shift_abcissa(i_x - center_x);
+                current.shift_ordinate(i_y - center_y);
             }
         }
     }
 
-    public void needed_space_fall(int[] x, int[] y)
+    public void fall()
     {
-        needed_space(x, y, 0);
+        shift(0, -1);
     }
 
-    public void needed_space_left(int[] x, int[] y)
+    public void left()
     {
-        needed_space(x, y, 1);
+        shift(-1, 0);
     }
 
-    public void needed_space_right(int[] x, int[] y)
+    public void right()
     {
-        needed_space(x, y, 2);
+        shift(1, 0);
     }
 
-    protected void needed_space(int[] x, int[] y, int move)
+    private void shift(int horizontal_shift, int vertical_shift)
     {
-        /* move:
-         * 0: fall, 1: left; 2: right */
-        int shift = (move == 0) ? 0 : ((move == 1) ? -1 : 1);
-        for (int i = 0; i < abcissae.length; i++)
-            x[i] = abcissae[i] + shift;
-
-        shift = (move == 0) ? -1 : 0;
-        for (int i = 0; i < ordinates.length; i++)
-            y[i] = ordinates[i] + shift;
+        for (Point point : coordinates)
+            point.shift(horizontal_shift, vertical_shift);
     }
 
-    public void needed_space_rotation(int[] x, int[] y)
+    public void needed_space_fall(Point[] space)
     {
-        rotate();
-        for (int i = 0; i < abcissae.length; i++)
+        needed_space(space, 0);
+    }
+
+    public void needed_space_left(Point[] space)
+    {
+        needed_space(space, 1);
+    }
+
+    public void needed_space_right(Point[] space)
+    {
+        needed_space(space, 2);
+    }
+
+    private void needed_space(Point[] space, int move)
+    {
+        int h_shift = (move == move_down) ? 0 : ((move == move_left) ? -1 : 1);
+        int v_shift = (move == move_down) ? -1 : 0;
+
+        for (int i = 0; i < coordinates.length; i++)
         {
-            x[i] = abcissae[i];
-            y[i] = ordinates[i];
+            space[i].set(coordinates[i]);
+            space[i].shift(h_shift, v_shift);
         }
-        rotate();
-        rotate();
-        rotate();
     }
 
-    protected static int[][][] load_face(int p)
+    public void needed_space_rotation(Point[] space)
     {
-        int[][][] face = new int[4][4][2];
+        rotate();
+
+        for (int i = 0; i < coordinates.length; i++)
+            space[i].set(coordinates[i]);
+
+        for (int i = 0; i < 3; i++)
+            rotate();
+    }
+
+    private static Point[][] load_face(int p)
+    {
+        Point[][] face = new Point[4][4];
+        for (int i = 0; i < face.length; i++)
+            for (int j = 0; j < face[i].length; j++)
+                face[i][j] = new Point();
+
         /* Centre de rotation. */
         for (int i = 0; i < face.length; i++)
-        {
-            face[i][0][0] = 0;
-            face[i][0][1] = 1;
-        }
+            face[i][0].set(0, 1);
 
-        face[0][1][0] = p != 0 ? 1 : 0;
-        face[0][1][1] = p >= 4 ? 1 : (3 - p);
+        face[0][1].set_abcissa(p != 0 ? 1 : 0);
+        face[0][1].set_ordinate(p >= 4 ? 1 : (3 - p));
 
-        face[0][2][0] = p == 4 ? 1 : 0 ;
-        face[0][2][1] = ((p % 2) == 0) ? 2 : 0;
+        face[0][2].set_abcissa(p == 4 ? 1 : 0);
+        face[0][2].set_ordinate(((p % 2) == 0) ? 2 : 0);
 
-        face[0][3][0] = p > 4 ? 1 : 0;
-        face[0][3][1] = (p == 1 || p == 3) ? 2 : 0;
+        face[0][3].set_abcissa(p > 4 ? 1 : 0);
+        face[0][3].set_ordinate((p == 1 || p == 3) ? 2 : 0);
 
         /* Rotations. */
         for (int i = 1; i < face.length; i++)
             for (int j = 0; j < face[i].length; j++)
             {
                 int h = i - 1;
-                face[i][j][0] = -face[h][j][1];
-                face[i][j][1] = face[h][j][0];
+                int x = -face[h][j].ordinate();
+                int y = face[h][j].abcissa();
+                face[i][j].set(x, y);
             }
 
         return face;
+    }
+
+    public static Piece[] full_set_factory(int x, int y)
+    {
+        Piece[] set = new Piece[cardinal];
+        for (int i = 0; i < cardinal; i++)
+            set[i] = new Piece(i, x, y);
+
+        return set;
     }
 }

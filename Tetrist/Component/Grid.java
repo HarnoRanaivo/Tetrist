@@ -1,75 +1,143 @@
-package Basic;
+package Component;
 
 import java.util.Arrays;
+import java.util.Comparator;
 
-class Grid
+public class Grid
 {
-    static final int height = 20;
-    static final int width = 10;
+    public static final int default_height = 20;
+    public static final int default_width = 10;
 
-    int grid[][];
+    protected static final int empty_block = -1;
+
+    private final int height;
+    private final int width;
+
+    private int grid[][];
 
     public Grid()
     {
+        height = default_height;
+        width = default_width;
+
+        init_grid();
+    }
+
+    public Grid(int width, int height)
+    {
+        this.height = height;
+        this.width = width;
+
+        init_grid();
+    }
+
+    private void init_grid()
+    {
         grid = new int[width][height];
-        for (int i = 0; i < width; i++)
-            for (int j = 0; j < height; j++)
-                grid[i][j] = -1;
+        for (int i =  0; i < height; i++)
+            empty_line(i);
     }
 
-    public void put(int x, int y, int v)
+    public int height()
     {
-        grid[x][y] = v;
+        return height;
     }
 
-    public void put(int[] x, int[] y, int v)
+    public int width()
     {
-        for (int i = 0; i < x.length; i++)
-            grid[x[i]][y[i]] = v;
+        return width;
     }
 
-    public int check_and_delete(int[] y)
+    public void put(Point[] coordinates, int value)
+    {
+        for (Point point : coordinates)
+            put(point, value);
+    }
+
+    public void put(Point point, int value)
+    {
+        put(point.abcissa(), point.ordinate(), value);
+    }
+
+    public void put(int x, int y, int value)
+    {
+        grid[x][y] = value;
+    }
+
+    public int check_and_delete(Point[] y)
     {
         int destroyed = 0;
 
-        Arrays.sort(y);
+        Arrays.sort(y, new Comparator<Point>()
+            {
+                public int compare(Point a, Point b)
+                {
+                    return Integer.compare(a.ordinate(), b.ordinate());
+                }
+                public boolean equals(Point a, Point b)
+                {
+                    return a.ordinate() == b.ordinate() && a.abcissa() == b.abcissa();
+                }
+            });
         for (int i = y.length - 1; i >= 0; i--)
-            if (check_line(y[i]))
+            if (check_line(y[i].ordinate()))
             {
                 destroyed++;
-                delete_line(y[i]);
+                delete_line(y[i].ordinate());
             }
 
         return destroyed;
     }
 
-
-    boolean check_line(int y)
+    public boolean check_line(int line)
     {
         for (int i = 0; i < width; i++)
-            if (grid[i][y] == -1)
+            if (is_free(i, line))
                 return false;
 
         return true;
     }
 
-    public boolean in_bonds(int[] x, int[] y)
+    public boolean in_bonds(Point[] coordinates)
     {
-        for (int i = 0; i < x.length; i++)
-            if (x[i] < 0 || x[i] >= width || y[i] < 0 || y[i] >= height)
+        for (Point point : coordinates)
+            if (! in_bonds(point))
                 return false;
 
         return true;
     }
 
-    void delete_line(int y)
+    public boolean in_bonds(Point point)
     {
-        for (int i = y; i < height-1; i++)
-            for (int j = 0; j < width; j++)
-                grid[j][i] = grid[j][i+1];
+        int x = point.abcissa();
+        int y = point.ordinate();
 
+        return (x >= 0 && x < width && y >= 0 && y < height);
+    }
+
+    public void delete_line(int line)
+    {
+        for (int i = line; i < height-1; i++)
+            shift_down_line(i+1);
+
+        empty_line(height-1);
+    }
+
+    protected void shift_down_line(int line)
+    {
         for (int i = 0; i < width; i++)
-            grid[i][height-1] = -1;
+            put(i, line-1, get(i, line));
+    }
+
+    protected void empty_line(int line)
+    {
+        for (int i = 0; i < width; i++)
+            put(i, line, empty_block);
+    }
+
+    public int get(Point point)
+    {
+        return get(point.abcissa(), point.ordinate());
     }
 
     public int get(int x, int y)
@@ -77,21 +145,45 @@ class Grid
         return grid[x][y];
     }
 
-    boolean is_free(int[] abcissae, int[] ordinates)
+    public boolean is_free(Point[] coordinates)
     {
-        for (int i = 0; i < abcissae.length; i++)
-            if (get(abcissae[i], ordinates[i]) != -1)
+        for (Point point : coordinates)
+            if (! is_free(point))
                 return false;
 
         return true;
     }
 
-    boolean column_full()
+    public boolean is_free(Point point)
+    {
+        return is_free(point.abcissa(), point.ordinate());
+    }
+
+    public boolean is_free(int x, int y)
+    {
+        return get(x, y) == empty_block;
+    }
+
+    public boolean full()
     {
         for (int i = 0; i < width; i++)
-            if (grid[i][height-1] != -1)
+            if (column_full(i))
                 return true;
 
         return false;
+    }
+
+    public boolean column_full(Point[] coordinates)
+    {
+        for (Point point : coordinates)
+            if (column_full(point.ordinate()))
+                return true;
+
+        return false;
+    }
+
+    public boolean column_full(int column)
+    {
+        return (! is_free(column, height - 1));
     }
 }

@@ -1,4 +1,4 @@
-package Basic;
+package Component;
 
 import java.rmi.server.UnicastRemoteObject;
 import java.rmi.RemoteException;
@@ -6,38 +6,32 @@ import java.util.Random;
 
 public class Game extends UnicastRemoteObject implements MatrixInterface
 {
-    protected static int[] points_scale = { 0, 40, 100, 300, 1200 };
+    protected static final int[] score_scale = { 0, 40, 100, 300, 1200 };
 
-    Grid grid;
-    Piece current;
-    Piece next;
-    public int points;
+    private Grid grid;
+    private Piece current;
+    private int score;
 
-    protected int[] temp_x;
-    protected int[] temp_y;
-    protected Random generator;
+    private Point[] temp_points;
+    private Random generator;
 
-    protected boolean is_busy;
-    protected boolean matrice_IA[][];
+    private boolean is_busy;
+    private boolean matrice_IA[][];
 
-    protected Piece pieces[];
+    private Piece pieces[];
 
     public Game() throws RemoteException
     {
         super();
 
-        temp_x = new int[4];
-        temp_y = new int[4];
-        matrice_IA = new boolean[Grid.width][Grid.height];
+        temp_points = new Point[4];
+        for (int i = 0; i < temp_points.length; i++)
+            temp_points[i] = new Point();
         grid = new Grid();
+        matrice_IA = new boolean[grid.width()][grid.height()];
         generator = new Random();
-        points = 0;
-        pieces = new Piece[7];
-        for (int i = 0; i < 7; i++)
-            pieces[i] = new Piece(i, Grid.width/2, Grid.height-2);
-        int id = generator.nextInt(7);
-        next = pieces[id];
-        next.reset();
+        score = 0;
+        pieces = Piece.full_set_factory(grid.width()/2, grid.height()-1);
         new_piece();
     }
 
@@ -51,15 +45,17 @@ public class Game extends UnicastRemoteObject implements MatrixInterface
     }
     // Fin de l'appel distant.
 
-    protected void refresh()
+    public void refresh()
     {
         is_busy = true;
-        for (int y = 0; y < Grid.height; y++)
-            for (int x = 0; x < Grid.width; x++)
-                matrice_IA[x][y] = grid.grid[x][y] != -1;
+        for (int y = 0; y < grid.height(); y++)
+            for (int x = 0; x < grid.width(); x++)
+                matrice_IA[x][y] = ! grid.is_free(x, y);
 
-        for (int i = 0; i < 4; i++)
-            matrice_IA[current.abcissae[i]][current.ordinates[i]] = true;
+        Point[] coordinates = current.coordinates();
+        for (Point point : coordinates)
+            if (grid.in_bonds(point))
+                matrice_IA[point.abcissa()][point.ordinate()] = true;
         is_busy = false;
     }
 
@@ -68,24 +64,27 @@ public class Game extends UnicastRemoteObject implements MatrixInterface
         return grid;
     }
 
+    public Piece current_piece()
+    {
+        return current;
+    }
+
     public void new_piece()
     {
-        current = next;
-        int id = generator.nextInt(7);
-        next = pieces[id];
-        next.reset();
+        current = pieces[generator.nextInt(7)];
+        current.reset();
     }
 
     public void fall()
     {
-        current.needed_space_fall(temp_x, temp_y);
-        if (grid.in_bonds(temp_x, temp_y) && grid.is_free(temp_x, temp_y))
+        current.needed_space_fall(temp_points);
+        if (grid.in_bonds(temp_points) && grid.is_free(temp_points))
             current.fall();
         else
         {
-            grid.put(current.abcissae, current.ordinates, current.id);
-            int destroyed = grid.check_and_delete(current.ordinates);
-            points += lines_to_points(destroyed);
+            grid.put(current.coordinates(), current.id());
+            int destroyed = grid.check_and_delete(current.coordinates());
+            score += lines_to_score(destroyed);
             if (! game_is_over())
                 new_piece();
         }
@@ -93,33 +92,38 @@ public class Game extends UnicastRemoteObject implements MatrixInterface
 
     public void left()
     {
-        current.needed_space_left(temp_x, temp_y);
-        if (grid.in_bonds(temp_x, temp_y) && grid.is_free(temp_x, temp_y))
+        current.needed_space_left(temp_points);
+        if (grid.in_bonds(temp_points) && grid.is_free(temp_points))
             current.left();
     }
 
     public void right()
     {
-        current.needed_space_right(temp_x, temp_y);
-        if (grid.in_bonds(temp_x, temp_y) && grid.is_free(temp_x, temp_y))
+        current.needed_space_right(temp_points);
+        if (grid.in_bonds(temp_points) && grid.is_free(temp_points))
             current.right();
     }
 
     public void rotate()
     {
-        current.needed_space_rotation(temp_x, temp_y);
-        if (grid.in_bonds(temp_x, temp_y) && grid.is_free(temp_x, temp_y))
+        current.needed_space_rotation(temp_points);
+        if (grid.in_bonds(temp_points) && grid.is_free(temp_points))
             current.rotate();
     }
 
     public boolean game_is_over()
     {
-        return grid.column_full();
+        return grid.full();
     }
 
-    int lines_to_points(int destroyed)
+    private int lines_to_score(int destroyed)
     {
-        int index = (destroyed < 0 || destroyed >= points_scale.length) ? 0 : destroyed;
-        return points_scale[index];
+        int index = (destroyed < 0 || destroyed >= score_scale.length) ? 0 : destroyed;
+        return score_scale[index];
+    }
+
+    public int score()
+    {
+        return score;
     }
 }

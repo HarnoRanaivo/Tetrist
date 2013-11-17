@@ -12,8 +12,8 @@ import java.awt.event.KeyEvent;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import Basic.Draw;
-import Basic.Game;
+import Graphic.Draw;
+import Component.Game;
 
 class Tetrist
 {
@@ -47,7 +47,7 @@ class Tetrist
         draw.refresh();
         if (game.game_is_over())
         {
-            System.out.println("Score : " + game.points);
+            System.out.println("Score : " + game.score());
             System.exit(0);
         }
     }
