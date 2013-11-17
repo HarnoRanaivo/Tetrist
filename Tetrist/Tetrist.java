@@ -13,6 +13,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import Graphic.Draw;
+import Graphic.DrawImage;
 import Component.Game;
 
 class Tetrist
@@ -71,7 +72,7 @@ class Tetrist
 
         // Base Graphique
         JFrame f = new JFrame("TetriS");
-        draw = new Draw(game);
+        draw = new DrawImage(game);
         f.getContentPane().add(draw);
         f.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         f.pack();

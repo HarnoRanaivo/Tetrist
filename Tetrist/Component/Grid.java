@@ -7,8 +7,7 @@ public class Grid
 {
     public static final int default_height = 20;
     public static final int default_width = 10;
-
-    protected static final int empty_block = -1;
+    public static final int empty_block = -1;
 
     private final int height;
     private final int width;
