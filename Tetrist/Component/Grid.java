@@ -71,7 +71,8 @@ public class Grid
             {
                 public int compare(Point a, Point b)
                 {
-                    return Integer.compare(a.ordinate(), b.ordinate());
+                    /* Pas de static int Integer.compare(int a, int b) en Java 6 ! */
+                    return Integer.valueOf(a.ordinate()).compareTo(Integer.valueOf(b.ordinate()));
                 }
                 public boolean equals(Point a, Point b)
                 {
