@@ -35,6 +35,11 @@ public class Draw extends JPanel
     {
         super.paint(g);
 
+        paint_game(g);
+    }
+
+    protected void paint_game(Graphics g)
+    {
         paint_grid(g);
         paint_piece(g);
     }
