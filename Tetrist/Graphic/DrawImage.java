@@ -20,19 +20,19 @@ public class DrawImage extends Draw
     protected static final Color[] nice_colors =
     {
         /* I : rouge. */
-        new Color(255, 95, 95),
+        new Color(240, 40, 40),
         /* J : blanc. */
-        new Color(215, 215, 215),
+        new Color(205, 205, 205),
         /* T : brun. */
         new Color(180, 140, 70),
         /* L : magenta. */
-        new Color(250, 140, 195),
+        new Color(230, 85, 155),
         /* Z : cyan. */
-        new Color(145, 210, 255),
+        new Color(50, 200, 220),
         /* O : bleu. */
-        new Color(105, 175, 255),
+        new Color(40, 90, 240),
         /* S : vert. */
-        new Color(125, 240, 55)
+        new Color(50, 190, 20)
     };
 
     private Image block;
