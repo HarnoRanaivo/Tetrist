@@ -1,75 +1,48 @@
 package Graphic;
 
-import java.awt.Color;
+import java.util.Vector;
 import java.awt.Graphics;
 import javax.swing.JPanel;
 import java.awt.Dimension;
 
-import Component.Point;
-import Component.Piece;
-import Component.Grid;
 import Component.Game;
+import Graphic.Basic.DrawPart;
+import Graphic.Basic.DrawGrid;
+import Graphic.Basic.DrawNext;
+import Graphic.Basic.DrawBlock;
+import Graphic.Basic.DrawInfos;
 
-public class Draw extends JPanel
+public abstract class Draw extends JPanel
 {
-    protected static final int block_size = 24;
-    protected static final Color[] ugly_colors =
-    {
-        Color.red, Color.white, Color.orange, Color.pink, Color.cyan,
-        Color.blue, Color.green
-    };
-
     protected final Game game;
-    protected final int grid_width;
-    protected final int grid_height;
+    protected final DrawGrid draw_grid;
+    protected final DrawNext draw_next;
+    protected final DrawBlock draw_block;
+    protected final DrawInfos draw_infos;
+    protected final DrawPart[] parts;
 
-    protected static Color color_of_int(int x)
+    public Draw(Game g, DrawGrid dg, DrawNext dn, DrawBlock db, DrawInfos di)
     {
-        if (x < 0 || x >= Piece.cardinal)
-            return Color.black;
-        else
-            return ugly_colors[x];
+        super();
+        game = g;
+
+        draw_grid = dg;
+        draw_next = dn;
+        draw_block = db;
+        draw_infos = di;
+
+        parts = new DrawPart[] { dg, dn, di };
+
+        set_size();
     }
 
     public void paint(Graphics g)
     {
         super.paint(g);
 
-        paint_grid(g);
-        paint_piece(g);
-    }
-
-    protected void paint_grid(Graphics g)
-    {
-        Grid grid = game.grid();
-
-        for (int i = 0; i < grid_width; i++)
-            for (int j = 0; j < grid_height; j++)
-            {
-                int x = i * block_size;
-                int y = (grid_height - 1 - j) * block_size;
-
-                paint_block(g, x, y, grid.get(i, j));
-            }
-    }
-
-    protected void paint_piece(Graphics g)
-    {
-        Piece current = game.current_piece();
-        int id = current.id();
-
-        for (Point point : current.coordinates())
-        {
-            int x = point.abcissa() * block_size;
-            int y = (grid_height -1 - point.ordinate()) * block_size;
-            paint_block(g, x, y, id);
-        }
-    }
-
-    protected void paint_block(Graphics g, int x, int y, int value)
-    {
-        g.setColor(color_of_int(value));
-        g.fillRect(x, y, block_size, block_size);
+        draw_grid.paint(g);
+        draw_next.paint(g);
+        draw_infos.paint(g);
     }
 
     public void refresh()
@@ -78,12 +51,35 @@ public class Draw extends JPanel
         repaint(getVisibleRect());
     }
 
-    public Draw(Game g)
+    private void set_size()
     {
-        super();
-        game = g;
-        grid_width = g.grid().width();
-        grid_height = g.grid().height();
-        setPreferredSize(new Dimension(grid_width * block_size, grid_height * block_size));
+        int width = 0;
+        int height = 0;
+
+        for (DrawPart part : parts)
+        {
+            int part_x = part.offset_x();
+            int part_y = part.offset_y();
+            int part_width = part.width();
+            int part_height = part.height();
+
+            if (part_x < width)
+            {
+                if (part_x + part_width > width)
+                    width += part_width - (width - part_x);
+            }
+            else
+                width += part_width + (part_x - width);
+
+            if (part_y < height)
+            {
+                if (part_y + part_height > height)
+                    height += part_height - (height - part_y);
+            }
+            else
+                height += part_height + (part_y - height);
+        }
+
+        setPreferredSize(new Dimension(width, height));
     }
 }

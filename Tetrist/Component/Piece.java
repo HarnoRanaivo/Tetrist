@@ -54,6 +54,11 @@ public class Piece
         return rotation;
     }
 
+    public Point[][] face()
+    {
+        return face;
+    }
+
     public Point[] coordinates()
     {
         return coordinates;
