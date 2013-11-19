@@ -29,10 +29,10 @@ public class Piece
         for (int i = 0; i < coordinates.length; i++)
             coordinates[i] = new Point();
 
-        reset();
+        init();
     }
 
-    public void reset()
+    public void init()
     {
         rotation = spawn_rotation;
 
