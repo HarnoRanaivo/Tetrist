@@ -1,4 +1,4 @@
-package Basic;
+package Graphic.Basic;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -17,15 +17,19 @@ public class DrawGrid extends DrawPart
 
     public DrawGrid(Game g, Point offset, int block)
     {
+        this(g, offset, block, new Color[] { Color.red, Color.white, Color.orange, Color.pink, Color.cyan, Color.blue, Color.green });
+    }
+
+    protected DrawGrid(Game g, Point offset, int block, Color[] c)
+    {
         super(g, offset);
         block_size = block;
         width = game.grid().width();
         height = game.grid().height();
-        colors = { Color.red, Color.white, Color.orange, Color.ping,
-            Color.cyan, Color.blue, Color.green };
+        colors = c;
     }
 
-    protected static Color color_of_int(int value)
+    protected Color color_of_int(int value)
     {
         if (value < 0 || value >= Piece.cardinal)
             return Color.black;
@@ -61,7 +65,7 @@ public class DrawGrid extends DrawPart
         for (Point point : current.coordinates())
         {
             int x = point.abcissa() * block_size + offset_x;
-            int y = (grid - 1 - point.ordinate()) * block_size + offset_y;
+            int y = (height - 1 - point.ordinate()) * block_size + offset_y;
             paint_block(g, x, y, id);
         }
     }

@@ -1,26 +1,23 @@
 package Graphic;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import javax.swing.JPanel;
 import java.awt.Dimension;
 
-import Component.Point;
-import Component.Piece;
-import Component.Grid;
 import Component.Game;
+import Graphic.Basic.DrawGrid;
 
-public class Draw extends JPanel
+public abstract class Draw extends JPanel
 {
     protected final Game game;
     protected final DrawGrid draw_grid;
 
-    public Draw(Game g)
+    public Draw(Game g, DrawGrid dg)
     {
         super();
         game = g;
-        draw_grid = new DrawGrid(game, new Point(0, 0), 24);
-        setPreferredSize(new Dimension(grid_width * block_size, grid_height * block_size));
+        draw_grid = dg;
+        setPreferredSize(new Dimension(g.grid().width() * 24, g.grid().height() * 24));
     }
 
     public void paint(Graphics g)

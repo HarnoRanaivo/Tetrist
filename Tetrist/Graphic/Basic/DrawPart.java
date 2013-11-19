@@ -1,4 +1,4 @@
-package Basic;
+package Graphic.Basic;
 
 import java.awt.Graphics;
 
@@ -18,5 +18,5 @@ public abstract class DrawPart
         offset_y = offset.ordinate();
     }
 
-    public abstract paint(Graphics g);
+    public abstract void paint(Graphics g);
 }
