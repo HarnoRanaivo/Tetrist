@@ -14,6 +14,8 @@ public class Game extends UnicastRemoteObject implements MatrixInterface
     private int score;
     private int lines;
     private int level;
+    private int middle;
+    private int top;
 
     private Point[] temp_points;
     private Random generator;
@@ -35,8 +37,9 @@ public class Game extends UnicastRemoteObject implements MatrixInterface
         generator = new Random();
         score = 0;
         pieces = Piece.full_set_factory(grid.width()/2, grid.height()-1);
-        next = pieces[generator.nextInt(7)];
-        next.reset();
+        middle = grid.width()/2;
+        top = grid.height()-1;
+        next = new Piece(generator.nextInt(7), middle, top);
         new_piece();
     }
 
@@ -82,8 +85,8 @@ public class Game extends UnicastRemoteObject implements MatrixInterface
     public void new_piece()
     {
         current = next;
-        next = pieces[generator.nextInt(7)];
-        next.reset();
+        int i = generator.nextInt(7);
+        next = new Piece(i, middle, top);
     }
 
     public int level()
@@ -113,8 +116,7 @@ public class Game extends UnicastRemoteObject implements MatrixInterface
             lines += destroyed;
             score += lines_to_score(destroyed);
             compute_level();
-            if (! game_is_over())
-                new_piece();
+            new_piece();
         }
     }
 
