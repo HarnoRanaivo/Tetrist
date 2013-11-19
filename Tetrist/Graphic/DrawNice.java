@@ -6,21 +6,44 @@ import java.awt.Color;
 import Component.Point;
 import Component.Game;
 
+import Graphic.Basic.DrawGrid;
+import Graphic.Basic.DrawBlock;
+import Graphic.Basic.DrawNext;
+import Graphic.Basic.DrawInfos;
 import Graphic.Nice.DrawNiceGrid;
 import Graphic.Nice.DrawNiceBlock;
-import Graphic.Basic.DrawNext;
 
 public class DrawNice extends Draw
 {
-    public DrawNice(Game g, DrawNiceBlock db)
+    public DrawNice(Game g, DrawGrid dg, DrawNext dn, DrawBlock db)
     {
         super(g,
-            new DrawNiceGrid(g,
-                new Point(0, 0),
+            dg,
+            dn,
+            db,
+            new DrawInfos(g,
+                new Point(dn.offset_x(), dn.height() + dn.offset_y() + db.block_size())
+            )
+        );
+    }
+
+    public DrawNice(Game g, DrawGrid dg, DrawBlock db)
+    {
+        this(g,
+            dg,
+            new DrawNext(g,
+                new Point(dg.width() + dg.offset_x() + 10, 20),
                 db
             ),
-            new DrawNext(g,
-                new Point(250, 10),
+            db
+        );
+    }
+
+    public DrawNice(Game g, DrawBlock db)
+    {
+        this(g,
+            new DrawNiceGrid(g,
+                new Point(0, 0),
                 db
             ),
             db

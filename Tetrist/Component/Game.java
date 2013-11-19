@@ -12,6 +12,8 @@ public class Game extends UnicastRemoteObject implements MatrixInterface
     private Piece current;
     private Piece next;
     private int score;
+    private int lines;
+    private int level;
 
     private Point[] temp_points;
     private Random generator;
@@ -84,6 +86,21 @@ public class Game extends UnicastRemoteObject implements MatrixInterface
         next.reset();
     }
 
+    public int level()
+    {
+        return level;
+    }
+
+    public int lines_destroyed()
+    {
+        return lines;
+    }
+
+    private void compute_level()
+    {
+        level = score / 1000;
+    }
+
     public void fall()
     {
         current.needed_space_fall(temp_points);
@@ -93,7 +110,9 @@ public class Game extends UnicastRemoteObject implements MatrixInterface
         {
             grid.put(current.coordinates(), current.id());
             int destroyed = grid.check_and_delete(current.coordinates());
+            lines += destroyed;
             score += lines_to_score(destroyed);
+            compute_level();
             if (! game_is_over())
                 new_piece();
         }

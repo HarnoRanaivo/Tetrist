@@ -23,7 +23,7 @@ public class DrawNiceGrid extends DrawGrid
     protected Image block;
     protected Image background;
 
-    public DrawNiceGrid(Game g, Point offset, DrawNiceBlock db)
+    public DrawNiceGrid(Game g, Point offset, DrawBlock db)
     {
         super(g, offset, db);
         init_images();
