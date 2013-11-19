@@ -1,7 +1,5 @@
 package Graphic.Nice;
 
-import Graphic.Basic.DrawGrid;
-
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
@@ -14,6 +12,9 @@ import Component.Game;
 import Component.Grid;
 import Component.Point;
 
+import Graphic.Basic.DrawGrid;
+import Graphic.Basic.DrawBlock;
+
 public class DrawNiceGrid extends DrawGrid
 {
     protected static final String block_img = "Pictures/block-overlay_";
@@ -22,28 +23,11 @@ public class DrawNiceGrid extends DrawGrid
     protected Image block;
     protected Image background;
 
-    public DrawNiceGrid(Game g, Point offset, int block)
+    public DrawNiceGrid(Game g, Point offset, DrawNiceBlock db)
     {
-        super(g, offset, block,
-            new Color[] {
-                /* I : rouge. */
-                new Color(240, 40, 40),
-                /* J : blanc. */
-                new Color(205, 205, 205),
-                /* T : brun. */
-                new Color(180, 140, 70),
-                /* L : magenta. */
-                new Color(230, 85, 155),
-                /* Z : cyan. */
-                new Color(50, 200, 220),
-                /* O : bleu. */
-                new Color(40, 90, 240),
-                /* S : vert. */
-                new Color(50, 190, 20)
-            }
-        );
-
+        super(g, offset, db);
         init_block();
+        db.set_block(block);
     }
 
     private void init_block()
@@ -58,12 +42,6 @@ public class DrawNiceGrid extends DrawGrid
         catch(IOException ie)
         {
             System.err.println(ie.getMessage()); }
-    }
-
-    protected void paint_block(Graphics g, int x, int y, int value)
-    {
-        if (value != Grid.empty_block)
-            g.drawImage(block, x, y, color_of_int(value), null);
     }
 
     protected void paint_background(Graphics g)

@@ -6,11 +6,13 @@ import java.awt.Dimension;
 
 import Component.Game;
 import Graphic.Basic.DrawGrid;
+import Graphic.Basic.DrawNext;
 
 public abstract class Draw extends JPanel
 {
     protected final Game game;
     protected final DrawGrid draw_grid;
+    // protected final DrawNext draw_next;
 
     public Draw(Game g, DrawGrid dg)
     {
@@ -25,6 +27,7 @@ public abstract class Draw extends JPanel
         super.paint(g);
 
         draw_grid.paint(g);
+        // draw_next.paint(g);
     }
 
     public void refresh()

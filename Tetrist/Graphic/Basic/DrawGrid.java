@@ -13,28 +13,15 @@ public class DrawGrid extends DrawPart
     protected final int width;
     protected final int height;
     protected final int block_size;
-    protected final Color[] colors;
+    protected final DrawBlock draw_block;
 
-    public DrawGrid(Game g, Point offset, int block)
-    {
-        this(g, offset, block, new Color[] { Color.red, Color.white, Color.orange, Color.pink, Color.cyan, Color.blue, Color.green });
-    }
-
-    protected DrawGrid(Game g, Point offset, int block, Color[] c)
+    public DrawGrid(Game g, Point offset, DrawBlock db)
     {
         super(g, offset);
-        block_size = block;
+        block_size = db.block_size();
+        draw_block = db;
         width = game.grid().width();
         height = game.grid().height();
-        colors = c;
-    }
-
-    protected Color color_of_int(int value)
-    {
-        if (value < 0 || value >= Piece.cardinal)
-            return Color.black;
-        else
-            return colors[value];
     }
 
     public void paint(Graphics g)
@@ -53,7 +40,7 @@ public class DrawGrid extends DrawPart
                 int x = i * block_size + offset_x;
                 int y = (height - 1 - j) * block_size + offset_y;
 
-                paint_block(g, x, y, grid.get(i, j));
+                draw_block.paint_block(g, x, y, grid.get(i, j));
             }
     }
 
@@ -66,13 +53,7 @@ public class DrawGrid extends DrawPart
         {
             int x = point.abcissa() * block_size + offset_x;
             int y = (height - 1 - point.ordinate()) * block_size + offset_y;
-            paint_block(g, x, y, id);
+            draw_block.paint_block(g, x, y, id);
         }
-    }
-
-    protected void paint_block(Graphics g, int x, int y, int value)
-    {
-        g.setColor(color_of_int(value));
-        g.fillRect(x, y, block_size, block_size);
     }
 }
