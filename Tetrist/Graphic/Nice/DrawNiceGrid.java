@@ -26,22 +26,24 @@ public class DrawNiceGrid extends DrawGrid
     public DrawNiceGrid(Game g, Point offset, DrawNiceBlock db)
     {
         super(g, offset, db);
-        init_block();
-        db.set_block(block);
+        init_images();
     }
 
-    private void init_block()
+    private void init_images()
     {
-        block = null;
         background = null;
+
+        String bg_path = background_img + block_size + img_postfix;
+
         try
         {
-            block = ImageIO.read(new File(block_img + block_size + img_postfix));
-            background = ImageIO.read(new File(background_img + block_size + img_postfix));
+            background = ImageIO.read(new File(bg_path));
         }
         catch(IOException ie)
         {
-            System.err.println(ie.getMessage()); }
+            System.err.println(bg_path);
+            System.err.println("background : " + ie.getMessage());
+        }
     }
 
     protected void paint_background(Graphics g)

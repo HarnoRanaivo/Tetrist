@@ -18,10 +18,10 @@ public class DrawGrid extends DrawPart
     public DrawGrid(Game g, Point offset, DrawBlock db)
     {
         super(g, offset);
-        block_size = db.block_size();
-        draw_block = db;
         width = game.grid().width();
         height = game.grid().height();
+        draw_block = db;
+        block_size = db.block_size();
     }
 
     public void paint(Graphics g)
