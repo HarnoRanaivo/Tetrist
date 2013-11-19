@@ -35,5 +35,4 @@ public class Draw extends JPanel
         game.refresh();
         repaint(getVisibleRect());
     }
-
 }
