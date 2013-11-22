@@ -22,6 +22,11 @@ class Tetrist
     static Draw draw;
     static Game game;
 
+    static int level = 0;
+    static final int time_max = 500;
+    static final int time_min = 100;
+    static final int time_step = 100;
+    static Timer timer = null;
     static int x, y; // For example
 
     public static void action_right()
@@ -47,10 +52,39 @@ class Tetrist
     {
         game.fall();
         draw.refresh();
+        new_level(game.level());
         if (game.game_is_over())
         {
             System.out.println("Score : " + game.score());
+            System.out.println("Level : " + game.level());
+            System.out.println("Lines : " + game.lines_destroyed());
             System.exit(0);
+        }
+    }
+
+    public static int time_of_level(int n)
+    {
+        int time = time_max - (n-1) * time_step;
+        return time >= time_min ? time : time_min;
+    }
+
+    public static void new_level(int n)
+    {
+        if (level != n)
+        {
+            level = n;
+            int time = time_of_level(level);
+            if (timer != null)
+                timer.cancel();
+            timer = new Timer();
+            TimerTask fall_task = new TimerTask()
+                {
+                    public void run()
+                    {
+                        action_fall();
+                    }
+                };
+            timer.schedule(fall_task, 0, time);
         }
     }
 
@@ -79,18 +113,6 @@ class Tetrist
         f.pack();
         f.setVisible(true);
 
-        /* Chute. */
-        Timer timer = new Timer();
-        TimerTask fall_task = new TimerTask()
-            {
-                public void run()
-                {
-                    action_fall();
-                }
-            };
-        timer.schedule(fall_task, 0, 500);
-
-
         // Clavier
         f.addKeyListener(new KeyAdapter()
             {
@@ -118,5 +140,8 @@ class Tetrist
                 }
             }
         );
+
+        /* Chute. */
+        new_level(game.level());
     }
 }

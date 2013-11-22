@@ -6,6 +6,7 @@ import java.util.Random;
 
 public class Game extends UnicastRemoteObject implements MatrixInterface
 {
+    private static final int score_factor = 1000;
     protected static final int[] score_scale = { 0, 40, 100, 300, 1200 };
 
     private Grid grid;
@@ -16,6 +17,7 @@ public class Game extends UnicastRemoteObject implements MatrixInterface
     private int level;
     private int middle;
     private int top;
+    private int threshold;
 
     private Point[] temp_points;
     private Random generator;
@@ -36,6 +38,8 @@ public class Game extends UnicastRemoteObject implements MatrixInterface
         matrice_IA = new boolean[grid.width()][grid.height()];
         generator = new Random();
         score = 0;
+        level = 1;
+        threshold = score_factor;
         pieces = Piece.full_set_factory(grid.width()/2, grid.height()-1);
         middle = grid.width()/2;
         top = grid.height()-1;
@@ -101,7 +105,11 @@ public class Game extends UnicastRemoteObject implements MatrixInterface
 
     private void compute_level()
     {
-        level = score / 1000;
+        if (score >= threshold)
+        {
+            level++;
+            threshold = score_factor * level * level;
+        }
     }
 
     public void fall()
