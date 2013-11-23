@@ -1,4 +1,4 @@
-package Graphic.Basic;
+package Graphic.Abstract;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -8,7 +8,7 @@ import Component.Piece;
 import Component.Grid;
 import Component.Game;
 
-public class DrawGrid extends DrawPart
+public abstract class DrawGrid extends DrawPart
 {
     protected final int block_size;
     protected final DrawBlock draw_block;
@@ -24,11 +24,7 @@ public class DrawGrid extends DrawPart
         block_size = db.block_size();
     }
 
-    public void paint(Graphics g)
-    {
-        paint_grid(g);
-        paint_piece(g);
-    }
+    public abstract void paint(Graphics g);
 
     protected void paint_grid(Graphics g)
     {

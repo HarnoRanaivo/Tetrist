@@ -6,13 +6,13 @@ import java.awt.Color;
 import Component.Point;
 import Component.Game;
 
-import Graphic.Basic.DrawGrid;
-import Graphic.Basic.DrawBlock;
-import Graphic.Basic.DrawNext;
-import Graphic.Basic.DrawInfos;
-import Graphic.Nice.DrawNiceInfos;
-import Graphic.Nice.DrawNiceGrid;
-import Graphic.Nice.DrawNiceBlock;
+import Graphic.Abstract.DrawGrid;
+import Graphic.Abstract.DrawBlock;
+import Graphic.Abstract.DrawNext;
+import Graphic.Abstract.DrawInfos;
+import Graphic.Nice.DrawInfosNice;
+import Graphic.Nice.DrawGridNice;
+import Graphic.Nice.DrawBlockNice;
 
 public class DrawNice extends Draw
 {
@@ -22,7 +22,7 @@ public class DrawNice extends Draw
             dg,
             dn,
             db,
-            new DrawNiceInfos(g,
+            new DrawInfosNice(g,
                 new Point(dn.offset_x(), 20 + dn.height() + dn.offset_y() + db.block_size())
             )
         );
@@ -43,7 +43,7 @@ public class DrawNice extends Draw
     public DrawNice(Game g, DrawBlock db) throws Exception
     {
         this(g,
-            new DrawNiceGrid(g,
+            new DrawGridNice(g,
                 new Point(0, 0),
                 db
             ),
@@ -55,7 +55,7 @@ public class DrawNice extends Draw
     public DrawNice(Game g) throws Exception
     {
         this(g,
-            new DrawNiceBlock(24,
+            new DrawBlockNice(24,
                 new Color[] {
                     /* I : rouge. */
                     new Color(240, 40, 40),

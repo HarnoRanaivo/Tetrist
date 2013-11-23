@@ -8,26 +8,30 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 import Component.Grid;
-import Graphic.Basic.DrawBlock;
+import Graphic.Abstract.DrawBlock;
 
-public class DrawNiceBlock extends DrawBlock
+public class DrawBlockNice extends DrawBlock
 {
-    protected Image block;
     protected static final String block_img = "/Pictures/block-overlay_";
     protected static final String img_postfix = ".png";
 
-    public DrawNiceBlock(int block, Color[] c)
+    protected final Image block;
+
+    public DrawBlockNice(int size, Color[] c)
     {
-        super(block, c);
-        init_image();
+        super(size, c);
+        block = init_image();
     }
 
-    private void init_image()
+    protected Image init_image()
     {
-        block = null;
+        Image img = null;
+
         String block_path = block_img + block_size + img_postfix;
         URL block_url = getClass().getResource(block_path);
-        block = Toolkit.getDefaultToolkit().getImage(block_url);
+        img = Toolkit.getDefaultToolkit().getImage(block_url);
+
+        return img;
     }
 
     public void paint_block(Graphics g, int x, int y, int value)

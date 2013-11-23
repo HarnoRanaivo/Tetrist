@@ -11,16 +11,16 @@ import Component.Game;
 import Component.Grid;
 import Component.Point;
 
-import Graphic.Basic.DrawGrid;
-import Graphic.Basic.DrawBlock;
+import Graphic.Abstract.DrawGrid;
+import Graphic.Abstract.DrawBlock;
 
-public class DrawNiceGrid extends DrawGrid
+public class DrawGridNice extends DrawGrid
 {
     protected static final String background_img = "/Pictures/background_";
     protected static final String img_postfix = ".png";
     protected Image background;
 
-    public DrawNiceGrid(Game g, Point offset, DrawBlock db)
+    public DrawGridNice(Game g, Point offset, DrawBlock db)
     {
         super(g, offset, db);
         init_images();

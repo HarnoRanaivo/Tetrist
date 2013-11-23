@@ -6,10 +6,13 @@ import java.awt.Color;
 import Component.Point;
 import Component.Game;
 
-import Graphic.Basic.DrawBlock;
-import Graphic.Basic.DrawGrid;
-import Graphic.Basic.DrawNext;
-import Graphic.Basic.DrawInfos;
+import Graphic.Abstract.DrawBlock;
+import Graphic.Abstract.DrawGrid;
+import Graphic.Abstract.DrawNext;
+import Graphic.Abstract.DrawInfos;
+import Graphic.Basic.DrawBlockBasic;
+import Graphic.Basic.DrawGridBasic;
+import Graphic.Basic.DrawInfosBasic;
 
 public class DrawBasic extends Draw
 {
@@ -19,7 +22,7 @@ public class DrawBasic extends Draw
             dg,
             dn,
             db,
-            new DrawInfos(g,
+            new DrawInfosBasic(g,
                 new Point(dn.offset_x(), 20 + dn.height() + dn.offset_y() + db.block_size())
             )
         );
@@ -40,7 +43,7 @@ public class DrawBasic extends Draw
     public DrawBasic(Game g, DrawBlock db)
     {
         this(g,
-            new DrawGrid(g,
+            new DrawGridBasic(g,
                 new Point(0, 0),
                 db
             ),
@@ -51,7 +54,7 @@ public class DrawBasic extends Draw
     public DrawBasic(Game g)
     {
         this(g,
-            new DrawBlock(24,
+            new DrawBlockBasic(24,
                 new Color[] { Color.red, Color.white, Color.orange,
                     Color.pink, Color.cyan, Color.blue, Color.green
                 }

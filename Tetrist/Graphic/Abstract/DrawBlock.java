@@ -1,18 +1,18 @@
-package Graphic.Basic;
+package Graphic.Abstract;
 
 import java.awt.Graphics;
 import java.awt.Color;
 
 import Component.Piece;
 
-public class DrawBlock
+public abstract class DrawBlock
 {
     protected final int block_size;
     protected final Color[] colors;
 
-    public DrawBlock(int block, Color[] c)
+    public DrawBlock(int size, Color[] c)
     {
-        block_size = block;
+        block_size = size;
         colors = c;
     }
 
@@ -29,9 +29,5 @@ public class DrawBlock
             return colors[value];
     }
 
-    public void paint_block(Graphics g, int x, int y, int value)
-    {
-        g.setColor(color_of_int(value));
-        g.fillRect(x, y, block_size, block_size);
-    }
+    public abstract void paint_block(Graphics g, int x, int y, int value);
 }

@@ -6,11 +6,11 @@ import javax.swing.JPanel;
 import java.awt.Dimension;
 
 import Component.Game;
-import Graphic.Basic.DrawPart;
-import Graphic.Basic.DrawGrid;
-import Graphic.Basic.DrawNext;
-import Graphic.Basic.DrawBlock;
-import Graphic.Basic.DrawInfos;
+import Graphic.Abstract.DrawPart;
+import Graphic.Abstract.DrawGrid;
+import Graphic.Abstract.DrawNext;
+import Graphic.Abstract.DrawBlock;
+import Graphic.Abstract.DrawInfos;
 
 import Graphic.DrawBasic;
 import Graphic.DrawNice;
