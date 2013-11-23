@@ -20,7 +20,7 @@ public class DrawBasic extends Draw
             dn,
             db,
             new DrawInfos(g,
-                new Point(dn.offset_x(), dn.height() + dn.offset_y() + db.block_size())
+                new Point(dn.offset_x(), 20 + dn.height() + dn.offset_y() + db.block_size())
             )
         );
     }
@@ -30,7 +30,7 @@ public class DrawBasic extends Draw
         this(g,
             dg,
             new DrawNext(g,
-                new Point(dg.width() + dg.offset_x() + 10, 20),
+                new Point(dg.width() + dg.offset_x() + 30, 40),
                 db
             ),
             db

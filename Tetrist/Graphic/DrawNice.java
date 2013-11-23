@@ -10,36 +10,37 @@ import Graphic.Basic.DrawGrid;
 import Graphic.Basic.DrawBlock;
 import Graphic.Basic.DrawNext;
 import Graphic.Basic.DrawInfos;
+import Graphic.Nice.DrawNiceInfos;
 import Graphic.Nice.DrawNiceGrid;
 import Graphic.Nice.DrawNiceBlock;
 
 public class DrawNice extends Draw
 {
-    public DrawNice(Game g, DrawGrid dg, DrawNext dn, DrawBlock db)
+    public DrawNice(Game g, DrawGrid dg, DrawNext dn, DrawBlock db) throws Exception
     {
         super(g,
             dg,
             dn,
             db,
-            new DrawInfos(g,
-                new Point(dn.offset_x(), dn.height() + dn.offset_y() + db.block_size())
+            new DrawNiceInfos(g,
+                new Point(dn.offset_x(), 20 + dn.height() + dn.offset_y() + db.block_size())
             )
         );
     }
 
-    public DrawNice(Game g, DrawGrid dg, DrawBlock db)
+    public DrawNice(Game g, DrawGrid dg, DrawBlock db) throws Exception
     {
         this(g,
             dg,
             new DrawNext(g,
-                new Point(dg.width() + dg.offset_x() + 10, 20),
+                new Point(dg.width() + dg.offset_x() + 30, 40),
                 db
             ),
             db
         );
     }
 
-    public DrawNice(Game g, DrawBlock db)
+    public DrawNice(Game g, DrawBlock db) throws Exception
     {
         this(g,
             new DrawNiceGrid(g,
@@ -51,7 +52,7 @@ public class DrawNice extends Draw
 
     }
 
-    public DrawNice(Game g)
+    public DrawNice(Game g) throws Exception
     {
         this(g,
             new DrawNiceBlock(24,

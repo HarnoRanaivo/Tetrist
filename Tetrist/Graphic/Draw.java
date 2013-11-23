@@ -12,6 +12,9 @@ import Graphic.Basic.DrawNext;
 import Graphic.Basic.DrawBlock;
 import Graphic.Basic.DrawInfos;
 
+import Graphic.DrawBasic;
+import Graphic.DrawNice;
+
 public abstract class Draw extends JPanel
 {
     protected final Game game;
@@ -81,5 +84,20 @@ public abstract class Draw extends JPanel
         }
 
         setPreferredSize(new Dimension(width, height));
+    }
+
+    public static Draw factory(Game g)
+    {
+        Draw draw = null;
+        try
+        {
+            draw = new DrawNice(g);
+        }
+        catch (Exception e)
+        {
+            draw = new DrawBasic(g);
+        }
+
+        return draw;
     }
 }

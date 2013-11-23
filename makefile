@@ -18,7 +18,7 @@ tetristjar : tetristbytecodedir
 	$(COMPILER) -sourcepath $(TETRIST_SPATH) -cp $(TETRIST_BPATH) -d $(TETRIST_BPATH) $(TETRIST_SPATH)/Tetrist.java
 	rmic -classpath $(TETRIST_BPATH) -d $(TETRIST_BPATH) Component.Game
 	echo "Main-Class: Tetrist" > manifest
-	jar cmf manifest $(JPATH)/Tetrist.jar -C bytecode/Tetrist/ . -C Tetrist/ Pictures
+	jar cmf manifest $(JPATH)/Tetrist.jar -C bytecode/Tetrist/ . -C Tetrist/ Pictures -C Tetrist/ Fonts
 	rm manifest
 
 tetristdoc :
