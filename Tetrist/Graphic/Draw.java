@@ -39,6 +39,7 @@ public abstract class Draw extends JPanel
         draw_infos = di;
         parts = new DrawPart[] { dg, dn, di };
 
+        compute_size();
         set_size();
         draw_bg = create_draw_background(window_width, window_height);
     }
@@ -61,7 +62,7 @@ public abstract class Draw extends JPanel
         repaint(getVisibleRect());
     }
 
-    private void set_size()
+    private void compute_size()
     {
         int width = 0;
         int height = 0;
@@ -92,7 +93,11 @@ public abstract class Draw extends JPanel
 
         window_width = width;
         window_height = height;
-        setPreferredSize(new Dimension(width, height));
+    }
+
+    protected void set_size()
+    {
+        setPreferredSize(new Dimension(window_width, window_height));
     }
 
     public static Draw factory(Game g)

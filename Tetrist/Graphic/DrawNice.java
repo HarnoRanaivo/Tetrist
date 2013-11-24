@@ -35,7 +35,7 @@ public class DrawNice extends Draw
         this(g,
             dg,
             new DrawNext(g,
-                new Point(dg.width() + dg.offset_x() + 30, 40),
+                new Point(dg.width() + dg.offset_x() + 30, 70),
                 db
             ),
             db
@@ -46,7 +46,7 @@ public class DrawNice extends Draw
     {
         this(g,
             new DrawGridNice(g,
-                new Point(0, 0),
+                new Point(30, 30),
                 db
             ),
             db
@@ -81,5 +81,11 @@ public class DrawNice extends Draw
     public DrawBackground create_draw_background(int w, int h)
     {
         return new DrawBackgroundNice(w, h);
+    }
+
+    protected void set_size()
+    {
+        window_height += 30;
+        super.set_size();
     }
 }
