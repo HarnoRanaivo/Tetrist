@@ -11,6 +11,7 @@ import Graphic.Abstract.DrawGrid;
 import Graphic.Abstract.DrawNext;
 import Graphic.Abstract.DrawBlock;
 import Graphic.Abstract.DrawInfos;
+import Graphic.Abstract.DrawBackground;
 
 import Graphic.DrawBasic;
 import Graphic.DrawNice;
@@ -22,7 +23,10 @@ public abstract class Draw extends JPanel
     protected final DrawNext draw_next;
     protected final DrawBlock draw_block;
     protected final DrawInfos draw_infos;
+    protected final DrawBackground draw_bg;
     protected final DrawPart[] parts;
+    protected int window_width;
+    protected int window_height;
 
     public Draw(Game g, DrawGrid dg, DrawNext dn, DrawBlock db, DrawInfos di)
     {
@@ -33,20 +37,23 @@ public abstract class Draw extends JPanel
         draw_next = dn;
         draw_block = db;
         draw_infos = di;
-
         parts = new DrawPart[] { dg, dn, di };
 
         set_size();
+        draw_bg = create_draw_background(window_width, window_height);
     }
 
     public void paint(Graphics g)
     {
         super.paint(g);
 
+        draw_bg.paint(g);
         draw_grid.paint(g);
         draw_next.paint(g);
         draw_infos.paint(g);
     }
+
+    public abstract DrawBackground create_draw_background(int w, int h);
 
     public void refresh()
     {
@@ -83,6 +90,8 @@ public abstract class Draw extends JPanel
                 height += part_height + (part_y - height);
         }
 
+        window_width = width;
+        window_height = height;
         setPreferredSize(new Dimension(width, height));
     }
 

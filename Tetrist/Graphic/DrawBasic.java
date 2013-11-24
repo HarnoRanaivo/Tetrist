@@ -10,9 +10,11 @@ import Graphic.Abstract.DrawBlock;
 import Graphic.Abstract.DrawGrid;
 import Graphic.Abstract.DrawNext;
 import Graphic.Abstract.DrawInfos;
+import Graphic.Abstract.DrawBackground;
 import Graphic.Basic.DrawBlockBasic;
 import Graphic.Basic.DrawGridBasic;
 import Graphic.Basic.DrawInfosBasic;
+import Graphic.Basic.DrawBackgroundBasic;
 
 public class DrawBasic extends Draw
 {
@@ -60,5 +62,10 @@ public class DrawBasic extends Draw
                 }
             )
         );
+    }
+
+    public DrawBackground create_draw_background(int w, int h)
+    {
+        return new DrawBackgroundBasic(w, h);
     }
 }
