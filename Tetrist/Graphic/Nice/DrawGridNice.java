@@ -16,6 +16,9 @@ import Graphic.Abstract.DrawBlock;
 
 public class DrawGridNice extends DrawGrid
 {
+    protected static final Color bg_color = new Color(0, 0, 0, 150);
+    protected static final Color border_color = new Color(200, 200, 200);
+
     public DrawGridNice(Game g, Point offset, DrawBlock db)
     {
         super(g, offset, db, 2);
@@ -23,7 +26,7 @@ public class DrawGridNice extends DrawGrid
 
     protected void paint_border(Graphics g)
     {
-        g.setColor(Color.white);
+        g.setColor(border_color);
         g.fillRect(offset_x, offset_y, width, border);
         g.fillRect(offset_x, offset_y + height - border, width, border);
         g.fillRect(offset_x, offset_y, border, height);
@@ -32,7 +35,7 @@ public class DrawGridNice extends DrawGrid
 
     protected void paint_background(Graphics g)
     {
-        g.setColor(Color.black);
+        g.setColor(bg_color);
         g.fillRect(offset_x, offset_y, width, height);
     }
 
