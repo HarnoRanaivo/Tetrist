@@ -1,18 +1,19 @@
 #!/bin/sh
 # Run Tetrist
 
-JAR_DIR=jar
-JAR_ARCHIVE=Tetrist.jar
+MAIN=Tetrist
+BYTECODE_DIR=bytecode/Tetrist
 
-# if ! [ -f $JAR_DIR/$JAR_ARCHIVE ]; then
-#     echo "Are you sure you ran \"make\" ?"
-#     exit 66
-# fi
+if ! [ -f "$BYTECODE_DIR/$MAIN.class"  ]; then
+    echo "Are you sure you ran \"make\" ?"
+    exit 66
+fi
 
-killall java
-killall rmiregistry
+killall java 2> /dev/null
+killall rmiregistry 2> /dev/null
+sleep 2
 
-cd bytecode/Tetrist
+cd $BYTECODE_DIR
 
 rmiregistry &
-java -Djava.rmi.server.codebase=file:Component/ Tetrist
+java $MAIN -Djava.rmi.server.codebase=file:Component/
