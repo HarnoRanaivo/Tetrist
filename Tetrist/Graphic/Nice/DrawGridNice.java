@@ -18,7 +18,16 @@ public class DrawGridNice extends DrawGrid
 {
     public DrawGridNice(Game g, Point offset, DrawBlock db)
     {
-        super(g, offset, db);
+        super(g, offset, db, 2);
+    }
+
+    protected void paint_border(Graphics g)
+    {
+        g.setColor(Color.white);
+        g.fillRect(offset_x, offset_y, width, border);
+        g.fillRect(offset_x, offset_y + height - border, width, border);
+        g.fillRect(offset_x, offset_y, border, height);
+        g.fillRect(offset_x + width - border, offset_y, border, height);
     }
 
     protected void paint_background(Graphics g)
@@ -30,6 +39,7 @@ public class DrawGridNice extends DrawGrid
     public void paint(Graphics g)
     {
         paint_background(g);
+        paint_border(g);
         paint_grid(g);
         paint_piece(g);
     }
