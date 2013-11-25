@@ -16,10 +16,13 @@ all : jardir tetristjar
 
 tetristjar : tetristbytecodedir
 	$(COMPILER) -sourcepath $(TETRIST_SPATH) -cp $(TETRIST_BPATH) -d $(TETRIST_BPATH) $(TETRIST_SPATH)/Tetrist.java
+	cp -R $(TETRIST_SPATH)/Fonts $(TETRIST_BPATH)
+	cp -R $(TETRIST_SPATH)/Pictures $(TETRIST_BPATH)
 	rmic -classpath $(TETRIST_BPATH) -d $(TETRIST_BPATH) Component.Game
-	echo "Main-Class: Tetrist" > manifest
-	jar cmf manifest $(JPATH)/Tetrist.jar -C bytecode/Tetrist/ . -C Tetrist/ Pictures -C Tetrist/ Fonts
-	rm manifest
+	# echo "Main-Class: Tetrist" > manifest
+	# echo "Class-Path: bytecode/Tetrist/Component" >> manifest
+	# jar cmf manifest $(JPATH)/Tetrist.jar -C bytecode/Tetrist/ . -C Tetrist/ Pictures -C Tetrist/ Fonts
+	# rm manifest
 
 tetristdoc :
 	@javadoc -sourcepath $(TETRIST_SPATH) -classpath $(TETRIST_BPATH) -d $(TETRIST_DPATH) $(TETRIST_SPATH)/*.java \

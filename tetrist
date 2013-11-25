@@ -4,14 +4,15 @@
 JAR_DIR=jar
 JAR_ARCHIVE=Tetrist.jar
 
-if ! [ -f $JAR_DIR/$JAR_ARCHIVE ]; then
-    echo "Are you sure you ran \"make\" ?"
-    exit 66
-fi
+# if ! [ -f $JAR_DIR/$JAR_ARCHIVE ]; then
+#     echo "Are you sure you ran \"make\" ?"
+#     exit 66
+# fi
 
-pkill rmiregistry
-pkill java
-sleep 1
+killall java
+killall rmiregistry
+
+cd bytecode/Tetrist
 
 rmiregistry &
-java -jar $JAR_DIR/$JAR_ARCHIVE "$@"
+java -Djava.rmi.server.codebase=file:Component/ Tetrist
