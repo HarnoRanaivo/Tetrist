@@ -107,7 +107,7 @@ class Tetrist
         JFrame f = new JFrame("TetriS");
         draw = Draw.factory(game);
         f.getContentPane().add(draw);
-        f.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         f.pack();
         f.setVisible(true);
 
