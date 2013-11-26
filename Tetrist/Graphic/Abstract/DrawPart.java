@@ -1,4 +1,4 @@
-package Graphic.Basic;
+package Graphic.Abstract;
 
 import java.awt.Graphics;
 

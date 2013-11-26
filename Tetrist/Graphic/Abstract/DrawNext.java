@@ -1,4 +1,4 @@
-package Graphic.Basic;
+package Graphic.Abstract;
 
 import java.awt.Graphics;
 
@@ -6,23 +6,20 @@ import Component.Point;
 import Component.Game;
 import Component.Piece;
 
-import Graphic.Basic.DrawBlock;
+import Graphic.Abstract.DrawBlock;
 
 public class DrawNext extends DrawPart
 {
+    protected static final int next_height = 2;
+    protected static final int next_width = 4;
     protected final int block_size;
     protected final DrawBlock draw_block;
-    protected final int next_height;
-    protected final int next_width;
 
     public DrawNext(Game g, Point offset, DrawBlock db)
     {
-        super(g, offset, db.block_size() * 4, db.block_size() * 2);
+        super(g, offset, db.block_size() * next_width, db.block_size() * next_height);
         draw_block = db;
-        next_height = 2;
-        next_width = 4;
         block_size = db.block_size();
-        // System.out.println(offset_y + " " + block_size);
     }
 
     public void paint(Graphics g)

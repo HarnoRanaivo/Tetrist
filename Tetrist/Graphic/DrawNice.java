@@ -6,44 +6,47 @@ import java.awt.Color;
 import Component.Point;
 import Component.Game;
 
-import Graphic.Basic.DrawGrid;
-import Graphic.Basic.DrawBlock;
-import Graphic.Basic.DrawNext;
-import Graphic.Basic.DrawInfos;
-import Graphic.Nice.DrawNiceGrid;
-import Graphic.Nice.DrawNiceBlock;
+import Graphic.Abstract.DrawGrid;
+import Graphic.Abstract.DrawBlock;
+import Graphic.Abstract.DrawNext;
+import Graphic.Abstract.DrawInfos;
+import Graphic.Abstract.DrawBackground;
+import Graphic.Nice.DrawInfosNice;
+import Graphic.Nice.DrawGridNice;
+import Graphic.Nice.DrawBlockNice;
+import Graphic.Nice.DrawBackgroundNice;
 
 public class DrawNice extends Draw
 {
-    public DrawNice(Game g, DrawGrid dg, DrawNext dn, DrawBlock db)
+    public DrawNice(Game g, DrawGrid dg, DrawNext dn, DrawBlock db) throws Exception
     {
         super(g,
             dg,
             dn,
             db,
-            new DrawInfos(g,
-                new Point(dn.offset_x(), dn.height() + dn.offset_y() + db.block_size())
+            new DrawInfosNice(g,
+                new Point(dn.offset_x(), 20 + dn.height() + dn.offset_y() + db.block_size())
             )
         );
     }
 
-    public DrawNice(Game g, DrawGrid dg, DrawBlock db)
+    public DrawNice(Game g, DrawGrid dg, DrawBlock db) throws Exception
     {
         this(g,
             dg,
             new DrawNext(g,
-                new Point(dg.width() + dg.offset_x() + 10, 20),
+                new Point(dg.width() + dg.offset_x() + 30, 70),
                 db
             ),
             db
         );
     }
 
-    public DrawNice(Game g, DrawBlock db)
+    public DrawNice(Game g, DrawBlock db) throws Exception
     {
         this(g,
-            new DrawNiceGrid(g,
-                new Point(0, 0),
+            new DrawGridNice(g,
+                new Point(30, 30),
                 db
             ),
             db
@@ -51,10 +54,10 @@ public class DrawNice extends Draw
 
     }
 
-    public DrawNice(Game g)
+    public DrawNice(Game g) throws Exception
     {
         this(g,
-            new DrawNiceBlock(24,
+            new DrawBlockNice(24,
                 new Color[] {
                     /* I : rouge. */
                     new Color(240, 40, 40),
@@ -73,5 +76,16 @@ public class DrawNice extends Draw
                 }
             )
         );
+    }
+
+    public DrawBackground create_draw_background(int w, int h)
+    {
+        return new DrawBackgroundNice(w, h);
+    }
+
+    protected void set_size()
+    {
+        window_height += 30;
+        super.set_size();
     }
 }

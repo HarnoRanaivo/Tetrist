@@ -1,0 +1,19 @@
+#!/bin/sh
+# Run Tetrist
+
+MAIN=Tetrist
+BYTECODE_DIR=bytecode/Tetrist
+
+if ! [ -f "$BYTECODE_DIR/$MAIN.class"  ]; then
+    echo "Are you sure you ran \"make\" ?"
+    exit 66
+fi
+
+killall java 2> /dev/null
+killall rmiregistry 2> /dev/null
+sleep 2
+
+cd $BYTECODE_DIR
+
+rmiregistry &
+java $MAIN -Djava.rmi.server.codebase=file:Component/

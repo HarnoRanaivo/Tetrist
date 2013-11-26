@@ -6,21 +6,67 @@ import java.rmi.*;
 import javax.swing.*;
 
 // Clavier
-import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyListener;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
 import Graphic.Draw;
-import Graphic.DrawBasic;
-import Graphic.DrawNice;
 import Component.Game;
 
 class Tetrist
 {
     static Draw draw;
     static Game game;
+    static JFrame frame;
+    static KeyListener in_game = new KeyAdapter()
+        {
+            public void keyPressed(KeyEvent e)
+            {
+                switch (e.getKeyCode())
+                {
+                    case KeyEvent.VK_RIGHT:
+                        action_right();
+                        break;
+                    case KeyEvent.VK_LEFT:
+                        action_left();
+                        break;
+                    case KeyEvent.VK_UP:
+                        action_rotation();
+                        break;
+                    case KeyEvent.VK_DOWN:
+                        action_fall();
+                        break;
+                    case KeyEvent.VK_ESCAPE:
+                        action_pause();
+                        break;
+                }
+            }
+
+            public void keyReleased(KeyEvent e)
+            {
+                // KEY RELEASED
+            }
+        };
+
+    static KeyListener in_pause = new KeyAdapter()
+        {
+            public void keyPressed(KeyEvent e)
+            {
+                switch (e.getKeyCode())
+                {
+                    case KeyEvent.VK_ESCAPE:
+                        action_pause();
+                        break;
+                }
+            }
+
+            public void keyReleased(KeyEvent e)
+            {
+            }
+        };
 
     static int level = 0;
     static final int time_max = 500;
@@ -28,6 +74,26 @@ class Tetrist
     static final int time_step = 100;
     static Timer timer = null;
     static int x, y; // For example
+    static boolean pause = false;
+
+    public static void action_pause()
+    {
+        if (pause)
+        {
+            frame.removeKeyListener(in_pause);
+            int time = time_of_level(level);
+            new_timer(time);
+            frame.addKeyListener(in_game);
+
+        }
+        else
+        {
+            frame.removeKeyListener(in_game);
+            timer.cancel();
+            frame.addKeyListener(in_pause);
+        }
+        pause = ! pause;
+    }
 
     public static void action_right()
     {
@@ -68,23 +134,28 @@ class Tetrist
         return time >= time_min ? time : time_min;
     }
 
+    public static void new_timer(int time)
+    {
+        if (timer != null)
+            timer.cancel();
+        timer = new Timer();
+        TimerTask fall_task = new TimerTask()
+            {
+                public void run()
+                {
+                    action_fall();
+                }
+            };
+        timer.schedule(fall_task, 0, time);
+    }
+
     public static void new_level(int n)
     {
         if (level != n)
         {
+            int time = time_of_level(n);
             level = n;
-            int time = time_of_level(level);
-            if (timer != null)
-                timer.cancel();
-            timer = new Timer();
-            TimerTask fall_task = new TimerTask()
-                {
-                    public void run()
-                    {
-                        action_fall();
-                    }
-                };
-            timer.schedule(fall_task, 0, time);
+            new_timer(time);
         }
     }
 
@@ -106,40 +177,15 @@ class Tetrist
         }
 
         // Base Graphique
-        JFrame f = new JFrame("TetriS");
-        draw = new DrawNice(game);
-        f.getContentPane().add(draw);
-        f.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        f.pack();
-        f.setVisible(true);
+        frame = new JFrame("TetriS");
+        draw = Draw.factory(game);
+        frame.getContentPane().add(draw);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        frame.pack();
+        frame.setVisible(true);
 
         // Clavier
-        f.addKeyListener(new KeyAdapter()
-            {
-                public void keyPressed(KeyEvent e)
-                {
-                    switch (e.getKeyCode()) {
-                        case KeyEvent.VK_RIGHT:
-                            action_right();
-                            break;
-                        case KeyEvent.VK_LEFT:
-                            action_left();
-                            break;
-                        case KeyEvent.VK_UP:
-                            action_rotation();
-                            break;
-                        case KeyEvent.VK_DOWN:
-                            action_fall();
-                            break;
-                    }
-                }
-
-                public void keyReleased(KeyEvent e)
-                {
-                    // KEY RELEASED
-                }
-            }
-        );
+        frame.addKeyListener(in_game);
 
         /* Chute. */
         new_level(game.level());

@@ -6,11 +6,15 @@ import javax.swing.JPanel;
 import java.awt.Dimension;
 
 import Component.Game;
-import Graphic.Basic.DrawPart;
-import Graphic.Basic.DrawGrid;
-import Graphic.Basic.DrawNext;
-import Graphic.Basic.DrawBlock;
-import Graphic.Basic.DrawInfos;
+import Graphic.Abstract.DrawPart;
+import Graphic.Abstract.DrawGrid;
+import Graphic.Abstract.DrawNext;
+import Graphic.Abstract.DrawBlock;
+import Graphic.Abstract.DrawInfos;
+import Graphic.Abstract.DrawBackground;
+
+import Graphic.DrawBasic;
+import Graphic.DrawNice;
 
 public abstract class Draw extends JPanel
 {
@@ -19,7 +23,10 @@ public abstract class Draw extends JPanel
     protected final DrawNext draw_next;
     protected final DrawBlock draw_block;
     protected final DrawInfos draw_infos;
+    protected final DrawBackground draw_bg;
     protected final DrawPart[] parts;
+    protected int window_width;
+    protected int window_height;
 
     public Draw(Game g, DrawGrid dg, DrawNext dn, DrawBlock db, DrawInfos di)
     {
@@ -30,20 +37,24 @@ public abstract class Draw extends JPanel
         draw_next = dn;
         draw_block = db;
         draw_infos = di;
-
         parts = new DrawPart[] { dg, dn, di };
 
+        compute_size();
         set_size();
+        draw_bg = create_draw_background(window_width, window_height);
     }
 
     public void paint(Graphics g)
     {
         super.paint(g);
 
+        draw_bg.paint(g);
         draw_grid.paint(g);
         draw_next.paint(g);
         draw_infos.paint(g);
     }
+
+    public abstract DrawBackground create_draw_background(int w, int h);
 
     public void refresh()
     {
@@ -51,7 +62,7 @@ public abstract class Draw extends JPanel
         repaint(getVisibleRect());
     }
 
-    private void set_size()
+    private void compute_size()
     {
         int width = 0;
         int height = 0;
@@ -80,6 +91,27 @@ public abstract class Draw extends JPanel
                 height += part_height + (part_y - height);
         }
 
-        setPreferredSize(new Dimension(width, height));
+        window_width = width;
+        window_height = height;
+    }
+
+    protected void set_size()
+    {
+        setPreferredSize(new Dimension(window_width, window_height));
+    }
+
+    public static Draw factory(Game g)
+    {
+        Draw draw = null;
+        try
+        {
+            draw = new DrawNice(g);
+        }
+        catch (Exception e)
+        {
+            draw = new DrawBasic(g);
+        }
+
+        return draw;
     }
 }
