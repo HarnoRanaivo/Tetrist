@@ -1,5 +1,7 @@
 package Component;
 
+import java.util.Comparator;
+
 public class Point
 {
     private int abcissa;

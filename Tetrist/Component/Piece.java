@@ -32,6 +32,12 @@ public class Piece
         init();
     }
 
+    public Piece(Piece p)
+    {
+        Piece(p.id(), p.spawn_abcissa(), p.spawn_ordinate());
+        set_coordinates(p.coordinates());
+    }
+
     public void init()
     {
         rotation = spawn_rotation;
@@ -47,6 +53,22 @@ public class Piece
             current.set_abcissa(spawn_abcissa + i_x - center_x);
             current.set_ordinate(spawn_ordinate + i_y - center_y);
         }
+    }
+
+    public void set_coordinates(Point[] points)
+    {
+        for (int i = 0; i < points.length; i++)
+            coordinates[i].set(points[i]);
+    }
+
+    public int spawn_abcissa()
+    {
+        return spawn_abcissa;
+    }
+
+    public int spawn_ordinate()
+    {
+        return spawn_ordinate;
     }
 
     public int rotation()

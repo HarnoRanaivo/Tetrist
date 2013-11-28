@@ -186,4 +186,13 @@ public class Grid
     {
         return (! is_free(column, height - 1));
     }
+
+    public int highest_block(int column)
+    {
+        for (int i = height - 1; i >= 0; i++)
+            if (get(column, i) != empty_block)
+                return i;
+
+        return -1;
+    }
 }
