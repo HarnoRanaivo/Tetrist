@@ -8,6 +8,14 @@ public class Grid
     public static final int default_height = 20;
     public static final int default_width = 10;
     public static final int empty_block = -1;
+    public static final Comparator<Point> ordinates_comparator = new Comparator<Point>()
+        {
+            public int compare(Point a, Point b)
+            {
+                /* Pas de static int Integer.compare(int a, int b) en Java 6 ! */
+                return Integer.valueOf(a.ordinate()).compareTo(Integer.valueOf(b.ordinate()));
+            }
+        };
 
     private final int height;
     private final int width;
@@ -30,7 +38,7 @@ public class Grid
         init_grid();
     }
 
-    private void init_grid()
+    protected void init_grid()
     {
         grid = new int[width][height];
         for (int i =  0; i < height; i++)
@@ -63,24 +71,13 @@ public class Grid
         grid[x][y] = value;
     }
 
-    public int check_and_delete(Point[] y)
+    public int check(Point[] y)
     {
         int destroyed = 0;
 
-        Arrays.sort(y, new Comparator<Point>()
-            {
-                public int compare(Point a, Point b)
-                {
-                    /* Pas de static int Integer.compare(int a, int b) en Java 6 ! */
-                    return Integer.valueOf(a.ordinate()).compareTo(Integer.valueOf(b.ordinate()));
-                }
-                public boolean equals(Point a, Point b)
-                {
-                    return a.ordinate() == b.ordinate() && a.abcissa() == b.abcissa();
-                }
-            });
+        Arrays.sort(y, ordinates_comparator);
         for (int i = y.length - 1; i >= 0; i--)
-            if (check_line(y[i].ordinate()))
+            if (full_line(y[i].ordinate()))
             {
                 destroyed++;
                 delete_line(y[i].ordinate());
@@ -89,7 +86,7 @@ public class Grid
         return destroyed;
     }
 
-    public boolean check_line(int line)
+    public boolean full_line(int line)
     {
         for (int i = 0; i < width; i++)
             if (is_free(i, line))
@@ -115,7 +112,7 @@ public class Grid
         return (x >= 0 && x < width && y >= 0 && y < height);
     }
 
-    public void delete_line(int line)
+    protected void delete_line(int line)
     {
         for (int i = line; i < height-1; i++)
             shift_down_line(i+1);
@@ -185,14 +182,5 @@ public class Grid
     public boolean column_full(int column)
     {
         return (! is_free(column, height - 1));
-    }
-
-    public int highest_block(int column)
-    {
-        for (int i = height - 1; i >= 0; i++)
-            if (get(column, i) != empty_block)
-                return i;
-
-        return -1;
     }
 }

@@ -120,7 +120,7 @@ public class Game extends UnicastRemoteObject implements MatrixInterface
         else
         {
             grid.put(current.coordinates(), current.id());
-            int destroyed = grid.check_and_delete(current.coordinates());
+            int destroyed = grid.check(current.coordinates());
             lines += destroyed;
             score += lines_to_score(destroyed);
             compute_level();

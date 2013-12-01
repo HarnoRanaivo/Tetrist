@@ -12,17 +12,17 @@ MARVIN_SPATH = Marvin
 MARVIN_BPATH = bytecode/Marvin
 MARVIN_DPATH = doc/Marvin
 
-all : jardir tetristjar
+all : tetrist marvin
 
-tetristjar : tetristbytecodedir
-	$(COMPILER) -sourcepath $(TETRIST_SPATH) -cp $(TETRIST_BPATH) -d $(TETRIST_BPATH) $(TETRIST_SPATH)/Tetrist.java
-	cp -R $(TETRIST_SPATH)/Fonts $(TETRIST_BPATH)
-	cp -R $(TETRIST_SPATH)/Pictures $(TETRIST_BPATH)
-	rmic -classpath $(TETRIST_BPATH) -d $(TETRIST_BPATH) Component.Game
-	# echo "Main-Class: Tetrist" > manifest
-	# echo "Class-Path: bytecode/Tetrist/Component" >> manifest
-	# jar cmf manifest $(JPATH)/Tetrist.jar -C bytecode/Tetrist/ . -C Tetrist/ Pictures -C Tetrist/ Fonts
-	# rm manifest
+tetrist : tetristbytecodedir
+	@$(COMPILER) -sourcepath $(TETRIST_SPATH) -cp $(TETRIST_BPATH) -d $(TETRIST_BPATH) $(TETRIST_SPATH)/Tetrist.java
+	@cp -R $(TETRIST_SPATH)/Fonts $(TETRIST_BPATH)
+	@cp -R $(TETRIST_SPATH)/Pictures $(TETRIST_BPATH)
+	@rmic -classpath $(TETRIST_BPATH) -d $(TETRIST_BPATH) Component.Game
+
+marvin : marvinbytecodedir tetrist
+	@$(COMPILER) -sourcepath $(MARVIN_SPATH) -cp $(MARVIN_BPATH) -d $(MARVIN_BPATH) $(MARVIN_BPATH)/Marvin.java
+	@cp $(TETRIST_BPATH)/Component/Game_Stub.class $(MARVIN_BPATH)/Component/Game_Stub.class
 
 tetristdoc :
 	@javadoc -sourcepath $(TETRIST_SPATH) -classpath $(TETRIST_BPATH) -d $(TETRIST_DPATH) $(TETRIST_SPATH)/*.java \

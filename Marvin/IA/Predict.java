@@ -9,7 +9,7 @@ import Component.Piece;
 public class Predict
 {
     private Grid grid_buffer;
-    private Point[] points_buffer;
+    private Point[] points_buffer = new Point[4];
     private Getter abcissa_getter = new Getter(true);
     private Getter ordinate_getter = new Getter(false);
     private IntComp lower_than = new IntComp(true);
@@ -18,31 +18,62 @@ public class Predict
     public Predict()
     {
         grid_buffer = new Grid();
-        points_buffer = new Point[4];
         for (int i = 0; i < points_buffer.length; i++)
             points_buffer[i] = new Point();
     }
 
-    public Vector<Point[]> possible_falls(Grid grid, Piece piece)
+    public Point[][][] possible_falls(Grid grid, Piece piece)
     {
-        Vector<Integer> columns = possible_columns(grid, piece);
+        Vector<Point[]>[] falls = new Vector<Point[]>[4];
+        int[] blocks = grid.highest_blocks();
+        int[] columns = possible_columns(grid, piece, blocks);
         Piece piece_buffer = new Piece(piece);
-        Point[] initial_coordinates = piece.coordinates();
 
-        return null;
+        for (int i = 0; i < 4; i++)
+        {
+            falls[i] = new Vector<Point[]>();
+            Point[] current_coordinates = piece_buffer.coordinates();
+            int left = min_abcissa(current_coordinates);
+            int right = max_abcissa(current_coordinates);
+            int piece_width = right - left;
+            int piece_bottom = min_ordinate(current_coordinates);
+            int max_shift = columns[1] - columns[0] - piece_width;
+
+            piece_buffer.left(left - columns[0]);
+            for (int j = 0; j < max_shift; j++)
+            {
+                int current_left = min_abcissa(current_coordinates);
+                int max_height = blocks[current_left];
+                for (int k = 0; k < 4; k++)
+                    if (blocks[current_left+k] > max_height)
+                        max_height = blocks[current_left+k];
+
+                int max_fall = piece_bottom - max_height;
+                piece_buffer.fall(max_fall);
+                Point[] candidates = new Point[4];
+                for (int m = 0; m < 4; m++)
+                    candidates = new Point(piece_buffer.coordinates()[m]);
+                falls[i].add(candidates);
+                piece_buffer.fly(max_fall);
+                piece_buffer.right();
+            }
+            piece_buffer.left(max_shift + 1);
+            piece_buffer.rotate();
+        }
+
+        Point[][][] result = new Point[4][][];
+        for (int i = 0; i < 4; i++)
+        {
+            result[i] = falls[i].toArray(new Point[falls[i].size()][]);
+        }
+
+        return result;
     }
 
     private void copy_points(Point[] points)
     {
         for (int i = 0; i < points.length(); i++)
             points_buffer[i].set(points[i]);
-    }
-
-    private void copy_grid(Grid grid)
-    {
-        for (int i = 0; i < grid.width(); i++)
-            for (int j = 0; i < grid.height(); j++)
-                grid_buffer.put(i, j, grid.get(i, j));
     }
 
     private int min_max(Point[] points, IntComp comparator, Getter getter)
@@ -79,60 +110,59 @@ public class Predict
         return min_max(points, lower_than, ordinate_getter);
     }
 
-    Vector<Integer> possible_columns(Grid grid, Piece piece)
+    int[] possible_columns(Grid grid, Piece piece, int[] highest)
     {
-        int left = 0;
-        int right = 0;
-        Vector<Integer> possible = new Vector<Integer>();
         Point[] coordinates = piece.coordinates();
         int piece_bottom = min_ordinate(coordinates);
         int piece_left = min_abcissa(coordinates);
         int piece_right = max_abcissa(coordinates);
+        int[] results = new results[3];
+        results[0] = piece_left;
+        results[1] = piece_right;
 
-        for (int i = 0; i < piece_left; i++)
-            if (grid.highest_block(i) < piece_bottom)
-                possible.add(i);
+        for (int i = piece_left-1; i >= 0 && highest[i] < piece_bottom; i--)
+            left--;
 
-        for (int i = piece_right + 1; i < grid.width(); i++)
-            if (grid.highest_block(i) < piece_bottom)
-                possible.add(i);
+        for (int i = piece_right+1; i <= grid.width() && highest[i] < piece_bottom; i++)
+            right++;
 
-        return possible;
+        return results;
     }
 
-    class Getter
+}
+
+class Getter
+{
+    boolean get_abcissa;
+
+    Getter(boolean abcissa)
     {
-        boolean get_abcissa;
-
-        Getter(boolean abcissa)
-        {
-            get_abcissa = abcissa;
-        }
-
-        int get_point_value(Point point)
-        {
-            if (get_abcissa)
-                return point.abcissa();
-            else
-                return point.ordinate();
-        }
+        get_abcissa = abcissa;
     }
 
-    class IntComp
+    int get_point_value(Point point)
     {
-        boolean lower;
+        if (get_abcissa)
+            return point.abcissa();
+        else
+            return point.ordinate();
+    }
+}
 
-        IntComp(boolean low)
-        {
-            lower = low;
-        }
+class IntComp
+{
+    boolean lower;
 
-        boolean compare(int a, int b)
-        {
-            if (lower)
-                return a < b;
-            else
-                return a >= b;
-        }
+    IntComp(boolean low)
+    {
+        lower = low;
+    }
+
+    boolean compare(int a, int b)
+    {
+        if (lower)
+            return a < b;
+        else
+            return a >= b;
     }
 }

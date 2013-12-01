@@ -34,7 +34,7 @@ public class Piece
 
     public Piece(Piece p)
     {
-        Piece(p.id(), p.spawn_abcissa(), p.spawn_ordinate());
+        this(p.id(), p.spawn_abcissa(), p.spawn_ordinate());
         set_coordinates(p.coordinates());
     }
 
@@ -118,17 +118,42 @@ public class Piece
 
     public void fall()
     {
-        shift(0, -1);
+        fall(1);
     }
 
     public void left()
     {
-        shift(-1, 0);
+        left(1);
     }
 
     public void right()
     {
-        shift(1, 0);
+        right(1);
+    }
+
+    public void fly()
+    {
+        fly(1);
+    }
+
+    public void left(int columns)
+    {
+        shift(-columns, 0);
+    }
+
+    public void right(int columns)
+    {
+        shift(columns, 0);
+    }
+
+    public void fall(int lines)
+    {
+        shift(0, -lines);
+    }
+
+    public void fly(int lines)
+    {
+        shift(0, lines);
     }
 
     private void shift(int horizontal_shift, int vertical_shift)
