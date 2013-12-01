@@ -1,7 +1,5 @@
 package Component;
 
-import java.util.Comparator;
-
 public class Point
 {
     private int abcissa;
@@ -14,7 +12,12 @@ public class Point
 
     public Point()
     {
-        set(0, 0);
+        this(0, 0);
+    }
+
+    public Point(Point point)
+    {
+        this(point.abcissa(), point.ordinate());
     }
 
     public void set(Point point)
@@ -46,12 +49,12 @@ public class Point
 
     public void shift_abcissa(int shift)
     {
-        abcissa += shift;
+        set_abcissa(abcissa() + shift);
     }
 
     public void shift_ordinate(int shift)
     {
-        ordinate += shift;
+        set_ordinate(ordinate() + shift);
     }
 
     public int abcissa()
@@ -62,5 +65,19 @@ public class Point
     public int ordinate()
     {
         return ordinate;
+    }
+
+    public boolean equals(Object obj)
+    {
+        boolean result;
+        if (obj instanceof Point)
+        {
+            Point point = (Point) obj;
+            result = abcissa() == point.abcissa() && ordinate() == point.ordinate();
+        }
+        else
+            result = false;
+
+        return result;
     }
 }
