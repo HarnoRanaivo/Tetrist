@@ -1,7 +1,14 @@
 package Component;
 
+import java.util.Comparator;
+
 public class Point
 {
+    public static final Comparator<Point> ABCISSA_COMPARATOR = new PointAbcissaComparator();
+    public static final Comparator<Point> ORDINATE_COMPARATOR = new PointOrdinateComparator();
+    public static final PointValueGetter ORDINATE_GETTER = new PointOrdinateGetter();
+    public static final PointValueGetter ABCISSA_GETTER = new PointAbcissaGetter();
+
     private int abcissa;
     private int ordinate;
 
@@ -79,5 +86,38 @@ public class Point
             result = false;
 
         return result;
+    }
+}
+
+class PointAbcissaComparator implements Comparator<Point>
+{
+    public int compare(Point a, Point b)
+    {
+        /* Pas de static int Integer.compare(int a, int b) en Java 6 ! */
+        return Integer.valueOf(a.abcissa()).compareTo(Integer.valueOf(b.abcissa()));
+    }
+}
+
+class PointOrdinateComparator implements Comparator<Point>
+{
+    public int compare(Point a, Point b)
+    {
+        return Integer.valueOf(a.ordinate()).compareTo(Integer.valueOf(b.ordinate()));
+    }
+}
+
+class PointAbcissaGetter extends PointValueGetter
+{
+    public int get_value(Point point)
+    {
+        return point.abcissa();
+    }
+}
+
+class PointOrdinateGetter extends PointValueGetter
+{
+    public int get_value(Point point)
+    {
+        return point.ordinate();
     }
 }

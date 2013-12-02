@@ -8,14 +8,6 @@ public class Grid
     public static final int DEFAULT_HEIGHT = 20;
     public static final int DEFAULT_WIDTH = 10;
     public static final int EMPTY_BLOCK = -1;
-    public static final Comparator<Point> ordinates_comparator = new Comparator<Point>()
-        {
-            public int compare(Point a, Point b)
-            {
-                /* Pas de static int Integer.compare(int a, int b) en Java 6 ! */
-                return Integer.valueOf(a.ordinate()).compareTo(Integer.valueOf(b.ordinate()));
-            }
-        };
 
     private final int height;
     private final int width;
@@ -75,7 +67,7 @@ public class Grid
     {
         int destroyed = 0;
 
-        Arrays.sort(y, ordinates_comparator);
+        Arrays.sort(y, Point.ORDINATE_COMPARATOR);
         for (int i = y.length - 1; i >= 0; i--)
             if (full_line(y[i].ordinate()))
             {
@@ -166,22 +158,22 @@ public class Grid
     public boolean full()
     {
         for (int i = 0; i < width; i++)
-            if (column_full(i))
+            if (full_column(i))
                 return true;
 
         return false;
     }
 
-    public boolean column_full(Point[] coordinates)
+    public boolean full_column(Point[] coordinates)
     {
         for (Point point : coordinates)
-            if (column_full(point.ordinate()))
+            if (full_column(point.ordinate()))
                 return true;
 
         return false;
     }
 
-    public boolean column_full(int column)
+    public boolean full_column(int column)
     {
         return (! is_free(column, height - 1));
     }

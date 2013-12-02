@@ -10,8 +10,6 @@ public class Predict
 {
     private Grid grid_buffer;
     private Point[] points_buffer = new Point[4];
-    private Getter abcissa_getter = new Getter(true);
-    private Getter ordinate_getter = new Getter(false);
     private IntComp lower_than = new IntComp(true);
     private IntComp greater_than = new IntComp(false);
 
@@ -76,13 +74,13 @@ public class Predict
             points_buffer[i].set(points[i]);
     }
 
-    private int min_max(Point[] points, IntComp comparator, Getter getter)
+    private int min_max(Point[] points, IntComp comparator, PointValueGetter getter)
     {
         int value = getter.get_point_value(points[0]);
 
         for (Point point : points)
         {
-            int candidate = getter.get_point_value(point);
+            int candidate = getter.get_value(point);
             if (comparator.compare(value, candidate))
                     value = candidate;
         }
@@ -92,22 +90,22 @@ public class Predict
 
     private int min_abcissa(Point[] points)
     {
-        return min_max(points, greater_than, abcissa_getter);
+        return min_max(points, greater_than, Point.ABCISSA_GETTER);
     }
 
     private int max_abcissa(Point[] points)
     {
-        return min_max(points, lower_than, abcissa_getter);
+        return min_max(points, lower_than, Point.ABCISSA_GETTER);
     }
 
     private int min_ordinate(Point[] points)
     {
-        return min_max(points, greater_than, ordinate_getter);
+        return min_max(points, greater_than, Point.ORDINATE_GETTER);
     }
 
     private int max_ordinate(Point[] points)
     {
-        return min_max(points, lower_than, ordinate_getter);
+        return min_max(points, lower_than, Point.ORDINATE_GETTER);
     }
 
     int[] possible_columns(Grid grid, Piece piece, int[] highest)
@@ -129,24 +127,6 @@ public class Predict
         return results;
     }
 
-}
-
-class Getter
-{
-    boolean get_abcissa;
-
-    Getter(boolean abcissa)
-    {
-        get_abcissa = abcissa;
-    }
-
-    int get_point_value(Point point)
-    {
-        if (get_abcissa)
-            return point.abcissa();
-        else
-            return point.ordinate();
-    }
 }
 
 class IntComp
