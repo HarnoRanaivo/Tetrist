@@ -5,9 +5,9 @@ import java.util.Comparator;
 
 public class Grid
 {
-    public static final int default_height = 20;
-    public static final int default_width = 10;
-    public static final int empty_block = -1;
+    public static final int DEFAULT_HEIGHT = 20;
+    public static final int DEFAULT_WIDTH = 10;
+    public static final int EMPTY_BLOCK = -1;
     public static final Comparator<Point> ordinates_comparator = new Comparator<Point>()
         {
             public int compare(Point a, Point b)
@@ -24,8 +24,8 @@ public class Grid
 
     public Grid()
     {
-        height = default_height;
-        width = default_width;
+        height = DEFAULT_HEIGHT;
+        width = DEFAULT_WIDTH;
 
         init_grid();
     }
@@ -106,9 +106,11 @@ public class Grid
 
     public boolean in_bonds(Point point)
     {
-        int x = point.abcissa();
-        int y = point.ordinate();
+        return in_bonds(point.abcissa(), point.ordinate());
+    }
 
+    public boolean in_bonds(int x, int y)
+    {
         return (x >= 0 && x < width && y >= 0 && y < height);
     }
 
@@ -129,7 +131,7 @@ public class Grid
     protected void empty_line(int line)
     {
         for (int i = 0; i < width; i++)
-            put(i, line, empty_block);
+            put(i, line, EMPTY_BLOCK);
     }
 
     public int get(Point point)
@@ -158,7 +160,7 @@ public class Grid
 
     public boolean is_free(int x, int y)
     {
-        return get(x, y) == empty_block;
+        return get(x, y) == EMPTY_BLOCK;
     }
 
     public boolean full()
