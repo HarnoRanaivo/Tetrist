@@ -7,11 +7,26 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 
+import java.util.Comparator;
 import Component.Point;
 
 @RunWith(JUnit4.class)
 public class TestPoint
 {
+    @Test
+    public void test_equals()
+    {
+        int x_2 = 2; int y_2 = 3;
+        Point point_1 = new Point();
+        Point point_2 = new Point(x_2, y_2);
+
+        assertTrue(point_1.equals(new Point()));
+        assertTrue(point_2.equals(new Point(x_2, y_2)));
+        assertTrue(point_2.equals(new Point(point_2)));
+
+        assertFalse(point_1.equals(point_2));
+    }
+
     @Test
     public void test_getters()
     {
@@ -40,7 +55,7 @@ public class TestPoint
     }
 
     @Test
-    public void test_setters()
+    public void test_set()
     {
         int x_1 = 0; int y_1 = 0;
         int x_2 = 2; int y_2 = 9;
@@ -71,6 +86,28 @@ public class TestPoint
         assertEquals(y_4, point_4.ordinate());
         assertEquals(y_5, point_5.ordinate());
 
+        Point point_6 = new Point();
+        Point point_7 = new Point();
+        Point point_8 = new Point();
+        Point point_9 = new Point();
+        Point point_10 = new Point();
+
+        point_6.set(point_1);
+        point_7.set(point_2);
+        point_8.set(point_3);
+        point_9.set(point_4);
+        point_10.set(point_5);
+
+        assertEquals(point_1, point_6);
+        assertEquals(point_2, point_7);
+        assertEquals(point_3, point_8);
+        assertEquals(point_4, point_9);
+        assertEquals(point_5, point_10);
+    }
+
+    @Test
+    public void test_set_abcissa()
+    {
         int x_6 = 0;
         int x_7 = 180;
         int x_8 = -121;
@@ -88,7 +125,11 @@ public class TestPoint
         assertEquals(0, point_7.ordinate());
         assertEquals(x_8, point_8.abcissa());
         assertEquals(0, point_8.ordinate());
+    }
 
+    @Test
+    public void test_set_ordinate()
+    {
         int y_9 = 0;
         int y_10 = 180;
         int y_11 = -121;
@@ -159,17 +200,83 @@ public class TestPoint
     }
 
     @Test
-    public void test_equals()
+    public void test_abcissa_getter()
     {
-        int x_2 = 2; int y_2 = 3;
+        int x_1 = 0; int y_1 = 0;
+        int x_2 = 2; int y_2 = 9;
+        int x_3 = -1; int y_3 = -8;
+        int x_4 = -3; int y_4 = 10;
+        int x_5 = 15; int y_5 = -6;
         Point point_1 = new Point();
         Point point_2 = new Point(x_2, y_2);
+        Point point_3 = new Point(x_3, y_3);
+        Point point_4 = new Point(x_4, y_4);
+        Point point_5 = new Point(x_5, y_5);
 
-        assertTrue(point_1.equals(new Point()));
-        assertTrue(point_2.equals(new Point(x_2, y_2)));
-        assertTrue(point_2.equals(new Point(point_2)));
+        assertEquals(x_1, Point.ABCISSA_GETTER.get_value(point_1));
+        assertEquals(x_2, Point.ABCISSA_GETTER.get_value(point_2));
+        assertEquals(x_3, Point.ABCISSA_GETTER.get_value(point_3));
+        assertEquals(x_4, Point.ABCISSA_GETTER.get_value(point_4));
+        assertEquals(x_5, Point.ABCISSA_GETTER.get_value(point_5));
+    }
 
-        assertFalse(point_1.equals(point_2));
+    @Test
+    public void test_ordinate_getter()
+    {
+        int x_1 = 0; int y_1 = 0;
+        int x_2 = 2; int y_2 = 9;
+        int x_3 = -1; int y_3 = -8;
+        int x_4 = -3; int y_4 = 10;
+        int x_5 = 15; int y_5 = -6;
+        Point point_1 = new Point();
+        Point point_2 = new Point(x_2, y_2);
+        Point point_3 = new Point(x_3, y_3);
+        Point point_4 = new Point(x_4, y_4);
+        Point point_5 = new Point(x_5, y_5);
+
+        assertEquals(y_1, Point.ORDINATE_GETTER.get_value(point_1));
+        assertEquals(y_2, Point.ORDINATE_GETTER.get_value(point_2));
+        assertEquals(y_3, Point.ORDINATE_GETTER.get_value(point_3));
+        assertEquals(y_4, Point.ORDINATE_GETTER.get_value(point_4));
+        assertEquals(y_5, Point.ORDINATE_GETTER.get_value(point_5));
+    }
+
+    @Test
+    public void test_abcissa_comparator()
+    {
+        int x_1 = 0; int y_1 = 0;
+        int x_2 = 2; int y_2 = 9;
+        int x_3 = -1; int y_3 = -8;
+        Point point_1 = new Point();
+        Point point_2 = new Point(x_2, y_2);
+        Point point_3 = new Point(x_3, y_3);
+
+        int c_1_1 = Integer.valueOf(x_1).compareTo(Integer.valueOf(x_1));
+        int c_1_2 = Integer.valueOf(x_1).compareTo(Integer.valueOf(x_2));
+        int c_1_3 = Integer.valueOf(x_1).compareTo(Integer.valueOf(x_3));
+
+        assertEquals(c_1_1, Point.ABCISSA_COMPARATOR.compare(point_1, point_1));
+        assertEquals(c_1_2, Point.ABCISSA_COMPARATOR.compare(point_1, point_2));
+        assertEquals(c_1_3, Point.ABCISSA_COMPARATOR.compare(point_1, point_3));
+    }
+
+    @Test
+    public void test_ordinate_comparator()
+    {
+        int x_1 = 0; int y_1 = 0;
+        int x_2 = 2; int y_2 = 9;
+        int x_3 = -1; int y_3 = -8;
+        Point point_1 = new Point();
+        Point point_2 = new Point(x_2, y_2);
+        Point point_3 = new Point(x_3, y_3);
+
+        int c_1_1 = Integer.valueOf(y_1).compareTo(Integer.valueOf(y_1));
+        int c_1_2 = Integer.valueOf(y_1).compareTo(Integer.valueOf(y_2));
+        int c_1_3 = Integer.valueOf(y_1).compareTo(Integer.valueOf(y_3));
+
+        assertEquals(c_1_1, Point.ORDINATE_COMPARATOR.compare(point_1, point_1));
+        assertEquals(c_1_2, Point.ORDINATE_COMPARATOR.compare(point_1, point_2));
+        assertEquals(c_1_3, Point.ORDINATE_COMPARATOR.compare(point_1, point_3));
     }
 
 }
