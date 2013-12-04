@@ -28,7 +28,7 @@ public class TestPoint
     }
 
     @Test
-    public void test_getters()
+    public void test_abcissa()
     {
         int x_1 = 0; int y_1 = 0;
         int x_2 = 2; int y_2 = 9;
@@ -46,6 +46,21 @@ public class TestPoint
         assertEquals(x_3, point_3.abcissa());
         assertEquals(x_4, point_4.abcissa());
         assertEquals(x_5, point_5.abcissa());
+    }
+
+    @Test
+    public void test_ordinate()
+    {
+        int x_1 = 0; int y_1 = 0;
+        int x_2 = 2; int y_2 = 9;
+        int x_3 = -1; int y_3 = -8;
+        int x_4 = -3; int y_4 = 10;
+        int x_5 = 15; int y_5 = -6;
+        Point point_1 = new Point();
+        Point point_2 = new Point(x_2, y_2);
+        Point point_3 = new Point(x_3, y_3);
+        Point point_4 = new Point(x_4, y_4);
+        Point point_5 = new Point(x_5, y_5);
 
         assertEquals(y_1, point_1.ordinate());
         assertEquals(y_2, point_2.ordinate());
@@ -150,7 +165,7 @@ public class TestPoint
     }
 
     @Test
-    public void test_shifters()
+    public void test_shift()
     {
         int x_1 = 0; int y_1 = 0;
         int x_2 = 2; int y_2 = 9;
@@ -197,6 +212,50 @@ public class TestPoint
         assertEquals(y_5 + s_y_5, point_5.ordinate());
         assertEquals(y_6 + s_y_6, point_6.ordinate());
         assertEquals(y_7 + s_y_7, point_7.ordinate());
+    }
+
+    @Test
+    public void test_shift_abcissa()
+    {
+        int x_1 = 0; int y_1 = 0;
+        int x_2 = 2; int y_2 = 9;
+        int x_3 = -3; int y_3 = 10;
+        Point point_1 = new Point();
+        Point point_2 = new Point(x_2, y_2);
+        Point point_3 = new Point(x_3, y_3);
+
+        int s_x_1 = 0;
+        int s_x_2 = 10;
+        int s_x_3 = -381;
+        point_1.shift_abcissa(s_x_1);
+        point_2.shift_abcissa(s_x_2);
+        point_3.shift_abcissa(s_x_3);
+
+        assertEquals(x_1 + s_x_1, point_1.abcissa());
+        assertEquals(x_2 + s_x_2, point_2.abcissa());
+        assertEquals(x_3 + s_x_3, point_3.abcissa());
+    }
+
+    @Test
+    public void test_shift_ordinate()
+    {
+        int x_1 = 0; int y_1 = 0;
+        int x_2 = 15; int y_2 = -6;
+        int x_3 = -1; int y_3 = -8;
+        Point point_1 = new Point();
+        Point point_2 = new Point(x_2, y_2);
+        Point point_3 = new Point(x_3, y_3);
+
+        int s_y_1 = 0;
+        int s_y_2 = -482;
+        int s_y_3 = 9784;
+        point_1.shift_ordinate(s_y_1);
+        point_2.shift_ordinate(s_y_2);
+        point_3.shift_ordinate(s_y_3);
+
+        assertEquals(y_1 + s_y_1, point_1.ordinate());
+        assertEquals(y_2 + s_y_2, point_2.ordinate());
+        assertEquals(y_3 + s_y_3, point_3.ordinate());
     }
 
     @Test
@@ -278,5 +337,4 @@ public class TestPoint
         assertEquals(c_1_2, Point.ORDINATE_COMPARATOR.compare(point_1, point_2));
         assertEquals(c_1_3, Point.ORDINATE_COMPARATOR.compare(point_1, point_3));
     }
-
 }

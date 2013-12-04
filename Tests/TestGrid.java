@@ -29,6 +29,56 @@ public class TestGrid
     }
 
     @Test
+    public void test_equals()
+    {
+        Grid grid_1 = new Grid();
+        Grid grid_2 = new Grid(30, 5);
+
+        assertTrue("Failure - equals(Object): ", grid_1.equals(grid_1));
+        assertTrue("Failure - equals(Object): ", grid_2.equals(grid_2));
+        assertFalse("Failure - equals(Object): ", grid_1.equals(grid_2));
+
+        Grid grid_3 = new Grid();
+        Grid grid_4 = new Grid();
+
+        for (int i = 0; i < grid_1.width(); i++)
+            for (int j = 0; j < grid_1.height(); j++)
+            {
+                grid_1.put(i, j, i*j);
+                grid_3.put(i, j, i*j);
+                grid_4.put(i, j, i*j);
+            }
+        grid_4.put(grid_1.width()/2, grid_1.height()/2, Grid.EMPTY_BLOCK);
+
+        assertTrue("Failure - equals(Object): ", grid_1.equals(grid_1));
+        assertTrue("Failure - equals(Object): ", grid_3.equals(grid_3));
+        assertTrue("Failure - equals(Object): ", grid_4.equals(grid_4));
+        assertTrue("Failure - equals(Object): ", grid_1.equals(grid_3));
+        assertFalse("Failure - equals(Object): ", grid_4.equals(grid_1));
+        assertFalse("Failure - equals(Object): ", grid_4.equals(grid_3));
+    }
+
+    @Test
+    public void test_copy()
+    {
+        Grid grid_1 = new Grid();
+        Grid grid_2 = new Grid(30, 5);
+
+        grid_1.copy(grid_2);
+        assertFalse("Failure - copy(Grid): ", grid_1.equals(grid_2));
+
+        for (int i = 0; i < grid_1.width(); i += 2)
+            for (int j = 0; j < grid_1.height(); j += 3)
+                grid_1.put(i, j, i*j);
+
+        Grid grid_3 = new Grid();
+
+        assertFalse("Failure - copy(Grid): ", grid_1.equals(grid_3));
+        grid_3.copy(grid_1);
+        assertTrue("Failure - copy(Grid): ", grid_1.equals(grid_3));
+    }
+
+    @Test
     public void test_get()
     {
         Grid grid = new Grid();
@@ -172,7 +222,7 @@ public class TestGrid
             for (int i = 0; i < grid.height(); i++)
             {
                 grid.put(column, i, value);
-                full_columns_points.add(new Point(i, column));
+                full_columns_points.add(new Point(column, i));
             }
             assertTrue("Failure - full_column(int): ", grid.full_column(column));
         }
@@ -184,8 +234,8 @@ public class TestGrid
         {
             for (int i = 0; i < grid.height() - 1; i++)
             {
-                grid.put(9, i, value);
-                not_full_columns_points.add(new Point(i, column));
+                grid.put(column, i, value);
+                not_full_columns_points.add(new Point(column, i));
             }
             assertFalse("Failure - full_column(int): ", grid.full_column(column));
         }
@@ -210,5 +260,74 @@ public class TestGrid
         assertFalse("Failure - full(): ", grid_1.full());
         assertFalse("Failure - full(): ", grid_2.full());
         assertTrue("Failure - full(): ", grid_3.full());
+    }
+
+    @Test
+    public void test_full_line()
+    {
+        Grid grid = new Grid();
+        int value = 2;
+        int[] full_lines = { 1, 2, 6 };
+        Vector<Point> full_lines_points = new Vector<Point>();
+
+        for (int line : full_lines)
+        {
+            for (int i = 0; i < grid.width(); i++)
+            {
+                grid.put(i, line, value);
+                full_lines_points.add(new Point(i, line));
+            }
+            assertTrue("Failure - full_line(int): ", grid.full_line(line));
+        }
+        assertTrue("Failure - full_line(Point[]): ", grid.full_line(full_lines_points.toArray(new Point[0])));
+
+        int[] not_full_lines = { 9, 5 };
+        Vector<Point> not_full_lines_points = new Vector<Point>();
+        for (int line : not_full_lines)
+        {
+            for (int i = 0; i < grid.width() - 1; i++)
+            {
+                grid.put(i, line, value);
+                not_full_lines_points.add(new Point(i, line));
+            }
+            assertFalse("Failure - full_line(int): ", grid.full_line(line));
+        }
+        assertFalse("Failure - full_line(Point[]): ", grid.full_line(not_full_lines_points.toArray(new Point[0])));
+    }
+
+    @Test
+    public void test_check()
+    {
+        Grid grid_1 = new Grid();
+
+        for (int i = 0; i < grid_1.width(); i++)
+            for (int j = 0; j < 2; j++)
+                grid_1.put(i, j, i*j);
+
+        Grid grid_2 = new Grid(grid_1);
+        Point[] points_1 = { new Point(0, 0), new Point(0, 1) };
+        int destroyed_1 = grid_1.check(points_1);
+
+        assertEquals("Failure - check(): ", 2, destroyed_1);
+        assertFalse("Failure - check(): ", grid_1.equals(grid_2));
+        for (int i = 0; i < grid_1.height(); i++)
+            assertFalse("Failure - check(): ", grid_1.full_line(i));
+
+        Grid grid_3 = new Grid();
+        Point[] points_3 = new Point[grid_3.height()];
+        for (int j = 0; j < grid_3.height(); j++)
+        {
+            points_3[j] = new Point(0, j);
+            for (int i = 0; i < grid_3.width() - 1; i++)
+                grid_3.put(i, j, i*j);
+        }
+
+        Grid grid_4 = new Grid(grid_3);
+        int destroyed_3 = grid_3.check(points_3);
+
+        assertEquals("Failure - check(): ", 0, destroyed_3);
+        assertTrue("Failure - check(): ", grid_3.equals(grid_4));
+        for (int i = 0; i < grid_3.height(); i++)
+            assertFalse("Failure - check(): ", grid_3.full_line(i));
     }
 }
