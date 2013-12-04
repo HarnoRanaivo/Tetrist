@@ -4,7 +4,10 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
     TestPoint.class,
-    TestGrid.class
+    TestGrid.class,
+    TestPiece.class,
+    TestGame.class,
+    TestGridIA.class,
 })
 
 
