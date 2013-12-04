@@ -27,49 +27,49 @@ public class Point
         this(point.abcissa(), point.ordinate());
     }
 
-    public void set(Point point)
+    public synchronized void set(Point point)
     {
         set(point.abcissa(), point.ordinate());
     }
 
-    public void set(int x, int y)
+    public synchronized void set(int x, int y)
     {
         set_abcissa(x);
         set_ordinate(y);
     }
 
-    public void set_abcissa(int x)
+    public synchronized void set_abcissa(int x)
     {
         abcissa = x;
     }
 
-    public void set_ordinate(int y)
+    public synchronized void set_ordinate(int y)
     {
         ordinate = y;
     }
 
-    public void shift(int horizontal_shift, int vertical_shift)
+    public synchronized void shift(int horizontal_shift, int vertical_shift)
     {
         shift_abcissa(horizontal_shift);
         shift_ordinate(vertical_shift);
     }
 
-    public void shift_abcissa(int shift)
+    public synchronized void shift_abcissa(int shift)
     {
         set_abcissa(abcissa() + shift);
     }
 
-    public void shift_ordinate(int shift)
+    public synchronized void shift_ordinate(int shift)
     {
         set_ordinate(ordinate() + shift);
     }
 
-    public int abcissa()
+    public final int abcissa()
     {
         return abcissa;
     }
 
-    public int ordinate()
+    public final int ordinate()
     {
         return ordinate;
     }

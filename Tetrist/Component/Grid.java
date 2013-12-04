@@ -22,48 +22,48 @@ public class Grid
         init_grid();
     }
 
-    public Grid(int width, int height)
+    public Grid(int w, int h)
     {
-        this.height = height;
-        this.width = width;
+        height = h;
+        width = w;
 
         init_grid();
     }
 
-    protected void init_grid()
+    protected synchronized void init_grid()
     {
         grid = new int[width][height];
         for (int i =  0; i < height; i++)
             empty_line(i);
     }
 
-    public int height()
+    public final int height()
     {
         return height;
     }
 
-    public int width()
+    public final int width()
     {
         return width;
     }
 
-    public void put(Point[] coordinates, int value)
+    public synchronized void put(Point[] coordinates, int value)
     {
         for (Point point : coordinates)
             put(point, value);
     }
 
-    public void put(Point point, int value)
+    public synchronized void put(Point point, int value)
     {
         put(point.abcissa(), point.ordinate(), value);
     }
 
-    public void put(int x, int y, int value)
+    public synchronized void put(int x, int y, int value)
     {
         grid[x][y] = value;
     }
 
-    public int check(Point[] y)
+    public synchronized int check(Point[] y)
     {
         int destroyed = 0;
 
@@ -106,7 +106,7 @@ public class Grid
         return (x >= 0 && x < width && y >= 0 && y < height);
     }
 
-    protected void delete_line(int line)
+    protected synchronized void delete_line(int line)
     {
         for (int i = line; i < height-1; i++)
             shift_down_line(i+1);
@@ -114,13 +114,13 @@ public class Grid
         empty_line(height-1);
     }
 
-    protected void shift_down_line(int line)
+    protected synchronized void shift_down_line(int line)
     {
         for (int i = 0; i < width; i++)
             put(i, line-1, get(i, line));
     }
 
-    protected void empty_line(int line)
+    protected synchronized void empty_line(int line)
     {
         for (int i = 0; i < width; i++)
             put(i, line, EMPTY_BLOCK);
