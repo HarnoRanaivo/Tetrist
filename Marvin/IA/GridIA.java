@@ -95,10 +95,11 @@ public class GridIA extends Grid
 
     public void copy(Grid grid)
     {
-        blocks_count = 0;
-        for (int i = 0; i < grid.width(); i++)
-            for (int j = 0; i < grid.height(); j++)
-                put(i, j, grid.get(i, j));
+        if (grid.width() == width() && grid.height() == height())
+        {
+            blocks_count = 0;
+            super.copy(grid);
+        }
     }
 
     public int blocks_count()

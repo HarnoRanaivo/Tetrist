@@ -30,6 +30,12 @@ public class Grid
         init_grid();
     }
 
+    public Grid(Grid grid)
+    {
+        this(grid.width(), grid.height());
+        copy(grid);
+    }
+
     protected synchronized void init_grid()
     {
         grid = new int[width][height];
@@ -63,6 +69,14 @@ public class Grid
         grid[x][y] = value;
     }
 
+    public synchronized void copy(Grid grid)
+    {
+        if (grid.width() == width && grid.height() == height)
+            for (int i = 0; i < width; i++)
+                for (int j = 0; j < height; j++)
+                    put(i, j, grid.get(i, j));
+    }
+
     public synchronized int check(Point[] y)
     {
         int destroyed = 0;
@@ -76,6 +90,15 @@ public class Grid
             }
 
         return destroyed;
+    }
+
+    public boolean full_line(Point[] coordinates)
+    {
+        for (Point point : coordinates)
+            if (full_line(point.ordinate()))
+                return true;
+
+        return false;
     }
 
     public boolean full_line(int line)
@@ -167,7 +190,7 @@ public class Grid
     public boolean full_column(Point[] coordinates)
     {
         for (Point point : coordinates)
-            if (full_column(point.ordinate()))
+            if (full_column(point.abcissa()))
                 return true;
 
         return false;
@@ -177,4 +200,24 @@ public class Grid
     {
         return (! is_free(column, height - 1));
     }
+
+    public boolean equals(Object obj)
+    {
+        boolean result = false;
+
+        if (obj instanceof Grid)
+        {
+            Grid grid = (Grid) obj;
+
+            result = grid.width() == width && grid.height() == height;
+
+            for (int i = 0; result && i < width; i++)
+                for (int j = 0; result && j < height; j++)
+                    if (get(i, j) != grid.get(i, j))
+                        result = false;
+        }
+
+        return result;
+    }
+
 }
