@@ -10,8 +10,8 @@ public class Predict
 {
     private Grid grid_buffer;
     private Point[] points_buffer = new Point[4];
-    private IntComp lower_than = new IntComp(true);
-    private IntComp greater_than = new IntComp(false);
+    private IntComp LOWER = new Lower();
+    private IntComp GREATER = new Greater();
 
     public Predict()
     {
@@ -90,22 +90,22 @@ public class Predict
 
     private int min_abcissa(Point[] points)
     {
-        return min_max(points, greater_than, Point.ABCISSA_GETTER);
+        return min_max(points, GREATER, Point.ABCISSA_GETTER);
     }
 
     private int max_abcissa(Point[] points)
     {
-        return min_max(points, lower_than, Point.ABCISSA_GETTER);
+        return min_max(points, LOWER, Point.ABCISSA_GETTER);
     }
 
     private int min_ordinate(Point[] points)
     {
-        return min_max(points, greater_than, Point.ORDINATE_GETTER);
+        return min_max(points, GREATER, Point.ORDINATE_GETTER);
     }
 
     private int max_ordinate(Point[] points)
     {
-        return min_max(points, lower_than, Point.ORDINATE_GETTER);
+        return min_max(points, LOWER, Point.ORDINATE_GETTER);
     }
 
     int[] possible_columns(Grid grid, Piece piece, int[] highest)
@@ -129,20 +129,23 @@ public class Predict
 
 }
 
-class IntComp
+abstract class IntComp
 {
-    boolean lower;
+    abstract boolean compare(int a, int b);
+}
 
-    IntComp(boolean low)
-    {
-        lower = low;
-    }
-
+class Lower extends IntComp
+{
     boolean compare(int a, int b)
     {
-        if (lower)
-            return a < b;
-        else
-            return a >= b;
+        return a < b;
+    }
+}
+
+class Greater extends IntComp
+{
+    boolean compare(int a, int b)
+    {
+        return a >= b;
     }
 }

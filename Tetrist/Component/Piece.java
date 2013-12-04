@@ -2,11 +2,11 @@ package Component;
 
 public class Piece
 {
-    public static final int cardinal = 7;
+    public static final int CARDINAL = 7;
 
-    protected static final int move_down = 0;
-    protected static final int move_left = 1;
-    protected static final int move_right = 2;
+    protected static final int MOVE_DOWN = 0;
+    protected static final int MOVE_LEFT = 1;
+    protected static final int MOVE_RIGHT = 2;
 
     protected final int id;
     protected final Point[][] face;
@@ -38,7 +38,7 @@ public class Piece
         set_coordinates(p.coordinates());
     }
 
-    public void init()
+    private void init()
     {
         rotation = spawn_rotation;
 
@@ -55,7 +55,7 @@ public class Piece
         }
     }
 
-    public void set_coordinates(Point[] points)
+    public synchronized void set_coordinates(Point[] points)
     {
         for (int i = 0; i < points.length; i++)
             coordinates[i].set(points[i]);
@@ -91,7 +91,7 @@ public class Piece
         return id;
     }
 
-    public void rotate()
+    public synchronized void rotate()
     {
         if (id != 5)
         {
@@ -116,47 +116,47 @@ public class Piece
         }
     }
 
-    public void fall()
+    public synchronized void fall()
     {
         fall(1);
     }
 
-    public void left()
+    public synchronized void left()
     {
         left(1);
     }
 
-    public void right()
+    public synchronized void right()
     {
         right(1);
     }
 
-    public void fly()
+    public synchronized void fly()
     {
         fly(1);
     }
 
-    public void left(int columns)
+    public synchronized void left(int columns)
     {
         shift(-columns, 0);
     }
 
-    public void right(int columns)
+    public synchronized void right(int columns)
     {
         shift(columns, 0);
     }
 
-    public void fall(int lines)
+    public synchronized void fall(int lines)
     {
         shift(0, -lines);
     }
 
-    public void fly(int lines)
+    public synchronized void fly(int lines)
     {
         shift(0, lines);
     }
 
-    private void shift(int horizontal_shift, int vertical_shift)
+    private synchronized void shift(int horizontal_shift, int vertical_shift)
     {
         for (Point point : coordinates)
             point.shift(horizontal_shift, vertical_shift);
@@ -164,23 +164,23 @@ public class Piece
 
     public void needed_space_fall(Point[] space)
     {
-        needed_space(space, 0);
+        needed_space(space, MOVE_DOWN);
     }
 
     public void needed_space_left(Point[] space)
     {
-        needed_space(space, 1);
+        needed_space(space, MOVE_LEFT);
     }
 
     public void needed_space_right(Point[] space)
     {
-        needed_space(space, 2);
+        needed_space(space, MOVE_RIGHT);
     }
 
     private void needed_space(Point[] space, int move)
     {
-        int h_shift = (move == move_down) ? 0 : ((move == move_left) ? -1 : 1);
-        int v_shift = (move == move_down) ? -1 : 0;
+        int h_shift = (move == MOVE_DOWN) ? 0 : ((move == MOVE_LEFT) ? -1 : 1);
+        int v_shift = (move == MOVE_DOWN) ? -1 : 0;
 
         for (int i = 0; i < coordinates.length; i++)
         {
@@ -208,8 +208,7 @@ public class Piece
                 face[i][j] = new Point();
 
         /* Centre de rotation. */
-        for (int i = 0; i < face.length; i++)
-            face[i][0].set(0, 1);
+        face[0][0].set(0, 1);
 
         face[0][1].set_abcissa(p != 0 ? 1 : 0);
         face[0][1].set_ordinate(p >= 4 ? 1 : (3 - p));
@@ -235,8 +234,8 @@ public class Piece
 
     public static Piece[] full_set_factory(int x, int y)
     {
-        Piece[] set = new Piece[cardinal];
-        for (int i = 0; i < cardinal; i++)
+        Piece[] set = new Piece[CARDINAL];
+        for (int i = 0; i < CARDINAL; i++)
             set[i] = new Piece(i, x, y);
 
         return set;

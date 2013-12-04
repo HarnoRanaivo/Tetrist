@@ -57,7 +57,7 @@ public class Game extends UnicastRemoteObject implements MatrixInterface
     }
     // Fin de l'appel distant.
 
-    public void refresh()
+    public synchronized void refresh()
     {
         is_busy = true;
         for (int y = 0; y < grid.height(); y++)
@@ -86,7 +86,7 @@ public class Game extends UnicastRemoteObject implements MatrixInterface
         return next;
     }
 
-    public void new_piece()
+    private synchronized void new_piece()
     {
         current = next;
         int i = generator.nextInt(7);
@@ -112,7 +112,7 @@ public class Game extends UnicastRemoteObject implements MatrixInterface
         }
     }
 
-    public void fall()
+    public synchronized void fall()
     {
         current.needed_space_fall(temp_points);
         if (grid.in_bonds(temp_points) && grid.is_free(temp_points))
@@ -128,21 +128,21 @@ public class Game extends UnicastRemoteObject implements MatrixInterface
         }
     }
 
-    public void left()
+    public synchronized void left()
     {
         current.needed_space_left(temp_points);
         if (grid.in_bonds(temp_points) && grid.is_free(temp_points))
             current.left();
     }
 
-    public void right()
+    public synchronized void right()
     {
         current.needed_space_right(temp_points);
         if (grid.in_bonds(temp_points) && grid.is_free(temp_points))
             current.right();
     }
 
-    public void rotate()
+    public synchronized void rotate()
     {
         current.needed_space_rotation(temp_points);
         if (grid.in_bonds(temp_points) && grid.is_free(temp_points))

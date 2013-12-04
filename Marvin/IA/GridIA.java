@@ -1,9 +1,14 @@
-import Compenent.Grid;
+package IA;
+
+import Component.Point;
+import Component.Grid;
 
 public class GridIA extends Grid
 {
-    private int blocks_count;
+    private int blocks;
+    private int holes;
     private int[] highest_blocks;
+    private int[] holes_columns;
 
     public GridIA()
     {
@@ -21,40 +26,56 @@ public class GridIA extends Grid
         copy(grid);
     }
 
-    protected void init_grid()
+    public synchronized void init_grid()
     {
-        super.init_grid();
+        blocks = 0;
+        holes = 0;
+        int width = width();
+        highest_blocks = new int[width];
+        holes_columns = new int[width];
+        for (int i = 0; i < width; i++)
+        {
+            highest_blocks[i] = -1;
+            holes_columns[i] = 0;
+        }
 
-        blocks_count = 0;
-        highest_blocks = new int[width()];
-        for (int i = 0; i < width(); i++)
-            highest_blocks = -1;
+        super.init_grid();
     }
 
-    public void put(int x, int y, int value)
+    public synchronized void put(int x, int y, int value)
     {
         super.put(x, y, value);
 
-        if (value != empty_block)
+        if (value != EMPTY_BLOCK)
         {
-            blocks_count++;
+            blocks++;
             highest_blocks[x] = y;
         }
-        else if (--blocks_count < 0)
-            blocks_count = 0;
+        else if (--blocks < 0)
+            blocks = 0;
+
+        count_holes(x);
     }
 
-    public int check(Point[] y)
+    public synchronized  int check(Point[] y)
     {
         int destroyed = super.check(y);
 
         if (destroyed > 0)
+        {
             check_highest();
+            count_holes();
+        }
 
         return destroyed;
     }
 
-    protected void delete_line(int line)
+    public int holes()
+    {
+        return holes;
+    }
+
+    protected synchronized  void delete_line(int line)
     {
         int count = 0;
 
@@ -64,17 +85,17 @@ public class GridIA extends Grid
 
         super.delete_line(line);
 
-        blocks_count -= count;
+        blocks -= count;
     }
 
     protected void check_highest(int column)
     {
-        highest = height() - 1;
+        int highest = height() - 1;
 
-        for (int i = height() - 1; i >= 0 && get(column, i) == empty_block; i--)
+        for (int i = height() - 1; i >= 0 && get(column, i) == EMPTY_BLOCK; i--)
             highest--;
 
-        highest_blocks[i] = highest;
+        highest_blocks[column] = highest;
     }
 
     protected void check_highest()
@@ -83,28 +104,18 @@ public class GridIA extends Grid
             check_highest(i);
     }
 
-    public int highest_block(int column)
-    {
-        return highest_blocks[i];
-    }
-
-    public int[] highest_blocks()
-    {
-        return highest_blocks;
-    }
-
-    public void copy(Grid grid)
+    public synchronized  void copy(Grid grid)
     {
         if (grid.width() == width() && grid.height() == height())
         {
-            blocks_count = 0;
+            init_grid();
             super.copy(grid);
         }
     }
 
-    public int blocks_count()
+    public int blocks()
     {
-        return blocks_count;
+        return blocks;
     }
 
     public int[] highest_blocks()
@@ -117,31 +128,29 @@ public class GridIA extends Grid
         return highest_blocks[column];
     }
 
-    public int count_holes(int column)
+    protected void count_holes(int column)
     {
-        int holes = 0;
+        int local_holes = 0;
 
-        for (int i = highest_block(column); i >= 0; i++)
+        for (int i = highest_block(column); i >= 0; i--)
             if (is_free(column, i))
-                holes++;
+                local_holes++;
 
-        return holes;
+        if (local_holes != holes_columns[column])
+        {
+            holes += local_holes - holes_columns[column];
+            holes_columns[column] = local_holes;
+        }
     }
 
-    public int count_holes()
+    protected void count_holes()
     {
-        int holes = 0;
-
-        for (int i = 0; i < witdh(); i++)
-            holes += count_holes(i);
-
-        return holes;
+        for (int i = 0; i < width(); i++)
+            count_holes(i);
     }
 
     public int eval()
     {
-        int holes = count_holes();
-
         return 0;
     }
 }
