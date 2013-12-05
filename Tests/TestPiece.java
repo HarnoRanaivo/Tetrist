@@ -146,6 +146,83 @@ public class TestPiece
         }
     }
 
+    @Test
+    public void test_min_max_abcissa()
+    {
+        for (int i = 0; i < Piece.CARDINAL; i++)
+        {
+            Piece[] sample = get_sample(i);
+
+            for (Piece piece : sample)
+            {
+                int id = piece.id();
+                int rotation = piece.rotation();
+                int spawn_abcissa = piece.spawn_abcissa();
+                int spawn_ordinate = piece.spawn_ordinate();
+                int min_abcissa = piece.minimum_abcissa();
+                int min_ordinate = piece.minimum_ordinate();
+                int max_abcissa = piece.maximum_abcissa();
+                int max_ordinate = piece.maximum_ordinate();
+
+                assertTrue(min_abcissa <= max_abcissa);
+                assertTrue(min_ordinate <= max_ordinate);
+                assertTrue(min_abcissa == spawn_abcissa + minimum_abcissa_shift(id, rotation));
+                assertTrue(max_abcissa == spawn_abcissa + maximum_abcissa_shift(id, rotation));
+                assertTrue(min_ordinate == spawn_ordinate + minimum_ordinate_shift(id, rotation));
+                assertTrue(max_ordinate == spawn_ordinate + maximum_ordinate_shift(id, rotation));
+            }
+        }
+    }
+
+    private int minimum_abcissa_shift(int id, int rotation)
+    {
+        int center_abcissa = Piece.FACES[id][rotation][0].abcissa();
+        int shift = 0;
+        for (int i = 1; i < 4; i++)
+        {
+            int a = Piece.FACES[id][rotation][i].abcissa() - center_abcissa;
+            shift = a < shift ? a : shift;
+        }
+        return shift;
+    }
+
+    private int maximum_abcissa_shift(int id, int rotation)
+    {
+        int center_abcissa = Piece.FACES[id][rotation][0].abcissa();
+        int shift = 0;
+        for (int i = 1; i < 4; i++)
+        {
+            int a = Piece.FACES[id][rotation][i].abcissa() - center_abcissa;
+            shift = a > shift ? a : shift;
+        }
+        return shift;
+    }
+
+    private int minimum_ordinate_shift(int id, int rotation)
+    {
+        int center_ordinate = Piece.FACES[id][rotation][0].ordinate();
+        int shift = 0;
+        for (int i = 1; i < 4; i++)
+        {
+            int a = Piece.FACES[id][rotation][i].ordinate() - center_ordinate;
+            shift = a < shift ? a : shift;
+        }
+        return shift;
+    }
+
+    private int maximum_ordinate_shift(int id, int rotation)
+    {
+        int center_ordinate = Piece.FACES[id][rotation][0].ordinate();
+        int shift = 0;
+        for (int i = 1; i < 4; i++)
+        {
+            int a = Piece.FACES[id][rotation][i].ordinate() - center_ordinate;
+            shift = a > shift ? a : shift;
+        }
+        return shift;
+    }
+
+
     private void test_needed_space(Move move)
     {
         Point[] buffer = new Point[4];

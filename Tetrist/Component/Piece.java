@@ -7,6 +7,14 @@ public class Piece
     public static final int CARDINAL = 7;
     public static final PieceGenerator RANDOM = new PieceRandom();
     public static final char[] NAMES = { 'I', 'J', 'T', 'L', 'Z', 'O', 'S' };
+    public static final Point[][][] FACES =
+    {
+        load_face(0), load_face(1), load_face(2), load_face(3),
+        load_face(4), load_face(5), load_face(6)
+    };
+
+    private static final IntComp LOWER = new Lower();
+    private static final IntComp GREATER = new Greater();
 
     protected static final int MOVE_DOWN = 0;
     protected static final int MOVE_LEFT = 1;
@@ -33,7 +41,7 @@ public class Piece
         spawn_rotation = 3;
         spawn_abcissa = x;
         spawn_ordinate = y;
-        face = load_face(id);
+        face = FACES[id];
         coordinates = new Point[4];
         for (int i = 0; i < coordinates.length; i++)
             coordinates[i] = new Point();
@@ -222,34 +230,68 @@ public class Piece
 
     private static Point[][] load_face(int p)
     {
-        Point[][] face = new Point[4][4];
-        for (int i = 0; i < face.length; i++)
-            for (int j = 0; j < face[i].length; j++)
-                face[i][j] = new Point();
+        Point[][] blocks = new Point[4][4];
+        for (int i = 0; i < blocks.length; i++)
+            for (int j = 0; j < blocks[i].length; j++)
+                blocks[i][j] = new Point();
 
         /* Centre de rotation. */
-        face[0][0].set(0, 1);
+        blocks[0][0].set(0, 1);
 
-        face[0][1].set_abcissa(p != 0 ? 1 : 0);
-        face[0][1].set_ordinate(p >= 4 ? 1 : (3 - p));
+        blocks[0][1].set_abcissa(p != 0 ? 1 : 0);
+        blocks[0][1].set_ordinate(p >= 4 ? 1 : (3 - p));
 
-        face[0][2].set_abcissa(p == 4 ? 1 : 0);
-        face[0][2].set_ordinate(((p % 2) == 0) ? 2 : 0);
+        blocks[0][2].set_abcissa(p == 4 ? 1 : 0);
+        blocks[0][2].set_ordinate(((p % 2) == 0) ? 2 : 0);
 
-        face[0][3].set_abcissa(p > 4 ? 1 : 0);
-        face[0][3].set_ordinate((p == 1 || p == 3) ? 2 : 0);
+        blocks[0][3].set_abcissa(p > 4 ? 1 : 0);
+        blocks[0][3].set_ordinate((p == 1 || p == 3) ? 2 : 0);
 
         /* Rotations. */
-        for (int i = 1; i < face.length; i++)
-            for (int j = 0; j < face[i].length; j++)
+        for (int i = 1; i < blocks.length; i++)
+            for (int j = 0; j < blocks[i].length; j++)
             {
                 int h = i - 1;
-                int x = -face[h][j].ordinate();
-                int y = face[h][j].abcissa();
-                face[i][j].set(x, y);
+                int x = -blocks[h][j].ordinate();
+                int y = blocks[h][j].abcissa();
+                blocks[i][j].set(x, y);
             }
 
-        return face;
+        return blocks;
+    }
+
+    private int min_max(IntComp comparator, PointValueGetter getter)
+    {
+        int value = getter.get_value(coordinates[0]);
+
+        for (Point point : coordinates)
+        {
+            int candidate = getter.get_value(point);
+            if (comparator.compare(value, candidate))
+                    value = candidate;
+        }
+
+        return value;
+    }
+
+    public int minimum_abcissa()
+    {
+        return min_max(GREATER, Point.ABCISSA_GETTER);
+    }
+
+    public int maximum_abcissa()
+    {
+        return min_max(LOWER, Point.ABCISSA_GETTER);
+    }
+
+    public int minimum_ordinate()
+    {
+        return min_max(GREATER, Point.ORDINATE_GETTER);
+    }
+
+    public int maximum_ordinate()
+    {
+        return min_max(LOWER, Point.ORDINATE_GETTER);
     }
 
     public static Piece[] full_set_factory(int x, int y)
@@ -277,5 +319,26 @@ class PieceRandom implements PieceGenerator
         Piece piece = new Piece(id, x, y);
 
         return piece;
+    }
+}
+
+abstract class IntComp
+{
+    abstract boolean compare(int a, int b);
+}
+
+class Lower extends IntComp
+{
+    boolean compare(int a, int b)
+    {
+        return a < b;
+    }
+}
+
+class Greater extends IntComp
+{
+    boolean compare(int a, int b)
+    {
+        return a >= b;
     }
 }
