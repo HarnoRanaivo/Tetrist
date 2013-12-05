@@ -26,7 +26,7 @@ public class GridIA extends Grid
         copy(grid);
     }
 
-    public synchronized void init_grid()
+    protected synchronized void init_grid()
     {
         blocks = 0;
         holes = 0;
@@ -57,7 +57,7 @@ public class GridIA extends Grid
         count_holes(x);
     }
 
-    public synchronized  int check(Point[] y)
+    public synchronized int check(Point[] y)
     {
         int destroyed = super.check(y);
 
@@ -73,19 +73,6 @@ public class GridIA extends Grid
     public int holes()
     {
         return holes;
-    }
-
-    protected synchronized  void delete_line(int line)
-    {
-        int count = 0;
-
-        for (int i = 0; i < width(); i++)
-            if (! is_free(i, line))
-                count++;
-
-        super.delete_line(line);
-
-        blocks -= count;
     }
 
     protected void check_highest(int column)
@@ -104,7 +91,7 @@ public class GridIA extends Grid
             check_highest(i);
     }
 
-    public synchronized  void copy(Grid grid)
+    public synchronized void copy(Grid grid)
     {
         if (grid.width() == width() && grid.height() == height())
         {

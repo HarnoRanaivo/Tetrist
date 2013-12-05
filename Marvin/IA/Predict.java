@@ -8,10 +8,10 @@ import Component.Piece;
 
 public class Predict
 {
+    private static final IntComp LOWER = new Lower();
+    private static final IntComp GREATER = new Greater();
     private Grid grid_buffer;
     private Point[] points_buffer = new Point[4];
-    private IntComp LOWER = new Lower();
-    private IntComp GREATER = new Greater();
 
     public Predict()
     {
@@ -119,10 +119,10 @@ public class Predict
         results[1] = piece_right;
 
         for (int i = piece_left-1; i >= 0 && highest[i] < piece_bottom; i--)
-            left--;
+            results[0]--;
 
         for (int i = piece_right+1; i <= grid.width() && highest[i] < piece_bottom; i++)
-            right++;
+            results[1]++;
 
         return results;
     }
