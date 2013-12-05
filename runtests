@@ -2,12 +2,11 @@
 
 MAIN=TestAll
 BYTECODE_DIR=bytecode/Tests
-FLAGS="-cp .:/usr/share/java/junit.jar org.junit.runner.JUnitCore"
+FLAGS="-cp .:$BYTECODE_DIR:/usr/share/java/junit.jar org.junit.runner.JUnitCore"
 
 if ! [ -f "$BYTECODE_DIR/$MAIN.class" ]; then
     echo "Are you sure you ran \"make tests\" ?" >&2
     exit 66
 fi
 
-cd $BYTECODE_DIR
 java $FLAGS $MAIN
