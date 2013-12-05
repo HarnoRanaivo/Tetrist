@@ -36,7 +36,7 @@ public class DrawBlockNice extends DrawBlock
 
     public void paint_block(Graphics g, int x, int y, int value)
     {
-        if (value != Grid.empty_block)
+        if (value != Grid.EMPTY_BLOCK)
             g.drawImage(block, x, y, color_of_int(value), null);
     }
 }

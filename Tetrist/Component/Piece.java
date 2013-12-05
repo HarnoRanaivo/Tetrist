@@ -1,12 +1,24 @@
 package Component;
 
+import java.util.Random;
+
 public class Piece
 {
-    public static final int cardinal = 7;
+    public static final int CARDINAL = 7;
+    public static final PieceGenerator RANDOM = new PieceRandom();
+    public static final char[] NAMES = { 'I', 'J', 'T', 'L', 'Z', 'O', 'S' };
+    public static final Point[][][] FACES =
+    {
+        load_face(0), load_face(1), load_face(2), load_face(3),
+        load_face(4), load_face(5), load_face(6)
+    };
 
-    protected static final int move_down = 0;
-    protected static final int move_left = 1;
-    protected static final int move_right = 2;
+    private static final IntComp LOWER = new Lower();
+    private static final IntComp GREATER = new Greater();
+
+    protected static final int MOVE_DOWN = 0;
+    protected static final int MOVE_LEFT = 1;
+    protected static final int MOVE_RIGHT = 2;
 
     protected final int id;
     protected final Point[][] face;
@@ -18,13 +30,18 @@ public class Piece
     private int rotation;
     private Point[] coordinates;
 
+    public Piece(char c, int x, int y)
+    {
+        this(name_to_id(c), x, y);
+    }
+
     public Piece(int n, int x, int y)
     {
         id = n;
         spawn_rotation = 3;
         spawn_abcissa = x;
         spawn_ordinate = y;
-        face = load_face(id);
+        face = FACES[id];
         coordinates = new Point[4];
         for (int i = 0; i < coordinates.length; i++)
             coordinates[i] = new Point();
@@ -38,7 +55,7 @@ public class Piece
         set_coordinates(p.coordinates());
     }
 
-    public void init()
+    private void init()
     {
         rotation = spawn_rotation;
 
@@ -55,7 +72,18 @@ public class Piece
         }
     }
 
-    public void set_coordinates(Point[] points)
+    public static int name_to_id(char c)
+    {
+        int id = -1;
+
+        for (int i = 0; id == -1 && i < NAMES.length; i++)
+            if (NAMES[i] == c)
+                id = i;
+
+        return (id == -1) ? 0 : id;
+    }
+
+    public synchronized void set_coordinates(Point[] points)
     {
         for (int i = 0; i < points.length; i++)
             coordinates[i].set(points[i]);
@@ -91,7 +119,7 @@ public class Piece
         return id;
     }
 
-    public void rotate()
+    public synchronized void rotate()
     {
         if (id != 5)
         {
@@ -116,47 +144,47 @@ public class Piece
         }
     }
 
-    public void fall()
+    public synchronized void fall()
     {
         fall(1);
     }
 
-    public void left()
+    public synchronized void left()
     {
         left(1);
     }
 
-    public void right()
+    public synchronized void right()
     {
         right(1);
     }
 
-    public void fly()
+    public synchronized void fly()
     {
         fly(1);
     }
 
-    public void left(int columns)
+    public synchronized void left(int columns)
     {
         shift(-columns, 0);
     }
 
-    public void right(int columns)
+    public synchronized void right(int columns)
     {
         shift(columns, 0);
     }
 
-    public void fall(int lines)
+    public synchronized void fall(int lines)
     {
         shift(0, -lines);
     }
 
-    public void fly(int lines)
+    public synchronized void fly(int lines)
     {
         shift(0, lines);
     }
 
-    private void shift(int horizontal_shift, int vertical_shift)
+    private synchronized void shift(int horizontal_shift, int vertical_shift)
     {
         for (Point point : coordinates)
             point.shift(horizontal_shift, vertical_shift);
@@ -164,23 +192,23 @@ public class Piece
 
     public void needed_space_fall(Point[] space)
     {
-        needed_space(space, 0);
+        needed_space(space, MOVE_DOWN);
     }
 
     public void needed_space_left(Point[] space)
     {
-        needed_space(space, 1);
+        needed_space(space, MOVE_LEFT);
     }
 
     public void needed_space_right(Point[] space)
     {
-        needed_space(space, 2);
+        needed_space(space, MOVE_RIGHT);
     }
 
     private void needed_space(Point[] space, int move)
     {
-        int h_shift = (move == move_down) ? 0 : ((move == move_left) ? -1 : 1);
-        int v_shift = (move == move_down) ? -1 : 0;
+        int h_shift = (move == MOVE_DOWN) ? 0 : ((move == MOVE_LEFT) ? -1 : 1);
+        int v_shift = (move == MOVE_DOWN) ? -1 : 0;
 
         for (int i = 0; i < coordinates.length; i++)
         {
@@ -202,43 +230,115 @@ public class Piece
 
     private static Point[][] load_face(int p)
     {
-        Point[][] face = new Point[4][4];
-        for (int i = 0; i < face.length; i++)
-            for (int j = 0; j < face[i].length; j++)
-                face[i][j] = new Point();
+        Point[][] blocks = new Point[4][4];
+        for (int i = 0; i < blocks.length; i++)
+            for (int j = 0; j < blocks[i].length; j++)
+                blocks[i][j] = new Point();
 
         /* Centre de rotation. */
-        for (int i = 0; i < face.length; i++)
-            face[i][0].set(0, 1);
+        blocks[0][0].set(0, 1);
 
-        face[0][1].set_abcissa(p != 0 ? 1 : 0);
-        face[0][1].set_ordinate(p >= 4 ? 1 : (3 - p));
+        blocks[0][1].set_abcissa(p != 0 ? 1 : 0);
+        blocks[0][1].set_ordinate(p >= 4 ? 1 : (3 - p));
 
-        face[0][2].set_abcissa(p == 4 ? 1 : 0);
-        face[0][2].set_ordinate(((p % 2) == 0) ? 2 : 0);
+        blocks[0][2].set_abcissa(p == 4 ? 1 : 0);
+        blocks[0][2].set_ordinate(((p % 2) == 0) ? 2 : 0);
 
-        face[0][3].set_abcissa(p > 4 ? 1 : 0);
-        face[0][3].set_ordinate((p == 1 || p == 3) ? 2 : 0);
+        blocks[0][3].set_abcissa(p > 4 ? 1 : 0);
+        blocks[0][3].set_ordinate((p == 1 || p == 3) ? 2 : 0);
 
         /* Rotations. */
-        for (int i = 1; i < face.length; i++)
-            for (int j = 0; j < face[i].length; j++)
+        for (int i = 1; i < blocks.length; i++)
+            for (int j = 0; j < blocks[i].length; j++)
             {
                 int h = i - 1;
-                int x = -face[h][j].ordinate();
-                int y = face[h][j].abcissa();
-                face[i][j].set(x, y);
+                int x = -blocks[h][j].ordinate();
+                int y = blocks[h][j].abcissa();
+                blocks[i][j].set(x, y);
             }
 
-        return face;
+        return blocks;
+    }
+
+    private int min_max(IntComp comparator, PointValueGetter getter)
+    {
+        int value = getter.get_value(coordinates[0]);
+
+        for (Point point : coordinates)
+        {
+            int candidate = getter.get_value(point);
+            if (comparator.compare(value, candidate))
+                    value = candidate;
+        }
+
+        return value;
+    }
+
+    public int minimum_abcissa()
+    {
+        return min_max(GREATER, Point.ABCISSA_GETTER);
+    }
+
+    public int maximum_abcissa()
+    {
+        return min_max(LOWER, Point.ABCISSA_GETTER);
+    }
+
+    public int minimum_ordinate()
+    {
+        return min_max(GREATER, Point.ORDINATE_GETTER);
+    }
+
+    public int maximum_ordinate()
+    {
+        return min_max(LOWER, Point.ORDINATE_GETTER);
     }
 
     public static Piece[] full_set_factory(int x, int y)
     {
-        Piece[] set = new Piece[cardinal];
-        for (int i = 0; i < cardinal; i++)
+        Piece[] set = new Piece[CARDINAL];
+        for (int i = 0; i < CARDINAL; i++)
             set[i] = new Piece(i, x, y);
 
         return set;
+    }
+}
+
+class PieceRandom implements PieceGenerator
+{
+    private final Random generator;
+
+    public PieceRandom()
+    {
+        generator = new Random();
+    }
+
+    public Piece new_piece(int x, int y)
+    {
+        int id = generator.nextInt(Piece.CARDINAL);
+        Piece piece = new Piece(id, x, y);
+
+        return piece;
+    }
+}
+
+abstract class IntComp
+{
+    abstract boolean compare(int a, int b);
+}
+
+class Lower extends IntComp
+{
+    boolean compare(int a, int b)
+    {
+        return a < b;
+    }
+}
+
+class Greater extends IntComp
+{
+    boolean compare(int a, int b)
+    {
+        return a >= b;
     }
 }

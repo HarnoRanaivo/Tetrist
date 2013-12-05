@@ -15,7 +15,7 @@ import Component.MatrixInterface;
 public class Marvin
 {
     static Robot robot;
-    static MatriceInterface matrice;
+    static MatrixInterface matrice;
 
     static void my_sleep(int ms)
     {
@@ -39,7 +39,7 @@ public class Marvin
         }
         catch (IOException ex)
         {
-            Logger.getLogger(IA.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Marvin.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -118,7 +118,7 @@ public class Marvin
         }
         catch (AWTException ex)
         {
-            Logger.getLogger(IA.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Marvin.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         // Client
