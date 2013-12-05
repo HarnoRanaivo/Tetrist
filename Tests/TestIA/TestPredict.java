@@ -1,3 +1,5 @@
+package TestIA;
+
 import org.junit.Test;
 import org.junit.Ignore;
 import org.junit.runner.RunWith;
@@ -19,16 +21,19 @@ public class TestPredict
 {
     private static final int MIDDLE = Grid.DEFAULT_WIDTH / 2;
     private static final int TOP = Grid.DEFAULT_HEIGHT - 1;
-
     private static final Grid EMPTY_GRID = new Grid();
 
     @Test
     public void test__possible_columns()
     {
-        GridIA g = new GridIA(EMPTY_GRID);
-        int[] results = Predict.possible_columns(g, L, g.highest_blocks());
-        assertEquals(0, results[0]);
-        assertEquals(9, results[1]);
+        GridIA grid = new GridIA(EMPTY_GRID);
+        for (char name : Piece.NAMES)
+        {
+            Piece piece = new Piece(name, MIDDLE, TOP);
+            int[] results = Predict.possible_columns(grid, piece, grid.highest_blocks());
+            assertEquals(0, results[0]);
+            assertEquals(9, results[1]);
+        }
     }
 
     @Test

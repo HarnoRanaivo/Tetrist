@@ -3,12 +3,12 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-    TestPoint.class,
-    TestGrid.class,
-    TestPiece.class,
-    TestGame.class,
-    TestGridIA.class,
-    TestPredict.class,
+    TestComponent.TestPoint.class,
+    TestComponent.TestGrid.class,
+    TestComponent.TestPiece.class,
+    TestComponent.TestGame.class,
+    TestIA.TestGridIA.class,
+    TestIA.TestPredict.class,
 })
 
 
