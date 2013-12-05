@@ -6,6 +6,7 @@ public class Piece
 {
     public static final int CARDINAL = 7;
     public static final PieceGenerator RANDOM = new PieceRandom();
+    public static final char[] NAMES = { 'I', 'J', 'T', 'L', 'Z', 'O', 'S' };
 
     protected static final int MOVE_DOWN = 0;
     protected static final int MOVE_LEFT = 1;
@@ -20,6 +21,11 @@ public class Piece
 
     private int rotation;
     private Point[] coordinates;
+
+    public Piece(char c, int x, int y)
+    {
+        this(name_to_id(c), x, y);
+    }
 
     public Piece(int n, int x, int y)
     {
@@ -56,6 +62,17 @@ public class Piece
             current.set_abcissa(spawn_abcissa + i_x - center_x);
             current.set_ordinate(spawn_ordinate + i_y - center_y);
         }
+    }
+
+    public static int name_to_id(char c)
+    {
+        int id = -1;
+
+        for (int i = 0; id == -1 && i < NAMES.length; i++)
+            if (NAMES[i] == c)
+                id = i;
+
+        return (id == -1) ? 0 : id;
     }
 
     public synchronized void set_coordinates(Point[] points)

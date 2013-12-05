@@ -77,6 +77,24 @@ public class TestPiece
     }
 
     @Test
+    public void test_name_to_id()
+    {
+        for (char c : Piece.NAMES)
+        {
+            int c_id = Piece.name_to_id(c);
+            assertTrue(c_id >= 0 && c_id < Piece.CARDINAL);
+            for (char d : Piece.NAMES)
+            {
+                boolean comparison = c_id == Piece.name_to_id(d);
+                if (c == d)
+                    assertTrue(comparison);
+                else
+                    assertFalse(comparison);
+            }
+        }
+    }
+
+    @Test
     public void test_needed_space_left()
     {
         test_needed_space(LEFT);
