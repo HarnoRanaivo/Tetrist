@@ -1,8 +1,11 @@
 package Component;
 
+import java.util.Random;
+
 public class Piece
 {
     public static final int CARDINAL = 7;
+    public static final PieceGenerator RANDOM = new PieceRandom();
 
     protected static final int MOVE_DOWN = 0;
     protected static final int MOVE_LEFT = 1;
@@ -239,5 +242,23 @@ public class Piece
             set[i] = new Piece(i, x, y);
 
         return set;
+    }
+}
+
+class PieceRandom implements PieceGenerator
+{
+    private final Random generator;
+
+    public PieceRandom()
+    {
+        generator = new Random();
+    }
+
+    public Piece new_piece(int x, int y)
+    {
+        int id = generator.nextInt(Piece.CARDINAL);
+        Piece piece = new Piece(id, x, y);
+
+        return piece;
     }
 }

@@ -36,7 +36,7 @@ public class Grid
         copy(grid);
     }
 
-    public synchronized void init_grid()
+    protected synchronized void init_grid()
     {
         grid = new int[width][height];
         for (int i =  0; i < height; i++)
