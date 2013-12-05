@@ -19,6 +19,7 @@ public class TestPiece
     private static final int NEG_VALUE = -10;
     private static final int POS_VALUE = 10;
     private static final int THRESHOLD = 50;
+    private static final int RANDOM_THRESHOLD = 100;
     private static final int STEP = 3;
 
     private static final Move LEFT = new Left();
@@ -93,27 +94,6 @@ public class TestPiece
         test_needed_space(FALL);
     }
 
-    public void test_needed_space(Move move)
-    {
-        Point[] buffer = new Point[4];
-        for (int i = 0; i < 4; i++)
-            buffer[i] = new Point();
-
-        for (int i = 0; i < Piece.CARDINAL; i++)
-        {
-            Piece[] sample = get_sample(i);
-
-            for (Piece piece : sample)
-            {
-                Point[] original = copy_point_array(piece.coordinates());
-
-                move.needed_space(piece, buffer);
-                test_shifts(original, buffer, move.SIMPLE_SHIFT_X, move.SIMPLE_SHIFT_Y);
-            }
-        }
-
-    }
-
     @Test
     public void test_left()
     {
@@ -136,6 +116,36 @@ public class TestPiece
     public void test_fly()
     {
         test_moves(FLY);
+    }
+
+    @Test
+    public void test_random()
+    {
+        for (int i = 0; i < RANDOM_THRESHOLD; i++)
+        {
+            Piece piece = Piece.RANDOM.new_piece(0, 0);
+            assertTrue(piece.id() >= 0 && piece.id() < Piece.CARDINAL);
+        }
+    }
+
+    private void test_needed_space(Move move)
+    {
+        Point[] buffer = new Point[4];
+        for (int i = 0; i < 4; i++)
+            buffer[i] = new Point();
+
+        for (int i = 0; i < Piece.CARDINAL; i++)
+        {
+            Piece[] sample = get_sample(i);
+
+            for (Piece piece : sample)
+            {
+                Point[] original = copy_point_array(piece.coordinates());
+
+                move.needed_space(piece, buffer);
+                test_shifts(original, buffer, move.SIMPLE_SHIFT_X, move.SIMPLE_SHIFT_Y);
+            }
+        }
     }
 
     private void test_moves(Move move)

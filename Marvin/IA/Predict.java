@@ -20,7 +20,7 @@ public class Predict
             points_buffer[i] = new Point();
     }
 
-    public Point[][][] possible_falls(Grid grid, Piece piece)
+    public static Point[][][] possible_falls(Grid grid, Piece piece)
     {
         Vector<Point[]>[] falls = new Vector<Point[]>[4];
         int[] blocks = grid.highest_blocks();

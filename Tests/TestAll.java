@@ -8,6 +8,7 @@ import org.junit.runners.Suite;
     TestPiece.class,
     TestGame.class,
     TestGridIA.class,
+    TestPredict.class,
 })
 
 

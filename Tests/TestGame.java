@@ -7,6 +7,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 
+import Component.PieceGenerator;
+import Component.Game;
+
 @RunWith(JUnit4.class)
 public class TestGame
 {
@@ -43,5 +46,35 @@ public class TestGame
     @Test
     public void test_game_is_over()
     {
+    }
+}
+
+class FakePieceRandom implements PieceGenerator
+{
+    private static final int[] DEFAULT_ID = { 0, 1, 2, 3, 4, 5, 6 };
+    private final int[] id;
+    private int cursor;
+
+    public FakePieceRandom()
+    {
+        this(DEFAULT_ID);
+    }
+
+    public FakePieceRandom(int[] fake_random_values)
+    {
+        boolean correct = true;
+        for (int i : fake_random_values)
+            if (i < 0 || i >= Piece.CARDINAL)
+                correct = false;
+
+        cursor = 0;
+        id = correct ? fake_random_values : DEFAULT_ID;
+    }
+
+    public Piece new_piece(int x, int y)
+    {
+        Piece piece = new Piece(ID[cursor], x, y);
+        cursor = (cursor + 1) % ID.length;
+        return piece;
     }
 }
