@@ -23,7 +23,7 @@ public abstract class DrawBlock
 
     protected Color color_of_int(int value)
     {
-        if (value < 0 || value >= Piece.cardinal)
+        if (value < 0 || value >= Piece.CARDINAL)
             return Color.black;
         else
             return colors[value];

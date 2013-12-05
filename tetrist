@@ -5,7 +5,7 @@ MAIN=Tetrist
 BYTECODE_DIR=bytecode/Tetrist
 
 if ! [ -f "$BYTECODE_DIR/$MAIN.class"  ]; then
-    echo "Are you sure you ran \"make\" ?"
+    echo "Are you sure you ran \"make\" ?" >&2
     exit 66
 fi
 
