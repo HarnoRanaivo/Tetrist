@@ -24,6 +24,8 @@ public class Eval
                 int current_state = eval_state(score, evaluation);
                 if (current_state > best_state)
                 {
+                    best_state = current_state;
+
                     results[0] = i;
 
                     Piece buffer = new Piece(0, 0, 0);
