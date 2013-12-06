@@ -11,17 +11,17 @@ public class GridState implements Comparable<GridState>, Comparator<GridState>
     private final int blocks;
     private final int highest_block;
 
-    private final float[] blocks_array;
-    private final float[] highest_blocks_array;
-    private final float[] holes_array;
+    private final int[] blocks_array;
+    private final int[] highest_blocks_array;
+    private final int[] holes_array;
 
     private final float highest_blocks_mean;
     private final float holes_mean;
     private final float blocks_mean;
 
-    private final float highest_blocks_standard_deviation;
-    private final float holes_standard_deviation;
-    private final float blocks_standard_deviation;
+    private final float highest_blocks_std;
+    private final float holes_std;
+    private final float blocks_std;
 
     public GridState(GridIA grid)
     {
@@ -29,17 +29,17 @@ public class GridState implements Comparable<GridState>, Comparator<GridState>
         blocks = grid.blocks();
         highest_block = grid.highest_block();
 
-        blocks_array = int_array_to_float(grid.blocks_array());
-        highest_blocks_array = int_array_to_float(grid.highest_blocks_array());
-        holes_array = int_array_to_float(grid.holes_array());
+        blocks_array = grid.blocks_array();
+        highest_blocks_array = grid.highest_blocks_array();
+        holes_array = grid.holes_array();
 
         highest_blocks_mean = mean_value(highest_blocks_array);
         holes_mean = mean_value(holes_array);
         blocks_mean = mean_value(blocks_array);
 
-        highest_blocks_standard_deviation = standard_deviation(highest_blocks_array, highest_blocks_mean);
-        holes_standard_deviation = standard_deviation(holes_array, holes_mean);
-        blocks_standard_deviation = standard_deviation(blocks_array, blocks_mean);
+        highest_blocks_std = standard_deviation(highest_blocks_array, highest_blocks_mean);
+        holes_std = standard_deviation(holes_array, holes_mean);
+        blocks_std = standard_deviation(blocks_array, blocks_mean);
     }
 
     private float[] int_array_to_float(int[] array)
@@ -52,26 +52,26 @@ public class GridState implements Comparable<GridState>, Comparator<GridState>
         return result;
     }
 
-    private float standard_deviation(float[] values)
+    private float standard_deviation(int[] values)
     {
         return standard_deviation(values, mean_value(values));
     }
 
-    private float standard_deviation(float[] values, float mean)
+    private float standard_deviation(int[] values, float mean)
     {
         float sum = 0;
 
-        for (float value : values)
+        for (int value : values)
             sum += Math.pow(value - mean, 2);
 
         return sum / values.length;
     }
 
-    private float mean_value(float[] values)
+    private float mean_value(int[] values)
     {
         float sum = 0;
 
-        for (float value : values)
+        for (int value : values)
             sum += value;
 
         return sum / values.length;
@@ -100,7 +100,7 @@ public class GridState implements Comparable<GridState>, Comparator<GridState>
                         result = 1;
                     else if (highest_block == o.highest_block)
                     {
-                        if (holes_mean < o.holes_mean)
+                        if (highest_blocks_std > o.highest_blocks_std)
                             result = 1;
                     }
                 }

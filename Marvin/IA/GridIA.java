@@ -67,6 +67,7 @@ public class GridIA extends Grid
             blocks--;
             if (blocks < 0)
                 blocks = 0;
+            check_highest(x);
         }
         super.put(x, y, value);
         count_holes(x);
