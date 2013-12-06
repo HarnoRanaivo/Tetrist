@@ -109,6 +109,24 @@ public class Marvin
         }
     }
 
+    private static void print_grid()
+    {
+        for (int j = grid.height() - 1; j >= 0; j--)
+        {
+            System.out.print("|");
+            for (int i = 0; i < grid.width(); i++)
+            {
+                int value = grid.get(i, j);
+                if (value != -1)
+                    System.out.print(" " + value + " |");
+                else
+                    System.out.print("   |");
+            }
+            System.out.println("");
+        }
+        System.out.println("");
+    }
+
     public static void main(String[] args) throws AWTException, IOException
     {
         // Execution
@@ -158,6 +176,8 @@ public class Marvin
             Point[][][] falls = Predict.possible_falls(grid, piece);
             int[] directions = Eval.eval_possibilities(grid, falls, piece);
             sender.send_key(directions);
+            if (directions[1] != KeySender.NOTHING)
+                print_grid();
         }
     }
 }
