@@ -1,0 +1,16 @@
+#!/bin/sh
+# Run Marvin
+
+MARVIN_MAIN=Marvin
+TETRIST_MAIN=Tetrist
+BYTECODE_DIR=bytecode
+MARVIN_BYTECODE_DIR=$BYTECODE_DIR/Marvin
+TETRIST_BYTECODE_DIR=$BYTECODE_DIR/Tetrist
+TETRIST_CMD="java -cp $TETRIST_BYTECODE_DIR $TETRIST_MAIN"
+
+if ! [ -f "$MARVIN_BYTECODE_DIR/$MARVIN_MAIN.class" ] ; then
+    echo "Are you sure you ran \"make\" ?" >&2
+    exit 66
+fi
+
+java -cp $MARVIN_BYTECODE_DIR $MARVIN_MAIN "$TETRIST_CMD"

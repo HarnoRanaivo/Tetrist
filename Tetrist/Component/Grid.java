@@ -66,7 +66,8 @@ public class Grid
 
     public synchronized void put(int x, int y, int value)
     {
-        grid[x][y] = value;
+        if (x >= 0 && x < width && y >= 0 && y < height)
+            grid[x][y] = value;
     }
 
     public synchronized void copy(Grid grid)

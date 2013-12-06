@@ -10,12 +10,21 @@ import java.rmi.* ;
 import java.net.MalformedURLException ;
 import java.util.*;
 
-import Component.MatrixInterface;
+import IA.KeySender;
+import IA.Eval;
+import IA.Predict;
+import Component.Point;
+import Component.Grid;
+import Component.Piece;
+import Component.GameInterface;
 
 public class Marvin
 {
     static Robot robot;
-    static MatrixInterface matrice;
+    static GameInterface game;
+    static KeySender sender;
+    static Grid grid;
+    static Piece piece;
 
     static void my_sleep(int ms)
     {
@@ -43,29 +52,6 @@ public class Marvin
         }
     }
 
-    public static void send_key(int key)
-    {
-        int k = 0;
-
-        switch (key)
-        {
-            case 0: // 0:Droite
-                k = KeyEvent.VK_RIGHT;
-                break;
-            case 1: // 1:Gauche
-                k = KeyEvent.VK_LEFT;
-                break;
-            case 2: // 2:Rotation
-                k = KeyEvent.VK_UP;
-                break;
-            case 3: // 3:Tomber
-                k = KeyEvent.VK_DOWN;
-                break;
-        }
-        robot.keyPress(k);
-        robot.keyRelease(k);
-    }
-
     public static void display_matrice(boolean t[][])
     {
         int x, y;
@@ -82,32 +68,46 @@ public class Marvin
         }
     }
 
-    public static boolean[][] get_matrice()
+    public static void get_game()
     {
-        boolean [][] result = null;
-
+        boolean got_game = false;
         try
         {
             do
             {
-                result = matrice.get_matrice();
-                if (result == null)
+                int[][] g = game.get_grid();
+                int[][] p = game.get_piece();
+                int id = game.get_piece_id();
+
+                if (g == null || p == null || id == -1)
                     my_sleep(10);
+                else
+                {
+                    piece = new Piece(id, g.length/2, g[0].length-1);
+                    Point[] c = new Point[4];
+                    for (int i = 0; i < 4; i++)
+                        c[i] = new Point(p[i][0], p[i][1]);
+                    piece.set_coordinates(c);
+                    grid = new Grid(g.length, g[0].length);
+                    for (int i = 0; i < grid.width(); i++)
+                        for (int j = 0; j < grid.height(); j++)
+                            grid.put(i, j, g[i][j]);
+                    got_game = true;
+                }
             }
-            while (result == null);
+            while (! got_game);
         }
         catch (RemoteException re)
         {
             System.out.println(re);
         }
-
-        return result;
     }
 
     public static void main(String[] args) throws AWTException, IOException
     {
         // Execution
-        // run("java tetris");
+        if (args.length > 0)
+            run(args[0]);
 
         // Robot
         try
@@ -124,7 +124,7 @@ public class Marvin
         // Client
         try
         {
-            matrice = (MatrixInterface)Naming.lookup("//localhost/matrice");
+            game = (GameInterface)Naming.lookup("//localhost/matrice");
         }
         catch (MalformedURLException e)
         {
@@ -135,13 +135,23 @@ public class Marvin
             System.out.println(re);
         }
 
-        // For Example
-        String txt="0000030303333313131111122222222233333333333333333330000000202022222121211";
-        for (int j = 0; j < txt.length(); j++)
+        sender = new KeySender(robot);
+        // my_sleep(1000);
+        // for (int i = 0; i < 10; i++)
+        // {
+        //     sender.send_key(KeySender.LEFT);
+        //     my_sleep(100);
+        //     for (int j = 0; j < 37; i++)
+        //     {
+        //         sender.send_key(KeySender.DOWN);
+        //     }
+        // }
+        while (true)
         {
-            send_key((int) (txt.charAt(j) - '0'));
-            my_sleep(100);
-            display_matrice(get_matrice());
+            get_game();
+            Point[][][] falls = Predict.possible_falls(grid, piece);
+            int[] directions = Eval.eval_possibilities(grid, falls, piece);
+            sender.send_key(directions);
         }
     }
 }

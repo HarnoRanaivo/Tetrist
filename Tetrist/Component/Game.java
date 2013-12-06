@@ -3,7 +3,7 @@ package Component;
 import java.rmi.server.UnicastRemoteObject;
 import java.rmi.RemoteException;
 
-public class Game extends UnicastRemoteObject implements MatrixInterface
+public class Game extends UnicastRemoteObject implements GameInterface
 {
     private static final int score_factor = 1000;
     protected static final int[] score_scale = { 0, 40, 100, 300, 1200 };
@@ -23,7 +23,9 @@ public class Game extends UnicastRemoteObject implements MatrixInterface
     private PieceGenerator generator;
 
     private boolean is_busy;
-    private boolean matrice_IA[][];
+    private int[][] grid_IA;
+    private int[][] piece_IA;
+    private int piece_id_IA;
 
     public Game() throws RemoteException
     {
@@ -45,7 +47,8 @@ public class Game extends UnicastRemoteObject implements MatrixInterface
         temp_points = new Point[4];
         for (int i = 0; i < temp_points.length; i++)
             temp_points[i] = new Point();
-        matrice_IA = new boolean[grid.width()][grid.height()];
+        grid_IA = new int[grid.width()][grid.height()];
+        piece_IA = new int[4][2];
         score = 0;
         level = 1;
         threshold = score_factor;
@@ -54,26 +57,47 @@ public class Game extends UnicastRemoteObject implements MatrixInterface
     }
 
     // Appel distant pour la IA
-    public boolean[][] get_matrice() throws RemoteException
+    public int[][] get_grid() throws RemoteException
     {
         if (is_busy)
             return null;
 
-        return matrice_IA;
+        return grid_IA;
+    }
+
+    public int[][] get_piece() throws RemoteException
+    {
+        if (is_busy)
+            return null;
+
+        return piece_IA;
+    }
+
+    public int get_piece_id() throws RemoteException
+    {
+        if (is_busy)
+            return -1;
+
+        return piece_id_IA;
     }
     // Fin de l'appel distant.
 
     public synchronized void refresh()
     {
         is_busy = true;
-        for (int y = 0; y < grid.height(); y++)
-            for (int x = 0; x < grid.width(); x++)
-                matrice_IA[x][y] = ! grid.is_free(x, y);
 
-        Point[] coordinates = current.coordinates();
-        for (Point point : coordinates)
-            if (grid.in_bonds(point))
-                matrice_IA[point.abcissa()][point.ordinate()] = true;
+        for (int i = 0; i < grid.width(); i++)
+            for (int j = 0; j < grid.height(); j++)
+                grid_IA[i][j] = grid.get(i, j);
+
+        Point[] points = current.coordinates();
+        for (int i = 0; i < 4; i++)
+        {
+            piece_IA[i][0] = points[i].abcissa();
+            piece_IA[i][1] = points[i].ordinate();
+        }
+        piece_id_IA = current.id();
+
         is_busy = false;
     }
 
