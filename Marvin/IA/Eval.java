@@ -31,7 +31,7 @@ public class Eval
 
                     results[0] = i;
 
-                    Piece buffer = new Piece(0, 0, 0);
+                    Piece buffer = new Piece(piece);
                     buffer.set_coordinates(falls[i][j]);
                     int buffer_x = buffer.minimum_abcissa();
                     int piece_x = piece.minimum_abcissa();

@@ -25,6 +25,8 @@ public class Marvin
     static KeySender sender;
     static Grid grid;
     static Piece piece;
+    static int attempts;
+    static int MAX_ATTEMPTS = 10;
 
     static void my_sleep(int ms)
     {
@@ -93,6 +95,7 @@ public class Marvin
                         for (int j = 0; j < grid.height(); j++)
                             grid.put(i, j, g[i][j]);
                     got_game = true;
+                    attempts = 0;
                 }
             }
             while (! got_game);
@@ -100,6 +103,9 @@ public class Marvin
         catch (RemoteException re)
         {
             System.out.println(re);
+            if (attempts < MAX_ATTEMPTS)
+                attempts++;
+            else System.exit(1);
         }
     }
 

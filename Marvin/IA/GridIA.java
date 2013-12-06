@@ -36,10 +36,12 @@ public class GridIA extends Grid
         highest_block = -1;
         highest_blocks_array = new int[width];
         holes_array = new int[width];
+        blocks_array = new int[width];
         for (int i = 0; i < width; i++)
         {
             highest_blocks_array[i] = -1;
             holes_array[i] = 0;
+            blocks_array[i] = 0;
         }
 
         super.init_grid();
