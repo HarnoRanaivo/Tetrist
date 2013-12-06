@@ -32,7 +32,7 @@ tests : testbytecodedir
 	@$(COMPILER) -sourcepath $(TESTS_SPATH) -cp $(TESTS_BPATH) -cp /usr/share/java/junit.jar -d $(TESTS_BPATH) $(TESTS_SPATH)/TestAll.java
 
 tetristdoc :
-	@javadoc -sourcepath $(TETRIST_SPATH) -classpath $(TETRIST_BPATH) -d $(TETRIST_DPATH) $(TETRIST_SPATH)/*.java \
+	@javadoc -charset "UTF-8" -sourcepath $(TETRIST_SPATH) -classpath $(TETRIST_BPATH) -d $(TETRIST_DPATH) $(TETRIST_SPATH)/*.java \
 		-subpackages $(shell find $(TETRIST_SPATH) -mindepth 1 -type d -iname "*" -printf "%f ")
 
 doc : docdir tetristdoc

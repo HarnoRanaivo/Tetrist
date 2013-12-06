@@ -3,29 +3,131 @@ package Component;
 import java.rmi.server.UnicastRemoteObject;
 import java.rmi.RemoteException;
 
+/**
+ * Classe d'une partie de Tetrist.
+ */
 public class Game extends UnicastRemoteObject implements GameInterface
 {
+	/**
+	 * Entier utilisé dans le calcul de passage de niveau.
+	 * 
+	 * @see Game#init()
+	 * @see Game#compute_level()
+	 */
     private static final int score_factor = 1000;
+    
+    /**
+     * Gain de points en fonction du nombre de lignes supprimées.
+     * 
+     * @see Game#lines_to_score(int)
+     */
     protected static final int[] score_scale = { 0, 40, 100, 300, 1200 };
 
+
+	/**
+	 * Milieu de la grille <b>en largeur</b>.
+	 * 
+	 * @see Game#Constructor(PieceGenerator)
+	 * @see Game#init()
+	 * @see Game#new_piece()
+	 */
     private final int middle;
+    /**
+     * Hauteur de la grille.
+     * 
+     * @see Game#Constructor(PieceGenerator)
+	 * @see Game#init()
+	 * @see Game#new_piece()
+     */
     private final int top;
 
+	/**
+	 * Grille du jeu.
+	 * 
+	 * @see Game#Constructor(PieceGenerator)
+	 * @see Game#init()
+	 * @see Game#refresh()
+	 * @see Game#grid()
+	 * @see Game#fall()
+	 * @see Game#left()
+	 * @see Game#right()
+	 * @see Game#rotate()
+	 * @see Game#game_is_over()
+	 */
     private final Grid grid;
+    
+    
+    /**
+     * Pièce courante du jeu.
+     * 
+     * @see Game#refresh()
+	 * @see Game#current_piece()
+	 * @see Game#new_piece()
+	 * @see Game#fall()
+	 * @see Game#left()
+	 * @see Game#right()
+	 * @see Game#rotate()
+     */
     private Piece current;
+    
+    /**
+     * Pièce suivante du jeu.</br>
+     * <i>(non utilisée par l'IA)</i>
+     * 
+     * @see Game#init()
+     * @see Game#next_piece()
+	 * @see Game#new_piece()
+     */
     private Piece next;
+    
+    /**
+     * Score du jeu.
+     * 
+     * @see Game#init()
+     * @see Game#compute_level()
+     * @see Game#fall()
+     * @see Game#score()
+     */
     private int score;
+    
+    /**
+     * Lignes détruites.
+     * 
+     * @see Game#lines_destroyed()
+     * @see Game#fall()
+     */
     private int lines;
+    
+    /**
+     * Niveau de difficulté du jeu.
+     * 
+     * @see Game#init()
+     * @see Game#level()
+     * @see Game#compute_level()
+     */
     private int level;
+    
+    /**
+     * Palier pour le prochain niveau.
+     * 
+     * @see Game#init()
+     * @see Game#compute_level()
+     */
     private int threshold;
+
+
 
     private Point[] temp_points;
     private PieceGenerator generator;
+
+
 
     private boolean is_busy;
     private int[][] grid_IA;
     private int[][] piece_IA;
     private int piece_id_IA;
+
+
 
     public Game() throws RemoteException
     {
