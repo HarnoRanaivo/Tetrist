@@ -10,7 +10,7 @@ public class Eval
 {
     public static int[] eval_possibilities(Grid grid, Point[][][] falls, Piece piece)
     {
-        int best_state = 0;
+        GridState best_state = null;
         int[] results = new int[3];
 
         for (int i = 0; i < falls.length; i++)
@@ -20,9 +20,12 @@ public class Eval
                 Point[] points = falls[i][j];
                 grid_buffer.put(points, piece.id());
                 int score = grid_buffer.check(points);
-                int evaluation = grid_buffer.eval();
-                int current_state = eval_state(score, evaluation);
-                if (current_state > best_state)
+                GridState current_state = grid_buffer.eval();
+                if (best_state == null)
+                {
+                    best_state = current_state;
+                }
+                else if (current_state.compareTo(best_state) > 0)
                 {
                     best_state = current_state;
 

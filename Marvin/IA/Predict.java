@@ -23,7 +23,7 @@ public class Predict
     {
         GridIA grid_buffer = new GridIA(grid);
         Vector<Vector<Point[]>> falls = new Vector<Vector<Point[]>>();
-        int[] blocks = grid_buffer.highest_blocks();
+        int[] blocks = grid_buffer.highest_blocks_array();
         int[] columns = possible_columns(grid_buffer, piece, blocks);
         Piece piece_buffer = new Piece(piece);
 
