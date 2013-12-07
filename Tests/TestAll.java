@@ -8,8 +8,8 @@ import org.junit.runners.Suite;
     TestComponent.TestPiece.class,
     TestComponent.TestGame.class,
     TestIA.TestGridIA.class,
-    TestIA.TestPredict.class,
+    // TestIA.TestPredict.class,
+    TestIA.TestGridState.class,
 })
-
 
 public class TestAll { }

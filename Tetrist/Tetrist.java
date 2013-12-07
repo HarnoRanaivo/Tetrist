@@ -177,7 +177,7 @@ class Tetrist
         }
 
         // Base Graphique
-        frame = new JFrame("TetriS");
+        frame = new JFrame("Tetrist");
         draw = Draw.factory(game);
         frame.getContentPane().add(draw);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);

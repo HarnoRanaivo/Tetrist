@@ -30,7 +30,7 @@ public class TestPredict
         for (char name : Piece.NAMES)
         {
             Piece piece = new Piece(name, MIDDLE, TOP);
-            int[] results = Predict.possible_columns(grid, piece, grid.highest_blocks());
+            int[] results = Predict.possible_columns(grid, piece, grid.highest_blocks_array());
             assertEquals(0, results[0]);
             assertEquals(9, results[1]);
         }

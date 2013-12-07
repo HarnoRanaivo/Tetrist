@@ -53,6 +53,11 @@ public class Grid
         return width;
     }
 
+    public synchronized void put(Piece piece)
+    {
+        put(piece.coordinates(), piece.id());
+    }
+
     public synchronized void put(Point[] coordinates, int value)
     {
         for (Point point : coordinates)

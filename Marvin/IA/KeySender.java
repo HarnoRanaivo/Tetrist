@@ -26,7 +26,7 @@ public class KeySender
     {
         if (key > 0 && key <= KEYS.length)
         {
-            int k = KEYS[key+1];
+            int k = KEYS[key-1];
             robot.keyPress(k);
             robot.keyRelease(k);
         }

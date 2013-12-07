@@ -25,6 +25,9 @@ public class Marvin
     static KeySender sender;
     static Grid grid;
     static Piece piece;
+    static int attempts;
+    static int MAX_ATTEMPTS = 2;
+    static int last_ordinate;
 
     static void my_sleep(int ms)
     {
@@ -93,6 +96,7 @@ public class Marvin
                         for (int j = 0; j < grid.height(); j++)
                             grid.put(i, j, g[i][j]);
                     got_game = true;
+                    attempts = 0;
                 }
             }
             while (! got_game);
@@ -100,7 +104,28 @@ public class Marvin
         catch (RemoteException re)
         {
             System.out.println(re);
+            if (attempts < MAX_ATTEMPTS)
+                attempts++;
+            else System.exit(1);
         }
+    }
+
+    private static void print_grid()
+    {
+        for (int j = grid.height() - 1; j >= 0; j--)
+        {
+            System.out.print("|");
+            for (int i = 0; i < grid.width(); i++)
+            {
+                int value = grid.get(i, j);
+                if (value != -1)
+                    System.out.print(" " + value + " |");
+                else
+                    System.out.print("   |");
+            }
+            System.out.println("");
+        }
+        System.out.println("");
     }
 
     public static void main(String[] args) throws AWTException, IOException
@@ -113,7 +138,7 @@ public class Marvin
         try
         {
             robot = new Robot();
-            robot.setAutoDelay(100); // 100 ms
+            robot.setAutoDelay(1); // 100 ms
             robot.setAutoWaitForIdle(false);
         }
         catch (AWTException ex)
@@ -146,12 +171,21 @@ public class Marvin
         //         sender.send_key(KeySender.DOWN);
         //     }
         // }
+        last_ordinate = -1;
         while (true)
         {
             get_game();
-            Point[][][] falls = Predict.possible_falls(grid, piece);
-            int[] directions = Eval.eval_possibilities(grid, falls, piece);
+            int center_ordinate = piece.coordinates()[0].ordinate();
+            if (center_ordinate != last_ordinate)
+            {
+            // Point[][][] falls = Predict.possible_falls(grid, piece);
+            int[] directions = Eval.eval_possibilities(grid, piece);
             sender.send_key(directions);
+            if (directions[1] != KeySender.NOTHING)
+                print_grid();
+            last_ordinate = center_ordinate;
+            sender.send_key(KeySender.DOWN);
+            }
         }
     }
 }

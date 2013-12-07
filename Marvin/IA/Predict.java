@@ -23,40 +23,43 @@ public class Predict
     {
         GridIA grid_buffer = new GridIA(grid);
         Vector<Vector<Point[]>> falls = new Vector<Vector<Point[]>>();
-        int[] blocks = grid_buffer.highest_blocks();
+        int[] blocks = grid_buffer.highest_blocks_array();
         int[] columns = possible_columns(grid_buffer, piece, blocks);
         Piece piece_buffer = new Piece(piece);
 
         for (int i = 0; i < 4; i++)
         {
             falls.add(new Vector<Point[]>());
-            int left = piece_buffer.minimum_abcissa();
-            int right = piece_buffer.maximum_abcissa();
-            int piece_width = right - left;
-            int piece_bottom = piece_buffer.minimum_ordinate();
-            int max_shift = columns[1] - columns[0] - piece_width + 1;
-            int shift = left - columns[0];
-
-            piece_buffer.left(shift);
-            for (int j = 0; j < max_shift; j++)
+            if (grid_buffer.in_bonds(piece_buffer.coordinates()))
             {
-                int current_left = piece_buffer.minimum_abcissa();
-                int max_height = blocks[current_left];
-                for (int k = 0; k < piece_width; k++)
-                    if (blocks[current_left+k] > max_height)
-                        max_height = blocks[current_left+k];
+                int left = piece_buffer.minimum_abcissa();
+                int right = piece_buffer.maximum_abcissa();
+                int piece_width = right - left;
+                int piece_bottom = piece_buffer.minimum_ordinate();
+                int max_shift = columns[1] - columns[0] - piece_width + 1;
+                int shift = left - columns[0];
 
-                int max_fall = piece_bottom - max_height - 1;
-                max_fall = max_fall < 0 ? 0 : max_fall;
-                piece_buffer.fall(max_fall);
-                Point[] candidates = new Point[4];
-                for (int m = 0; m < 4; m++)
-                    candidates[m] = new Point(piece_buffer.coordinates()[m]);
-                falls.elementAt(i).add(candidates);
-                piece_buffer.fly(max_fall);
-                piece_buffer.right();
+                piece_buffer.left(shift);
+                for (int j = 0; j < max_shift; j++)
+                {
+                    int current_left = piece_buffer.minimum_abcissa();
+                    int max_height = blocks[current_left];
+                    for (int k = 0; k < piece_width; k++)
+                        if (blocks[current_left+k] > max_height)
+                            max_height = blocks[current_left+k];
+
+                    int max_fall = piece_bottom - max_height - 1;
+                    max_fall = max_fall < 0 ? 0 : max_fall;
+                    piece_buffer.fall(max_fall);
+                    Point[] candidates = new Point[4];
+                    for (int m = 0; m < 4; m++)
+                        candidates[m] = new Point(piece_buffer.coordinates()[m]);
+                    falls.elementAt(i).add(candidates);
+                    piece_buffer.fly(max_fall);
+                    piece_buffer.right();
+                }
+                piece_buffer.left(max_shift + shift);
             }
-            piece_buffer.left(max_shift + shift);
             piece_buffer.rotate();
         }
 
