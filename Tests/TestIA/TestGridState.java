@@ -26,48 +26,63 @@ public class TestGridState
     @Test
     public void test_compareTo()
     {
-        test_empty_i();
-        test_misc();
+        test_compareTo_empty_grid();
     }
 
-    private void test_misc()
+
+    private void test_compareTo_empty_grid()
     {
-        GridIA grid_1 = new GridIA();
-        GridIA grid_2 = new GridIA();
-
-        grid_1.put(0, 0, 1);
-        grid_1.put(1, 0, 1);
-        grid_1.put(2, 0, 1);
-        grid_1.put(1, 1, 1);
-
-        grid_2.put(0, 1, 1);
-        grid_2.put(1, 1, 1);
-        grid_2.put(2, 1, 1);
-        grid_2.put(1, 0, 1);
-
-        GridState state_1 = new GridState(grid_1);
-        GridState state_2 = new GridState(grid_2);
-
-        assertTrue(state_1.compareTo(state_2) > 0);
+        test_empty('I', new int[] { 0, 1 });
+        test_empty('J', new int[] { 2, 1, 0, 3 });
+        test_empty('T', new int[] { 2, 1, 3, 0 });
+        test_empty('L', new int[] { 2, 3, 0, 1 });
+        test_empty('Z', new int[] { 0, 1 });
+        /* Pas de test pour 'O' */
+        test_empty('S', new int[] { 0, 1 });
     }
 
-    private void test_empty_i()
+    private void test_empty(char name, int[] order)
     {
-        GridIA grid_1 = new GridIA();
-        GridIA grid_2 = new GridIA();
+        int n = Piece.max_rotations(name) + 1;
+        GridIA[] grids = create_grids(n);
+        Piece[] pieces = create_pieces(n, name);
 
-        Piece i_1 = new_i();
-        Piece i_2 = new_i();
-        i_1.fall(TOP);
-        i_2.rotate();
-        i_2.fall(TOP-2);
-        grid_1.put(i_1.coordinates(), i_1.id());
-        grid_2.put(i_2.coordinates(), i_2.id());
+        correct_fall(grids, pieces);
+        assert_order(grids, order, "Empty, " + name);
+    }
 
-        GridState state_1 = new GridState(grid_1);
-        GridState state_2 = new GridState(grid_2);
+    private GridIA[] create_grids(int n)
+    {
+        GridIA[] grids = new GridIA[n];
+        for (int i = 0; i < n; i++)
+            grids[i] = new GridIA();
 
-        assertTrue(state_1.compareTo(state_2) > 0);
+        return grids;
+    }
+
+    private void correct_fall(GridIA[] grids, Piece[] pieces)
+    {
+        for (int i = 0; i < grids.length; i++)
+            correct_fall(grids[i], pieces[i]);
+    }
+
+    private Piece[] create_pieces(int n, char name)
+    {
+        Piece[] pieces = new Piece[n];
+        for (int i = 0; i < n; i++)
+        {
+            pieces[i] = new_piece(name);
+            for (int j = 0; j < i; j++)
+                pieces[i].rotate();
+        }
+
+        return pieces;
+    }
+
+    private void assert_order(GridIA[] grids, int[] order, String message)
+    {
+        for (int i = 0; i < grids.length - 1; i++)
+            assert_better_than(grids[order[i]], grids[order[i+1]], message);
     }
 
     @Test
@@ -108,5 +123,56 @@ public class TestGridState
     private Piece new_piece(char name)
     {
         return new Piece(name, MIDDLE, TOP);
+    }
+
+    private void assert_better_than(GridIA g, GridIA h, String message)
+    {
+        String failure_string = "Failure: " + message;
+        GridState state_1 = new GridState(g);
+        GridState state_2 = new GridState(h);
+
+        assertTrue(failure_string, state_1.compareTo(state_2) >= 0);
+    }
+
+    private void assert_equals(GridIA g, GridIA h, String message)
+    {
+        String failure_string = "Failure: " + message;
+        GridState state_1 = new GridState(g);
+        GridState state_2 = new GridState(h);
+
+        assertTrue(failure_string, state_1.equals(state_2));
+        assertTrue(failure_string, state_1.compareTo(state_2) == 0);
+    }
+
+    private void double_rotate(Piece piece)
+    {
+        rotate_n(piece, 2);
+    }
+
+    private void triple_rotate(Piece piece)
+    {
+        rotate_n(piece, 3);
+    }
+
+    private void rotate_n(Piece piece, int n)
+    {
+        for (int i = 0; i < n; i++)
+            piece.rotate();
+    }
+
+    private void correct_fall(GridIA grid, Piece piece)
+    {
+        Point[] needed_space = new Point[4];
+        for (int i = 0; i < 4; i++)
+            needed_space[i] = new Point();
+
+        piece.needed_space_fall(needed_space);
+        while (grid.in_bonds(needed_space) && grid.is_free(needed_space))
+        {
+            piece.fall();
+            piece.needed_space_fall(needed_space);
+        }
+
+        grid.put(piece);
     }
 }

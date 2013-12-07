@@ -7,6 +7,7 @@ public class Piece
     public static final int CARDINAL = 7;
     public static final PieceGenerator RANDOM = new PieceRandom();
     public static final char[] NAMES = { 'I', 'J', 'T', 'L', 'Z', 'O', 'S' };
+    public static final int[] ROTATIONS = { 1, 3, 3, 3, 1, 0, 1 };
     public static final Point[][][] FACES =
     {
         load_face(0), load_face(1), load_face(2), load_face(3),
@@ -301,6 +302,11 @@ public class Piece
             set[i] = new Piece(i, x, y);
 
         return set;
+    }
+
+    public static int max_rotations(char name)
+    {
+        return ROTATIONS[name_to_id(name)];
     }
 }
 
