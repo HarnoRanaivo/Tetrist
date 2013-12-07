@@ -30,9 +30,9 @@ public class GridIA extends Grid
 
     protected synchronized void init_grid()
     {
+        int width = width();
         blocks = 0;
         holes = 0;
-        int width = width();
         highest_block = -1;
         highest_blocks_array = new int[width];
         holes_array = new int[width];
@@ -45,12 +45,15 @@ public class GridIA extends Grid
         }
 
         super.init_grid();
+        check_highest();
     }
 
     public synchronized void put(int x, int y, int value)
     {
         int old_value = get(x, y);
 
+        /* /!\ Modifier la grille avant de faire les vérifications ! */
+        super.put(x, y, value);
         if (value != EMPTY_BLOCK)
         {
             if (old_value == EMPTY_BLOCK)
@@ -65,11 +68,13 @@ public class GridIA extends Grid
         else if (old_value != EMPTY_BLOCK)
         {
             blocks--;
+            blocks_array[x]--;
             if (blocks < 0)
                 blocks = 0;
-            check_highest(x);
+            if (blocks_array[x] < 0)
+                blocks_array[x] = 0;
+            check_highest();
         }
-        super.put(x, y, value);
         count_holes(x);
     }
 
@@ -108,23 +113,21 @@ public class GridIA extends Grid
 
     protected synchronized void check_highest(int column)
     {
-        int highest = height() - 1;
+        int highest;
 
-        for (int i = height() - 1; i >= 0 && get(column, i) == EMPTY_BLOCK; i--)
-            highest--;
+        for (highest = height() - 1; highest >= 0 && is_free(column, highest); highest--)
+            ;
 
         highest_blocks_array[column] = highest;
+        if (highest > highest_block)
+            highest_block = highest;
     }
 
     protected synchronized void check_highest()
     {
         highest_block = -1;
         for (int i = 0; i < width(); i++)
-        {
             check_highest(i);
-            if (highest_blocks_array[i] > highest_block)
-                highest_block = highest_blocks_array[i];
-        }
     }
 
     public synchronized void copy(Grid grid)
@@ -139,6 +142,11 @@ public class GridIA extends Grid
     public int blocks()
     {
         return blocks;
+    }
+
+    public int blocks(int column)
+    {
+        return blocks_array[column];
     }
 
     public int[] highest_blocks_array()

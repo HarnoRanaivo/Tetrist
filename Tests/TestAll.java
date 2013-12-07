@@ -9,7 +9,7 @@ import org.junit.runners.Suite;
     TestComponent.TestGame.class,
     TestIA.TestGridIA.class,
     TestIA.TestPredict.class,
+    TestIA.TestGridState.class,
 })
-
 
 public class TestAll { }
