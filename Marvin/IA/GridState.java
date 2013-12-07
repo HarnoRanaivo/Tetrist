@@ -120,7 +120,11 @@ public class GridState implements Comparable<GridState>, Comparator<GridState>
 
             result = state.holes == holes
                 && state.blocks == blocks
-                && state.highest_block == highest_block;
+                && state.highest_block == highest_block
+                && state.highest_blocks_array.length == highest_blocks_array.length
+                && state.holes_array.length == holes_array.length
+                && state.blocks_array.length == blocks_array.length
+            ;
         }
 
         return result;

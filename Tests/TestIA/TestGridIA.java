@@ -344,6 +344,15 @@ public class TestGridIA
         GridIA grid_2 = new GridIA();
         GridIA grid_3 = new GridIA();
         GridIA grid_4 = new GridIA();
+        GridIA grid_5 = new GridIA();
+
+        int[] blocks_1 = new int[grid_1.width()];
+        int[] blocks_3 = new int[grid_3.width()];
+        for (int i = 0; i < grid_1.width(); i++)
+        {
+            blocks_1[i] = 0;
+            blocks_3[i] = 0;
+        }
 
         Vector<Point> points = new Vector<Point>();
         for (int j = 0; j < grid_2.height(); j++)
@@ -352,6 +361,7 @@ public class TestGridIA
             {
                 grid_2.put(i, j, i*j);
                 grid_3.put(i, j, i*j);
+                blocks_3[i] += 1;
             }
             points.add(new Point(0, j));
         }
@@ -359,10 +369,30 @@ public class TestGridIA
         grid_2.check(points.toArray(new Point[0]));
         grid_4.copy(grid_3);
 
-        assertEquals("Failure: blocks(): ", 0, grid_1.blocks());
-        assertEquals("Failure: blocks(): ", 0, grid_2.blocks());
-        assertEquals("Failure: blocks(): ", grid_3.width() * grid_3.height(), grid_3.blocks());
-        assertEquals("Failure: blocks(): ", grid_3.blocks(), grid_4.blocks());
+        grid_5.put(0, 0, 2);
+        grid_5.put(0, 0, Grid.EMPTY_BLOCK);
+
+        test_blocks(grid_1, 0, blocks_1, 1);
+        test_blocks(grid_2, 0, blocks_1, 2);
+        test_blocks(grid_3, grid_3.width() * grid_3.height(), blocks_3, 3);
+        test_blocks(grid_4, grid_3.width() * grid_3.height(), blocks_3, 4);
+        test_blocks(grid_5, 0, blocks_1, 5);
+    }
+
+    private void test_blocks(GridIA grid, int expected_blocks, int[] expected_array, int n)
+    {
+        String failure_grid = failure(n);
+
+        assertEquals(failure_grid + ".blocks()", expected_blocks, grid.blocks());
+        assertArrayEquals(failure_grid + ".blocks_array", expected_array, grid.blocks_array());
+        int sum = 0;
+        for (int i = 0; i < grid.width(); i++)
+        {
+            assertEquals(failure_grid + ".block(i)", expected_array[i], grid.blocks(i));
+            assertEquals(failure_grid + ".block(i) != grid_" + n +".blocks_array()[i]", grid.blocks(i), grid.blocks_array()[i]);
+            sum += grid.blocks(i);
+        }
+        assertEquals(expected_blocks, sum);
     }
 
     @Test
@@ -417,6 +447,8 @@ public class TestGridIA
         GridIA grid_2 = new GridIA();
         GridIA grid_3 = new GridIA();
         GridIA grid_4 = new GridIA();
+        GridIA grid_5 = new GridIA();
+        GridIA grid_6 = new GridIA();
 
         int[] blocks_1 = new int[grid_1.width()];
         for (int i = 0; i < grid_1.width(); i++)
@@ -439,37 +471,41 @@ public class TestGridIA
 
         grid_4.copy(grid_3);
 
-        assertEquals("Failure: grid_1.highest_block()", -1, grid_1.highest_block());
-        assertArrayEquals("Failure: grid_1.highest_blocks_array()", blocks_1, grid_1.highest_blocks_array());
-        for (int i = 0; i < grid_1.width(); i++)
-        {
-            assertEquals("Failure: grid_1.highest_block(i)", blocks_1[i], grid_1.highest_block(i));
-            assertEquals("Failure: grid_1.highest_block(i) != grid_1.highest_blocks_array()[i]", grid_1.highest_block(i), grid_1.highest_blocks_array()[i]);
-        }
+        grid_5.put(0, 0, 2);
+        grid_5.put(0, 0, Grid.EMPTY_BLOCK);
 
-        assertEquals("Failure: grid_2.highest_block()", grid_2.height()-1, grid_2.highest_block());
-        assertArrayEquals("Failure: grid_2.highest_blocks_arra()", blocks_2, grid_2.highest_blocks_array());
-        for (int i = 0; i < grid_2.width(); i++)
+        Vector<Point> points = new Vector<Point>();
+        for (int j = 0; j < grid_6.height(); j++)
         {
-            assertEquals("Failure: grid_1.highest_block(i)", blocks_2[i], grid_2.highest_block(i));
-            assertEquals("Failure: grid_1.highest_block(i) != grid_1.highest_blocks_array()[i]", grid_2.highest_block(i), grid_2.highest_blocks_array()[i]);
+            for (int i = 0; i < grid_6.width(); i++)
+                grid_6.put(i, j, i*j);
+            points.add(new Point(0, j));
         }
+        grid_6.check(points.toArray(new Point[0]));
 
-        assertEquals("Failure: grid_3.highest_block()", grid_3.width()-1, grid_3.highest_block());
-        assertArrayEquals("Failure: grid_3.highest_blocks_array()", blocks_3, grid_3.highest_blocks_array());
-        for (int i = 0; i < grid_3.width(); i++)
-        {
-            assertEquals("Failure: grid_1.highest_block(i)", blocks_3[i], grid_3.highest_block(i));
-            assertEquals("Failure: grid_1.highest_block(i) != grid_1.highest_blocks_array()[i]", grid_3.highest_block(i), grid_3.highest_blocks_array()[i]);
-        }
+        test_highest_blocks_array(grid_1, -1, blocks_1, 1);
+        test_highest_blocks_array(grid_2, grid_2.height()-1,  blocks_2, 2);
+        test_highest_blocks_array(grid_3, grid_3.width()-1, blocks_3, 3);
+        test_highest_blocks_array(grid_4, grid_3.highest_block(), grid_3.highest_blocks_array(), 4);
+        test_highest_blocks_array(grid_5, -1, blocks_1, 5);
+        test_highest_blocks_array(grid_6, -1, blocks_1, 6);
+    }
 
-        assertEquals("Failure: grid_4.highest_block()", grid_3.highest_block(), grid_4.highest_block());
-        assertArrayEquals("Failure: grid_4.highest_blocks_array()", blocks_3, grid_4.highest_blocks_array());
-        assertArrayEquals("Failure: grid_4.highest_blocks_array()", grid_3.highest_blocks_array(), grid_4.highest_blocks_array());
-        for (int i = 0; i < grid_4.width(); i++)
+    private void test_highest_blocks_array(GridIA grid, int expected_highest, int[] expected_array, int n)
+    {
+        String failure_grid = failure(n);
+
+        assertEquals(failure_grid + ".highest_block()", expected_highest, grid.highest_block());
+        assertArrayEquals(failure_grid + ".highest_blocks_array", expected_array, grid.highest_blocks_array());
+        for (int i = 0; i < grid.width(); i++)
         {
-            assertEquals("Failure: grid_3.highest_block(i)", blocks_3[i], grid_4.highest_block(i));
-            assertEquals("Failure: grid_3.highest_block(i) != grid_4.highest_blocks_array(i)", grid_3.highest_block(i), grid_4.highest_block(i));
+            assertEquals(failure_grid + ".highest_block(i)", expected_array[i], grid.highest_block(i));
+            assertEquals(failure_grid + ".highest_block(i) != grid_" + n +".highest_blocks_array()[i]", grid.highest_block(i), grid.highest_blocks_array()[i]);
         }
+    }
+
+    private String failure(int n)
+    {
+        return "Failure: grid_" + n;
     }
 }

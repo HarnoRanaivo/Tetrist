@@ -12,5 +12,4 @@ import org.junit.runners.Suite;
     TestIA.TestGridState.class,
 })
 
-
 public class TestAll { }

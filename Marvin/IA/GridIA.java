@@ -52,6 +52,8 @@ public class GridIA extends Grid
     {
         int old_value = get(x, y);
 
+        /* /!\ Modifier la grille avant de faire les vérifications ! */
+        super.put(x, y, value);
         if (value != EMPTY_BLOCK)
         {
             if (old_value == EMPTY_BLOCK)
@@ -59,19 +61,20 @@ public class GridIA extends Grid
                 blocks++;
                 blocks_array[x]++;
             }
-            // highest_blocks_array[x] = y;
-            // if (y > highest_block)
-            //     highest_block = y;
+            highest_blocks_array[x] = y;
+            if (y > highest_block)
+                highest_block = y;
         }
         else if (old_value != EMPTY_BLOCK)
         {
             blocks--;
+            blocks_array[x]--;
             if (blocks < 0)
                 blocks = 0;
-            // check_highest(x);
+            if (blocks_array[x] < 0)
+                blocks_array[x] = 0;
+            check_highest();
         }
-        super.put(x, y, value);
-        check_highest(x);
         count_holes(x);
     }
 
