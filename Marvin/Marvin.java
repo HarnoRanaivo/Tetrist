@@ -27,6 +27,7 @@ public class Marvin
     static Piece piece;
     static int attempts;
     static int MAX_ATTEMPTS = 2;
+    static int last_ordinate;
 
     static void my_sleep(int ms)
     {
@@ -137,7 +138,7 @@ public class Marvin
         try
         {
             robot = new Robot();
-            robot.setAutoDelay(100); // 100 ms
+            robot.setAutoDelay(1); // 100 ms
             robot.setAutoWaitForIdle(false);
         }
         catch (AWTException ex)
@@ -170,14 +171,21 @@ public class Marvin
         //         sender.send_key(KeySender.DOWN);
         //     }
         // }
+        last_ordinate = -1;
         while (true)
         {
             get_game();
+            int center_ordinate = piece.coordinates()[0].ordinate();
+            if (center_ordinate != last_ordinate)
+            {
             // Point[][][] falls = Predict.possible_falls(grid, piece);
             int[] directions = Eval.eval_possibilities(grid, piece);
             sender.send_key(directions);
             if (directions[1] != KeySender.NOTHING)
                 print_grid();
+            last_ordinate = center_ordinate;
+            sender.send_key(KeySender.DOWN);
+            }
         }
     }
 }

@@ -89,18 +89,35 @@ public class GridState implements Comparable<GridState>, Comparator<GridState>
             int holes_diff = Math.abs(holes - o.holes);
 
             if (blocks < o.blocks)
+            {
                 result = 1;
+            }
             else if (blocks == o.blocks)
             {
                 if (holes < o.holes)
-                    result = 1;
+                {
+                    if (highest_block < o.highest_block)
+                        result = 1;
+                    else if (highest_block == o.highest_block)
+                    {
+                        if (highest_blocks_std < o.highest_blocks_std)
+                            result = 1;
+                    }
+                    else
+                    {
+                        if (blocks_mean < o.blocks_mean)
+                            result = 1;
+                        else
+                            result = 1;
+                    }
+                }
                 else if (holes == o.holes)
                 {
                     if (highest_block < o.highest_block)
                         result = 1;
                     else if (highest_block == o.highest_block)
                     {
-                        if (highest_blocks_std > o.highest_blocks_std)
+                        if (highest_blocks_std < o.highest_blocks_std)
                             result = 1;
                     }
                 }
