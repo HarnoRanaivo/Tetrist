@@ -2,6 +2,7 @@ package IA;
 
 import Component.Point;
 import Component.Grid;
+import Component.Piece;
 
 public class GridIA extends Grid
 {
@@ -188,5 +189,21 @@ public class GridIA extends Grid
     public synchronized GridState eval()
     {
         return new GridState(this);
+    }
+
+    public synchronized void brute_fall(Piece piece)
+    {
+        Point[] needed_space = new Point[4];
+        for (int i = 0; i < 4; i++)
+            needed_space[i] = new Point();
+
+        piece.needed_space_fall(needed_space);
+        while (in_bonds(needed_space) && is_free(needed_space))
+        {
+            piece.fall();
+            piece.needed_space_fall(needed_space);
+        }
+
+        put(piece);
     }
 }

@@ -26,7 +26,7 @@ public class Marvin
     static Grid grid;
     static Piece piece;
     static int attempts;
-    static int MAX_ATTEMPTS = 10;
+    static int MAX_ATTEMPTS = 2;
 
     static void my_sleep(int ms)
     {
@@ -173,8 +173,8 @@ public class Marvin
         while (true)
         {
             get_game();
-            Point[][][] falls = Predict.possible_falls(grid, piece);
-            int[] directions = Eval.eval_possibilities(grid, falls, piece);
+            // Point[][][] falls = Predict.possible_falls(grid, piece);
+            int[] directions = Eval.eval_possibilities(grid, piece);
             sender.send_key(directions);
             if (directions[1] != KeySender.NOTHING)
                 print_grid();

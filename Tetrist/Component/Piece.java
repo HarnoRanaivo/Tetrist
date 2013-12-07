@@ -308,6 +308,12 @@ public class Piece
     {
         return ROTATIONS[name_to_id(name)];
     }
+
+    public static int max_rotations(int n)
+    {
+        int index = (n < 0 || n >= ROTATIONS.length) ? 0 : n;
+        return ROTATIONS[index];
+    }
 }
 
 class PieceRandom implements PieceGenerator
