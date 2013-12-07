@@ -92,35 +92,33 @@ public class GridState implements Comparable<GridState>, Comparator<GridState>
             {
                 result = 1;
             }
-            else if (blocks == o.blocks)
+            else if (holes < o.holes)
             {
-                if (holes < o.holes)
+                if (highest_block < o.highest_block)
+                    result = 1;
+                else if (highest_block == o.highest_block)
                 {
-                    if (highest_block < o.highest_block)
                         result = 1;
-                    else if (highest_block == o.highest_block)
-                    {
-                        if (highest_blocks_std < o.highest_blocks_std)
-                            result = 1;
-                    }
-                    else
-                    {
-                        if (blocks_mean < o.blocks_mean)
-                            result = 1;
-                        else
-                            result = 1;
-                    }
                 }
-                else if (holes == o.holes)
+                else if (highest_diff < 2)
                 {
-                    if (highest_block < o.highest_block)
-                        result = 1;
-                    else if (highest_block == o.highest_block)
-                    {
-                        if (highest_blocks_std < o.highest_blocks_std)
-                            result = 1;
-                    }
+                    result = 1;
                 }
+            }
+            else if (holes == o.holes)
+            {
+                if (highest_block < o.highest_block)
+                    result = 1;
+                else if (highest_block == o.highest_block)
+                {
+                    if (blocks_std < o.blocks_std)
+                        result = 1;
+                }
+            }
+            else
+            {
+                if (highest_block < o.highest_block && holes_diff < 3)
+                    result = 1;
             }
         }
 
