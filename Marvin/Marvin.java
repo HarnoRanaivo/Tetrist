@@ -6,13 +6,15 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 // Client
-import java.rmi.* ;
-import java.net.MalformedURLException ;
+import java.rmi.*;
+import java.rmi.registry.*;
+import java.net.MalformedURLException;
 import java.util.*;
 
 import IA.KeySender;
 import IA.Eval;
 import IA.Predict;
+import IA.Orders;
 import Component.Point;
 import Component.Grid;
 import Component.Piece;
@@ -149,28 +151,16 @@ public class Marvin
         // Client
         try
         {
-            game = (GameInterface)Naming.lookup("//localhost/matrice");
+            Registry registry = LocateRegistry.getRegistry(55042);
+            game = (GameInterface) registry.lookup("tetrist");
         }
-        catch (MalformedURLException e)
+        catch (Exception e)
         {
             System.out.println(e);
-        }
-        catch (NotBoundException re)
-        {
-            System.out.println(re);
+            System.exit(1);
         }
 
         sender = new KeySender(robot);
-        // my_sleep(1000);
-        // for (int i = 0; i < 10; i++)
-        // {
-        //     sender.send_key(KeySender.LEFT);
-        //     my_sleep(100);
-        //     for (int j = 0; j < 37; i++)
-        //     {
-        //         sender.send_key(KeySender.DOWN);
-        //     }
-        // }
         last_ordinate = -1;
         while (true)
         {
@@ -178,13 +168,12 @@ public class Marvin
             int center_ordinate = piece.coordinates()[0].ordinate();
             if (center_ordinate != last_ordinate)
             {
-            // Point[][][] falls = Predict.possible_falls(grid, piece);
-            int[] directions = Eval.eval_possibilities(grid, piece);
-            sender.send_key(directions);
-            if (directions[1] != KeySender.NOTHING)
-                print_grid();
-            last_ordinate = center_ordinate;
-            sender.send_key(KeySender.DOWN);
+                Orders orders = Eval.eval_possibilities(grid, piece);
+                sender.send_key(orders);
+                if (orders.direction() != KeySender.NOTHING)
+                    print_grid();
+                last_ordinate = center_ordinate;
+                sender.send_key(KeySender.DOWN);
             }
         }
     }

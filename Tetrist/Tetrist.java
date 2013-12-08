@@ -1,6 +1,8 @@
 // Connexion IA
 import java.net.*;
 import java.rmi.*;
+import java.rmi.registry.*;
+import java.rmi.server.*;
 
 // Graphique
 import javax.swing.*;
@@ -165,13 +167,10 @@ class Tetrist
         try
         {
             game = new Game();
-            Naming.rebind("matrice", game);
+            Registry registry = LocateRegistry.createRegistry(55042);
+            registry.rebind("tetrist", game);
         }
-        catch (RemoteException re)
-        {
-            System.out.println(re);
-        }
-        catch (MalformedURLException e)
+        catch (Exception e)
         {
             System.out.println(e);
         }
