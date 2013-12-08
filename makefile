@@ -22,11 +22,9 @@ tetrist : tetristbytecodedir
 	@$(COMPILER) -sourcepath $(TETRIST_SPATH) -cp $(TETRIST_BPATH) -d $(TETRIST_BPATH) $(TETRIST_SPATH)/Tetrist.java
 	@cp -R $(TETRIST_SPATH)/Fonts $(TETRIST_BPATH)
 	@cp -R $(TETRIST_SPATH)/Pictures $(TETRIST_BPATH)
-	@rmic -classpath $(TETRIST_BPATH) -d $(TETRIST_BPATH) Component.Game
 
 marvin : marvinbytecodedir tetrist
 	@$(COMPILER) -sourcepath $(MARVIN_SPATH) -cp $(MARVIN_BPATH) -d $(MARVIN_BPATH) $(MARVIN_SPATH)/Marvin.java
-	@cp $(TETRIST_BPATH)/Component/Game_Stub.class $(MARVIN_BPATH)/Component/Game_Stub.class
 
 tests : testbytecodedir
 	@$(COMPILER) -sourcepath $(TESTS_SPATH) -cp $(TESTS_BPATH) -cp /usr/share/java/junit.jar -d $(TESTS_BPATH) $(TESTS_SPATH)/TestAll.java
