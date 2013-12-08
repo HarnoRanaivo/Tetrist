@@ -90,35 +90,53 @@ public class GridState implements Comparable<GridState>, Comparator<GridState>
 
             if (blocks < o.blocks)
             {
-                result = 1;
+                if (holes < o.holes)
+                    result = 1;
+                else if (holes == o.holes)
+                {
+                    if (highest_blocks_std < o.highest_blocks_std)
+                        result = 1;
+                    else if (highest_blocks_std == o.highest_blocks_std)
+                        result = 0;
+                }
+                else if (highest_block > 4 && holes_diff < 3)
+                    result = 1;
+                else if (holes_diff < 5)
+                    result = 1;
             }
-            else if (holes < o.holes)
+            else if (blocks_diff == 0 && holes < o.holes)
             {
                 if (highest_block < o.highest_block)
                     result = 1;
                 else if (highest_block == o.highest_block)
                 {
+                    if (holes_std < o.holes_std)
                         result = 1;
+                    else if (holes_std == o.holes_std)
+                        result = 0;
                 }
                 else if (highest_diff < 2)
                 {
                     result = 1;
                 }
+                // }
             }
-            else if (holes == o.holes)
+            else if (blocks_diff == 0 && holes == o.holes)
             {
                 if (highest_block < o.highest_block)
                     result = 1;
                 else if (highest_block == o.highest_block)
                 {
-                    if (blocks_std < o.blocks_std)
+                    if (holes_std < o.holes_std)
                         result = 1;
+                    else if (holes_std == o.holes_std)
+                        result = 0;
                 }
             }
             else
             {
-                if (highest_block < o.highest_block && holes_diff < 3)
-                    result = 1;
+                // if (highest_block < o.highest_block && holes_diff < 3)
+                //     result = 1;
             }
         }
 
