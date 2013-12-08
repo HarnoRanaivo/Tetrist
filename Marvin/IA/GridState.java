@@ -141,16 +141,7 @@ public class GridState implements Comparable<GridState>, Comparator<GridState>
 
         if (holes < o.holes)
             result = 1;
-        else if (holes == o.holes)
-        {
-            if (highest_blocks_std < o.highest_blocks_std)
-                result = 1;
-            else if (highest_blocks_std == o.highest_blocks_std)
-                result = 0;
-        }
-        else if (highest_block > 4 && holes_diff < 3)
-            result = 1;
-        else if (holes_diff < 5)
+        else if (holes_diff < 3)
             result = 1;
 
         return result;
@@ -165,19 +156,7 @@ public class GridState implements Comparable<GridState>, Comparator<GridState>
 
         if (holes < o.holes)
         {
-            if (highest_block < o.highest_block)
                 result = 1;
-            else if (highest_block == o.highest_block)
-            {
-                if (holes_std < o.holes_std)
-                    result = 1;
-                else if (holes_std == o.holes_std)
-                    result = 0;
-            }
-            else if (highest_diff < 2)
-            {
-                result = 1;
-            }
         }
         else if (holes == o.holes)
         {
@@ -185,10 +164,22 @@ public class GridState implements Comparable<GridState>, Comparator<GridState>
                 result = 1;
             else if (highest_block == o.highest_block)
             {
-                if (holes_std < o.holes_std)
+                if (highest_blocks_mean < o.highest_blocks_mean)
+                {
                     result = 1;
-                else if (holes_std == o.holes_std)
-                    result = 0;
+                }
+                else if (highest_blocks_mean == o.highest_blocks_mean)
+                {
+                    if (blocks_std < o.blocks_std)
+                        result = 1;
+                    else if (blocks_std == o.blocks_std)
+                    {
+                        if (holes_std < o.holes_std)
+                            result = 1;
+                        else if (holes_std == o.holes_std)
+                            result = 0;
+                    }
+                }
             }
         }
 
