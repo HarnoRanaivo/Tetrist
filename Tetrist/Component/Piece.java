@@ -4,38 +4,177 @@ import java.util.Random;
 
 public class Piece
 {
+    /**
+     * Nombre de pièces <b>différentes</b>.
+     *
+     * @see Piece#full_set_factory(int,int)
+     * @see PieceRandom#new_piece(int,int)
+     */
     public static final int CARDINAL = 7;
+
+    /**
+     * Générateur de pièces.
+     *
+     * @see Game#Constructor()
+     */
     public static final PieceGenerator RANDOM = new PieceRandom();
+
+    /**
+     * Les différents noms attribués aux pièces.</br>
+     * <i>(la réprésentation d'une pièce se fait grâce à une lettre en comparant la ressemblance)</i>
+     *
+     * @see Piece#name_to_id(char)
+     */
     public static final char[] NAMES = { 'I', 'J', 'T', 'L', 'Z', 'O', 'S' };
+
+    /**
+     * Rotations.
+     */
     public static final int[] ROTATIONS = { 1, 3, 3, 3, 1, 0, 1 };
+
+    /**
+     * Chargement de tous les paramètres en fonction de la pièce.
+     *
+     * @see Piece#Constructor(int,int,int)
+     */
     public static final Point[][][] FACES =
     {
         load_face(0), load_face(1), load_face(2), load_face(3),
         load_face(4), load_face(5), load_face(6)
     };
 
+
+    /**
+     * Comparateur d'infériorité d'entiers.
+     *
+     * @see Piece#maximum_abcissa()
+     * @see Piece#maximum_ordinate()
+     */
     private static final IntComp LOWER = new Lower();
+
+    /**
+     * Comparateur de supériorité d'entiers.
+     *
+     * @see Piece#minimum_abcissa()
+     * @see Piece#minimum_ordinate()
+     */
     private static final IntComp GREATER = new Greater();
 
+
+    /**
+     * Valeur pour descendre une pièce.
+     *
+     * @see Piece#needed_space_fall(Point[])
+     * @see Piece#needed_space(Point[],int)
+     */
     protected static final int MOVE_DOWN = 0;
+
+    /**
+     * Valeur pour faire aller à gauche une pièce.
+     *
+     * @see Piece#needed_space_left(Point[])
+     * @see Piece#needed_space(Point[],int)
+     */
     protected static final int MOVE_LEFT = 1;
+
+    /**
+     * Valeur pour faire aller à droite une pièce.
+     *
+     * @see Piece#needed_space_right(Point[])
+     */
     protected static final int MOVE_RIGHT = 2;
 
+    /**
+     * Numéro de référence de la pièce.
+     *
+     * @see Piece#Constructor(int,int,int)
+     * @see Piece#id()
+     * @see Piece#rotate()
+     */
     protected final int id;
+
+    /**
+     * Objet représentant la pièce.
+     *
+     * @see Piece#Constructor(int,int,int)
+     * @see Piece#init()
+     * @see Piece#face()
+     * @see Piece#rotate()
+     */
     protected final Point[][] face;
 
+
+    /**
+     * Abscisse à l'apparition.
+     *
+     * @see Piece#Constructor(int,int,int)
+     * @see Piece#init()
+     * @see Piece#spawn_abcissa()
+     */
     private final int spawn_abcissa;
+
+    /**
+     * Ordonnée à l'apparition.
+     *
+     * @see Piece#Constructor(int,int,int)
+     * @see Piece#init()
+     * @see Piece#spawn_ordinate()
+     */
     private final int spawn_ordinate;
+
+    /**
+     * Rotation à l'apparition.
+     *
+     * @see Piece#Constructor(int,int,int)
+     * @see Piece#init()
+     * @see Piece#spawn_rotation()
+     */
     private final int spawn_rotation;
 
+
+    /**
+     * Rotation de la pièce.
+     *
+     * @see Piece#init()
+     * @see Piece#rotation()
+     * @see Piece#rotate()
+     */
     private int rotation;
+
+    /**
+     * Coordonnées de la pièce.
+     *
+     * @see Piece#Constructor(int,int,int)
+     * @see Piece#init()
+     */
     private Point[] coordinates;
 
+
+    /**
+     * Constructeur d'une pièce à partir de son nom.
+     *
+     * @param c
+     *          Nom de la pièce.
+     * @param x
+     *          Abscisse d'apparition.
+     * @param y
+     *          Ordonnée d'apparition.
+     */
     public Piece(char c, int x, int y)
     {
         this(name_to_id(c), x, y);
     }
 
+    /**
+     * Constructeur d'une pièce à partir de son id.
+     *
+     * @param n
+     *          id de la pièce.
+     * @param x
+     *          Abscisse d'apparition.
+     * @param y
+     *          Ordonnée d'apparition.
+     */
     public Piece(int n, int x, int y)
     {
         id = n;
@@ -50,12 +189,21 @@ public class Piece
         init();
     }
 
+    /**
+     * Constructeur d'une pièce avec une autre pièce.
+     *
+     * @param p
+     *          Pièce.
+     */
     public Piece(Piece p)
     {
         this(p.id(), p.spawn_abcissa(), p.spawn_ordinate());
         set_coordinates(p.coordinates());
     }
 
+    /**
+     * Initialisation de la pièce.
+     */
     private void init()
     {
         rotation = spawn_rotation;
@@ -73,6 +221,13 @@ public class Piece
         }
     }
 
+    /**
+     * Retourne le code d'une pièce à l'aide de son nom.
+     *
+     * @param c
+     *          Nom de la pièce.
+     * @return Code de la pièce.
+     */
     public static int name_to_id(char c)
     {
         int id = -1;
@@ -84,42 +239,82 @@ public class Piece
         return (id == -1) ? 0 : id;
     }
 
+    /**
+     * Value les coordonnées de la pièce.
+     *
+     * @param points
+     *          Points composant la pièce.
+     */
     public synchronized void set_coordinates(Point[] points)
     {
         for (int i = 0; i < points.length; i++)
             coordinates[i].set(points[i]);
     }
 
+    /**
+     * Retourne l'abscisse d'apparition.
+     *
+     * @return spawn_abcissa.
+     */
     public int spawn_abcissa()
     {
         return spawn_abcissa;
     }
 
+    /**
+     * Retourne l'ordonnée d'apparition.
+     *
+     * @return spawn_ordinate.
+     */
     public int spawn_ordinate()
     {
         return spawn_ordinate;
     }
 
+    /**
+     * Retourne la rotation de la pièce.
+     *
+     * @return rotation.
+     */
     public int rotation()
     {
         return rotation;
     }
 
+    /**
+     * Retourne la pièce.
+     *
+     * @return face.
+     */
     public Point[][] face()
     {
         return face;
     }
 
+    /**
+     * Retourne les coordonnée de la pièce.
+     *
+     * @return coordinates.
+     */
     public Point[] coordinates()
     {
         return coordinates;
     }
 
+    /**
+     * Retourne le code de la pièce.
+     *
+     * @return id.
+     */
     public int id()
     {
         return id;
     }
 
+    /**
+     * Applique la rotation d'une pièce.</br>
+     * <i>(cette méthode utilise le code des différentes pièces)</i>
+     */
     public synchronized void rotate()
     {
         if (id != 5)
@@ -145,67 +340,137 @@ public class Piece
         }
     }
 
+    /**
+     * Fait tomber une pièce d'une case.
+     */
     public synchronized void fall()
     {
         fall(1);
     }
 
+    /**
+     * Fait aller une pièce d'une case vers la gauche.
+     */
     public synchronized void left()
     {
         left(1);
     }
 
+    /**
+     * Fait aller une pièce d'une case vers la droite.
+     */
     public synchronized void right()
     {
         right(1);
     }
 
+    /**
+     * Remonte une pièce d'une case.
+     */
     public synchronized void fly()
     {
         fly(1);
     }
 
+    /**
+     * Fait aller une pièce de plusieurs cases vers la gauche.
+     *
+     * @param columns
+     *          Nombre de cases de décalage.
+     */
     public synchronized void left(int columns)
     {
         shift(-columns, 0);
     }
 
+    /**
+     * Fait aller une pièce de plusieurs cases vers la droite.
+     *
+     * @param columns
+     *          Nombre de cases de décalage.
+     */
     public synchronized void right(int columns)
     {
         shift(columns, 0);
     }
 
+    /**
+     * Fait tomber une pièce de plusieurs cases.
+     *
+     * @param lines
+     *          Nombre de cases de décalage.
+     */
     public synchronized void fall(int lines)
     {
         shift(0, -lines);
     }
 
+    /**
+     * Remonte de plusieurs cases.
+     *
+     * @param lines
+     *          Nombre de cases de décalage.
+     */
     public synchronized void fly(int lines)
     {
         shift(0, lines);
     }
 
+    /**
+     * Décalage d'une pièce.
+     *
+     * @param horizontal_shift
+     *          Décalage horizontal.
+     * @param vertical_shift
+     *          Décalage vertical.
+     */
     private synchronized void shift(int horizontal_shift, int vertical_shift)
     {
         for (Point point : coordinates)
             point.shift(horizontal_shift, vertical_shift);
     }
 
+    /**
+     * Espace nécessaire pour tomber.
+     *
+     * @param space
+     *          Espace.
+     */
     public void needed_space_fall(Point[] space)
     {
         needed_space(space, MOVE_DOWN);
     }
 
+    /**
+     * Espace nécessaire pour aller à gauche.
+     *
+     * @param space
+     *          Espace.
+     */
     public void needed_space_left(Point[] space)
     {
         needed_space(space, MOVE_LEFT);
     }
 
+    /**
+     * Espace nécessaire pour aller à droite.
+     *
+     * @param space
+     *          Espace.
+     */
     public void needed_space_right(Point[] space)
     {
         needed_space(space, MOVE_RIGHT);
     }
 
+    /**
+     * Espace nécessaire pour un déplacement quelconque.
+     *
+     * @param space
+     *          Espace.
+     * @param move
+     *          Déplacement effectué.
+     */
     private void needed_space(Point[] space, int move)
     {
         int h_shift = (move == MOVE_DOWN) ? 0 : ((move == MOVE_LEFT) ? -1 : 1);
@@ -218,6 +483,12 @@ public class Piece
         }
     }
 
+    /**
+     * Espace nécessaire pour une rotation.
+     *
+     * @param space
+     *          Espace.
+     */
     public void needed_space_rotation(Point[] space)
     {
         rotate();
@@ -229,6 +500,13 @@ public class Piece
             rotate();
     }
 
+    /**
+     * Charge les paramètres d'un pièce en fonction de son code.
+     *
+     * @param p
+     *          Code de pièce.
+     * @return un bloc.
+     */
     private static Point[][] load_face(int p)
     {
         Point[][] blocks = new Point[4][4];
@@ -261,6 +539,15 @@ public class Piece
         return blocks;
     }
 
+    /**
+     * Comparateur de minimum <b>ou</b> de maximum avec un point.
+     *
+     * @param comparator
+     *          Applique le minimum <b>ou</b> le maximum.
+     * @param getter
+     *          Point à comparer.
+     * @return Différence entre les deux points.
+     */
     private int min_max(IntComp comparator, PointValueGetter getter)
     {
         int value = getter.get_value(coordinates[0]);
@@ -295,6 +582,15 @@ public class Piece
         return min_max(LOWER, Point.ORDINATE_GETTER);
     }
 
+    /**
+     * Crée toutes les pièces différentes.
+     *
+     * @param x
+     *          Abscisse.
+     * @param y
+     *          Ordonnée.
+     * @return les 7 pièces du jeu Tetrist.
+     */
     public static Piece[] full_set_factory(int x, int y)
     {
         Piece[] set = new Piece[CARDINAL];
@@ -316,15 +612,35 @@ public class Piece
     }
 }
 
+/**
+ * Classe de générateur de pièces <b>aléatoires</b>.
+ */
 class PieceRandom implements PieceGenerator
 {
+    /**
+     * Générateur de nombres aléatoires.
+     *
+     * @see PieceRandom#Constructor()
+     */
     private final Random generator;
 
+    /**
+     * Constructeur de pièces aléatoires.
+     */
     public PieceRandom()
     {
         generator = new Random();
     }
 
+    /**
+     * Génère une nouvelle pièce aléatoire.
+     *
+     * @param x
+     *          Abscisse.
+     * @param y
+     *          Ordonnée.
+     * @return une pièce aléatoire.
+     */
     public Piece new_piece(int x, int y)
     {
         int id = generator.nextInt(Piece.CARDINAL);
@@ -334,21 +650,48 @@ class PieceRandom implements PieceGenerator
     }
 }
 
+/**
+ * Classe abstraite pour la comparaison d'entiers.
+ */
 abstract class IntComp
 {
     abstract boolean compare(int a, int b);
 }
 
+/**
+ * Classe de comparaison d'un entier inférieur à un autre.
+ */
 class Lower extends IntComp
 {
+    /**
+     * Compare deux entiers.
+     *
+     * @param a
+     *          Entier a.
+     * @param b
+     *          Entier b.
+     * @return <b>true</b> si a<b, <b>false</b> sinon.
+     */
     boolean compare(int a, int b)
     {
         return a < b;
     }
 }
 
+/**
+ * Classe de comparaison d'un entier supérieur à un autre.
+ */
 class Greater extends IntComp
 {
+    /**
+     * Compare deux entiers.
+     *
+     * @param a
+     *          Entier a.
+     * @param b
+     *          Entier b.
+     * @return <b>true</b> si a>=b, <b>false</b> sinon.
+     */
     boolean compare(int a, int b)
     {
         return a >= b;
