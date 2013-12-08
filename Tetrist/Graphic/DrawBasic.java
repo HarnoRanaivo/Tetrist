@@ -16,6 +16,9 @@ import Graphic.Basic.DrawGridBasic;
 import Graphic.Basic.DrawInfosBasic;
 import Graphic.Basic.DrawBackgroundBasic;
 
+/**
+ * Classe d'un dessin complet d'une partie de Tetrist sans image et font.
+ */
 public class DrawBasic extends Draw
 {
     public DrawBasic(Game g, DrawGrid dg, DrawNext dn, DrawBlock db)
@@ -64,6 +67,14 @@ public class DrawBasic extends Draw
         );
     }
 
+	/**
+	 * Création d'un dessin d'arrière-plan sans image.
+	 * 
+	 * @param w
+	 * 			Largeur.
+	 * @param h
+	 * 			Hauteur.
+	 */
     public DrawBackground create_draw_background(int w, int h)
     {
         return new DrawBackgroundBasic(w, h);

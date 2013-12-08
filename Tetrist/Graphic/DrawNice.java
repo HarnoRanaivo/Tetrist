@@ -16,6 +16,9 @@ import Graphic.Nice.DrawGridNice;
 import Graphic.Nice.DrawBlockNice;
 import Graphic.Nice.DrawBackgroundNice;
 
+/**
+ * Classe d'un dessin complet d'une partie de Tetrist avec images et font.
+ */
 public class DrawNice extends Draw
 {
     public DrawNice(Game g, DrawGrid dg, DrawNext dn, DrawBlock db) throws Exception
@@ -78,11 +81,22 @@ public class DrawNice extends Draw
         );
     }
 
+	/**
+	 * Création d'un dessin d'arrière-plan avec une image.
+	 * 
+	 * @param w
+	 * 			Largeur.
+	 * @param h
+	 * 			Hauteur.
+	 */
     public DrawBackground create_draw_background(int w, int h)
     {
         return new DrawBackgroundNice(w, h);
     }
 
+	/**
+	 * Augmentation de la taille de la fenêtre.
+	 */
     protected void set_size()
     {
         window_height += 30;

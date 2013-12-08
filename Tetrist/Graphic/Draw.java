@@ -16,8 +16,12 @@ import Graphic.Abstract.DrawBackground;
 import Graphic.DrawBasic;
 import Graphic.DrawNice;
 
+/**
+ * Classe de l'affichage actuel.
+ */
 public abstract class Draw extends JPanel
 {
+	///Tous les attributs présents dans l'affichage d'une partie de Tetrist.
     protected final Game game;
     protected final DrawGrid draw_grid;
     protected final DrawNext draw_next;
@@ -28,6 +32,7 @@ public abstract class Draw extends JPanel
     protected int window_width;
     protected int window_height;
 
+	/// Constructeur d'une partie de Tetrist.
     public Draw(Game g, DrawGrid dg, DrawNext dn, DrawBlock db, DrawInfos di)
     {
         super();
@@ -44,6 +49,12 @@ public abstract class Draw extends JPanel
         draw_bg = create_draw_background(window_width, window_height);
     }
 
+	/**
+	 * Dessin d'un jeu de Tetrist.
+	 * 
+	 * @param g
+	 * 			Variable employée pour le dessin dans une fenêtre.
+	 */
     public void paint(Graphics g)
     {
         super.paint(g);
@@ -56,6 +67,9 @@ public abstract class Draw extends JPanel
 
     public abstract DrawBackground create_draw_background(int w, int h);
 
+	/**
+	 * Rafraîchissement de l'affichage.
+	 */
     public void refresh()
     {
         game.refresh();
@@ -95,11 +109,21 @@ public abstract class Draw extends JPanel
         window_height = height;
     }
 
+	/**
+	 * Modifie la taille de la fenêtre.
+	 */
     protected void set_size()
     {
         setPreferredSize(new Dimension(window_width, window_height));
     }
 
+	/**
+	 * Dessine selon les possibilités.</br>
+	 * Soit <b>avec image et font</b> soit <b>sans</b>.
+	 * 
+	 * @param g
+	 * 			Variable du jeu Tetrist.
+	 */
     public static Draw factory(Game g)
     {
         Draw draw = null;
