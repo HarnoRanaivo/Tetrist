@@ -491,6 +491,46 @@ public class TestGridIA
         test_highest_blocks_array(grid_6, -1, blocks_1, 6);
     }
 
+    @Test
+    public void test_smallest_column_size()
+    {
+        GridIA grid_1 = new GridIA();
+        GridIA grid_2 = new GridIA();
+        GridIA grid_3 = new GridIA();
+        GridIA grid_4 = new GridIA();
+        GridIA grid_5 = new GridIA();
+        GridIA grid_6 = new GridIA();
+
+        for (int i = 0; i < grid_3.width(); i++)
+            grid_3.put(i, i, i*i);
+
+        for (int i = 0; i < grid_2.width(); i++)
+            for (int j = 0; j < grid_2.height(); j++)
+                grid_2.put(i, j, i*j);
+
+        grid_4.copy(grid_3);
+
+        grid_5.put(0, 0, 2);
+        grid_5.put(0, 0, Grid.EMPTY_BLOCK);
+
+        Vector<Point> points = new Vector<Point>();
+        for (int j = 0; j < grid_6.height(); j++)
+        {
+            for (int i = 0; i < grid_6.width(); i++)
+                grid_6.put(i, j, i*j);
+            points.add(new Point(0, j));
+        }
+        grid_6.check(points.toArray(new Point[0]));
+
+        assertEquals(-1, grid_1.smallest_column_size());
+        assertEquals(grid_2.height() - 1, grid_2.smallest_column_size());
+        assertEquals(0, grid_3.smallest_column_size());
+        assertEquals(0, grid_4.smallest_column_size());
+        assertEquals(-1, grid_5.smallest_column_size());
+        assertEquals(-1, grid_6.smallest_column_size());
+    }
+
+
     private void test_highest_blocks_array(GridIA grid, int expected_highest, int[] expected_array, int n)
     {
         String failure_grid = failure(n);

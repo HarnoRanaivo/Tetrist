@@ -10,6 +10,7 @@ public class GridState implements Comparable<GridState>, Comparator<GridState>
     private final int holes;
     private final int blocks;
     private final int highest_block;
+    private final int smallest_size;
 
     private final int[] blocks_array;
     private final int[] highest_blocks_array;
@@ -28,6 +29,7 @@ public class GridState implements Comparable<GridState>, Comparator<GridState>
         holes = grid.holes();
         blocks = grid.blocks();
         highest_block = grid.highest_block();
+        smallest_size = grid.smallest_column_size();
 
         blocks_array = grid.blocks_array();
         highest_blocks_array = grid.highest_blocks_array();
@@ -98,7 +100,7 @@ public class GridState implements Comparable<GridState>, Comparator<GridState>
             }
             else
             {
-                // result = - blocks_lower_than_compared(o);
+                result = - blocks_lower_than_compared(o);
                 // if (highest_block < o.highest_block && holes_diff < 3)
                 //     result = 1;
             }
@@ -139,10 +141,10 @@ public class GridState implements Comparable<GridState>, Comparator<GridState>
         int highest_diff = Math.abs(highest_block - o.highest_block);
         int holes_diff = Math.abs(holes - o.holes);
 
-        if (holes < o.holes)
+        if (holes <= o.holes)
             result = 1;
-        else if (holes_diff < 3)
-            result = 1;
+        // else if (highest_block < 6 && holes_diff < 3)
+        //     result = 1;
 
         return result;
     }
@@ -155,32 +157,56 @@ public class GridState implements Comparable<GridState>, Comparator<GridState>
         int holes_diff = Math.abs(holes - o.holes);
 
         if (holes < o.holes)
-        {
-                result = 1;
-        }
+            result = 1;
         else if (holes == o.holes)
         {
             if (highest_block < o.highest_block)
                 result = 1;
             else if (highest_block == o.highest_block)
             {
-                if (highest_blocks_mean < o.highest_blocks_mean)
-                {
+                int smallest_comparisons = compare_tabs_lower(highest_blocks_array, o.highest_blocks_array);
+                if (smallest_comparisons == 1)
                     result = 1;
-                }
-                else if (highest_blocks_mean == o.highest_blocks_mean)
+                else if (smallest_comparisons == 0)
                 {
-                    if (blocks_std < o.blocks_std)
+                    if (highest_blocks_mean < o.highest_blocks_mean)
                         result = 1;
-                    else if (blocks_std == o.blocks_std)
+                    else if (highest_blocks_mean == o.highest_blocks_mean)
                     {
-                        if (holes_std < o.holes_std)
+                        if (blocks_std < o.blocks_std)
                             result = 1;
-                        else if (holes_std == o.holes_std)
-                            result = 0;
+                        else if (blocks_std == o.blocks_std)
+                        {
+                            if (holes_std < o.holes_std)
+                                result = 1;
+                            else if (holes_std == o.holes_std)
+                                result = 0;
+                        }
                     }
                 }
             }
+        }
+
+        return result;
+    }
+
+    private int compare_tabs_lower(int[] local, int[] compared)
+    {
+        int result = 0;
+        int length = local.length;
+        int[] local_copy = Arrays.copyOf(local, length);
+        int[] compared_copy = Arrays.copyOf(compared, length);
+
+        Arrays.sort(local_copy);
+        Arrays.sort(compared_copy);
+
+        for (int i = 0; result == 0 && i < length; i++)
+        // for (int i = length -1; result == 0 && i >= 0; i--)
+        {
+            if (local_copy[i] < compared_copy[i])
+                result = 1;
+            else if (local_copy[i] > compared_copy[i])
+                result = -1;
         }
 
         return result;

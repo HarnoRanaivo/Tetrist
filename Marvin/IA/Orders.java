@@ -11,6 +11,7 @@ public class Orders
     public Orders()
     {
         rotations = 0;
+        shift = 0;
         direction = KeySender.NOTHING;
     }
 
@@ -30,11 +31,11 @@ public class Orders
         shift = n;
     }
 
-    public void set(int rotation, int direction, int shift)
+    public void set(int r, int d, int s)
     {
-        set_rotations(rotation);
-        set_direction(direction);
-        set_shift(shift);
+        set_rotations(r);
+        set_direction(d);
+        set_shift(s);
     }
 
     public int rotations()
