@@ -13,6 +13,7 @@ import java.util.*;
 import IA.KeySender;
 import IA.Eval;
 import IA.Predict;
+import IA.Orders;
 import Component.Point;
 import Component.Grid;
 import Component.Piece;
@@ -161,16 +162,6 @@ public class Marvin
         }
 
         sender = new KeySender(robot);
-        // my_sleep(1000);
-        // for (int i = 0; i < 10; i++)
-        // {
-        //     sender.send_key(KeySender.LEFT);
-        //     my_sleep(100);
-        //     for (int j = 0; j < 37; i++)
-        //     {
-        //         sender.send_key(KeySender.DOWN);
-        //     }
-        // }
         last_ordinate = -1;
         while (true)
         {
@@ -178,13 +169,12 @@ public class Marvin
             int center_ordinate = piece.coordinates()[0].ordinate();
             if (center_ordinate != last_ordinate)
             {
-            // Point[][][] falls = Predict.possible_falls(grid, piece);
-            int[] directions = Eval.eval_possibilities(grid, piece);
-            sender.send_key(directions);
-            if (directions[1] != KeySender.NOTHING)
-                print_grid();
-            last_ordinate = center_ordinate;
-            sender.send_key(KeySender.DOWN);
+                Orders orders = Eval.eval_possibilities(grid, piece);
+                sender.send_key(orders);
+                if (orders.direction() != KeySender.NOTHING)
+                    print_grid();
+                last_ordinate = center_ordinate;
+                sender.send_key(KeySender.DOWN);
             }
         }
     }

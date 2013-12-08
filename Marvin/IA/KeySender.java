@@ -32,13 +32,15 @@ public class KeySender
         }
     }
 
-    public void send_key(int[] directions)
+    public void send_key(Orders orders)
     {
-        for (int i = 0; i < directions[0]; i++)
+        for (int i = 0; i < orders.rotations(); i++)
             send_key(ROTATE);
 
-        if (directions[1] != NOTHING)
-            for (int i = 0; i < directions[2]; i++)
-                send_key(directions[1]);
+        int direction = orders.direction();
+        if (direction != KeySender.NOTHING)
+            for (int i = 0; i < orders.shift(); i++)
+                send_key(direction);
+
     }
 }
