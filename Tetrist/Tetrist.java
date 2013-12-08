@@ -18,6 +18,9 @@ import java.util.TimerTask;
 import Graphic.Draw;
 import Component.Game;
 
+/**
+ * Classe main du jeu Tetrist.
+ */
 class Tetrist
 {
     static Draw draw;
