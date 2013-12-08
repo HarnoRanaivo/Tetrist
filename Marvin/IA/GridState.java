@@ -94,34 +94,7 @@ public class GridState implements Comparable<GridState>, Comparator<GridState>
             }
             else if (blocks_diff == 0)
             {
-                if (holes < o.holes)
-                {
-                    if (highest_block < o.highest_block)
-                        result = 1;
-                    else if (highest_block == o.highest_block)
-                    {
-                        if (holes_std < o.holes_std)
-                            result = 1;
-                        else if (holes_std == o.holes_std)
-                            result = 0;
-                    }
-                    else if (highest_diff < 2)
-                    {
-                        result = 1;
-                    }
-                }
-                else if (holes == o.holes)
-                {
-                    if (highest_block < o.highest_block)
-                        result = 1;
-                    else if (highest_block == o.highest_block)
-                    {
-                        if (holes_std < o.holes_std)
-                            result = 1;
-                        else if (holes_std == o.holes_std)
-                            result = 0;
-                    }
-                }
+                result = blocks_equals_compared(o);
             }
             else
             {
@@ -179,6 +152,45 @@ public class GridState implements Comparable<GridState>, Comparator<GridState>
             result = 1;
         else if (holes_diff < 5)
             result = 1;
+
+        return result;
+    }
+
+    public int blocks_equals_compared(GridState o)
+    {
+        int result = -1;
+        int blocks_diff = Math.abs(blocks - o.blocks);
+        int highest_diff = Math.abs(highest_block - o.highest_block);
+        int holes_diff = Math.abs(holes - o.holes);
+
+        if (holes < o.holes)
+        {
+            if (highest_block < o.highest_block)
+                result = 1;
+            else if (highest_block == o.highest_block)
+            {
+                if (holes_std < o.holes_std)
+                    result = 1;
+                else if (holes_std == o.holes_std)
+                    result = 0;
+            }
+            else if (highest_diff < 2)
+            {
+                result = 1;
+            }
+        }
+        else if (holes == o.holes)
+        {
+            if (highest_block < o.highest_block)
+                result = 1;
+            else if (highest_block == o.highest_block)
+            {
+                if (holes_std < o.holes_std)
+                    result = 1;
+                else if (holes_std == o.holes_std)
+                    result = 0;
+            }
+        }
 
         return result;
     }
