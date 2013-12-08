@@ -1,6 +1,7 @@
 package IA;
 
 import java.util.Vector;
+import java.lang.Math;
 
 import Component.Point;
 import Component.Grid;
@@ -24,24 +25,14 @@ public class Eval
         {
             Piece piece_buffer_left = new Piece(piece_buffer);
             Piece piece_buffer_right = new Piece(piece_buffer);
+            Piece piece_buffer_nothing = new Piece(piece_buffer);
 
             piece_buffer_left.needed_space_left(points_buffer);
             while (grid.in_bonds(points_buffer) && grid.is_free(points_buffer))
             {
                 piece_buffer_left.left();
-                GridIA grid_buffer = new GridIA(grid);
-                Piece piece_buffer_local = new Piece(piece_buffer_left);
-
-                grid_buffer.brute_fall(piece_buffer_local);
-                grid_buffer.check(piece_buffer_local.coordinates());
-
-                GridState current_state = grid_buffer.eval();
-                if (best_state == null || current_state.compareTo(best_state) > 0)
-                {
-                    int shift = piece_buffer.minimum_abcissa() - piece_buffer_left.minimum_abcissa();
-                    orders.set(i, KeySender.LEFT, shift);
-                    best_state = current_state;
-                }
+                GridState current_state = eval_column(grid, piece_buffer_left);
+                best_state = check_state(best_state, current_state, piece_buffer, piece_buffer_left, orders, i, KeySender.LEFT);
                 piece_buffer_left.needed_space_left(points_buffer);
             }
 
@@ -49,32 +40,13 @@ public class Eval
             while (grid.in_bonds(points_buffer) && grid.is_free(points_buffer))
             {
                 piece_buffer_right.right();
-                GridIA grid_buffer = new GridIA(grid);
-                Piece piece_buffer_local = new Piece(piece_buffer_right);
-
-                grid_buffer.brute_fall(piece_buffer_local);
-                grid_buffer.check(piece_buffer_local.coordinates());
-
-                GridState current_state = grid_buffer.eval();
-                if (best_state == null || current_state.compareTo(best_state) > 0)
-                {
-                    int shift = piece_buffer_right.minimum_abcissa() - piece_buffer.minimum_abcissa();
-                    orders.set(i, KeySender.RIGHT, shift);
-                    best_state = current_state;
-                }
+                GridState current_state = eval_column(grid, piece_buffer_right);
+                best_state = check_state(best_state, current_state, piece_buffer, piece_buffer_right, orders, i, KeySender.RIGHT);
                 piece_buffer_right.needed_space_right(points_buffer);
             }
 
-            Piece piece_buffer_nothing = new Piece(piece_buffer);
-            GridIA grid_buffer = new GridIA(grid);
-            grid_buffer.brute_fall(piece_buffer_nothing);
-            grid_buffer.check(piece_buffer_nothing.coordinates());
-            GridState current_state = grid_buffer.eval();
-            if (best_state == null || current_state.compareTo(best_state) > 0)
-            {
-                orders.set(i, KeySender.NOTHING, 0);
-                best_state = current_state;
-            }
+            GridState current_state = eval_column(grid, piece_buffer_nothing);
+            best_state = check_state(best_state, current_state, piece_buffer, piece_buffer_nothing, orders, i, KeySender.NOTHING);
 
             Point[] rotation_buffer = new Point[4];
             for (int j = 0; j < 4; j++)
@@ -87,6 +59,30 @@ public class Eval
         }
 
         return orders;
+    }
+
+    private static GridState eval_column(Grid grid, Piece piece)
+    {
+        GridIA grid_buffer = new GridIA(grid);
+        Piece piece_buffer = new Piece(piece);
+
+        grid_buffer.brute_fall(piece_buffer);
+        grid_buffer.check(piece_buffer.coordinates());
+
+        return grid_buffer.eval();
+    }
+
+    private static GridState check_state(GridState current, GridState candidate_state, Piece original, Piece candidate_piece, Orders orders, int rotation, int key)
+    {
+        GridState best = current;
+        if (current == null || candidate_state.compareTo(current) > 0)
+        {
+            int shift = Math.abs(original.minimum_abcissa() - candidate_piece.minimum_abcissa());
+            orders.set(rotation, key, shift);
+            best = candidate_state;
+        }
+
+        return best;
     }
 
     public static int eval_state(int score, int evaluation)
