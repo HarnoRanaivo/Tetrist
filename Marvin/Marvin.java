@@ -6,8 +6,9 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 // Client
-import java.rmi.* ;
-import java.net.MalformedURLException ;
+import java.rmi.*;
+import java.rmi.registry.*;
+import java.net.MalformedURLException;
 import java.util.*;
 
 import IA.KeySender;
@@ -150,15 +151,13 @@ public class Marvin
         // Client
         try
         {
-            game = (GameInterface)Naming.lookup("//localhost/tetrist");
+            Registry registry = LocateRegistry.getRegistry(55042);
+            game = (GameInterface) registry.lookup("tetrist");
         }
-        catch (MalformedURLException e)
+        catch (Exception e)
         {
             System.out.println(e);
-        }
-        catch (NotBoundException re)
-        {
-            System.out.println(re);
+            System.exit(1);
         }
 
         sender = new KeySender(robot);

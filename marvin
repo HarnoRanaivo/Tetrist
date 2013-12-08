@@ -13,4 +13,8 @@ if ! [ -f "$MARVIN_BYTECODE_DIR/$MARVIN_MAIN.class" ] ; then
     exit 66
 fi
 
+killall java 2> /dev/null
+killall rmiregistry 2> /dev/null
+sleep 2
+
 java -cp $MARVIN_BYTECODE_DIR $MARVIN_MAIN "$TETRIST_CMD"
