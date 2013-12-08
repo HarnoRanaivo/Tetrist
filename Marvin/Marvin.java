@@ -140,7 +140,7 @@ public class Marvin
         try
         {
             robot = new Robot();
-            robot.setAutoDelay(1); // 100 ms
+            robot.setAutoDelay(0); // 100 ms
             robot.setAutoWaitForIdle(false);
         }
         catch (AWTException ex)
