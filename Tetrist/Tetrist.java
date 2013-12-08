@@ -165,7 +165,7 @@ class Tetrist
         try
         {
             game = new Game();
-            Naming.rebind("matrice", game);
+            Naming.rebind("tetrist", game);
         }
         catch (RemoteException re)
         {

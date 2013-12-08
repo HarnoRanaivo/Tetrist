@@ -150,7 +150,7 @@ public class Marvin
         // Client
         try
         {
-            game = (GameInterface)Naming.lookup("//localhost/matrice");
+            game = (GameInterface)Naming.lookup("//localhost/tetrist");
         }
         catch (MalformedURLException e)
         {

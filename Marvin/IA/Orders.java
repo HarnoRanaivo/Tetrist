@@ -22,7 +22,7 @@ public class Orders
 
     public void set_direction(int n)
     {
-        direction = (n < 0 || n > KeySender.KEYS.length) ? 0 : n;
+        direction = (n < 0 || n > 4) ? 0 : n;
     }
 
     public void set_shift(int n)
