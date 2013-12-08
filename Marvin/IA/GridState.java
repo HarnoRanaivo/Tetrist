@@ -45,12 +45,36 @@ public class GridState implements Comparable<GridState>, Comparator<GridState>
      */
     private final int[] holes_array;
 
+
+	/**
+	 * Moyenne des plus hauts blocs.
+	 */
     private final float highest_blocks_mean;
+    
+    /**
+     * Moyenne du nombre de trous.
+     */
     private final float holes_mean;
+    
+    /**
+     * Moyenne du nombre de blocs.
+     */
     private final float blocks_mean;
 
+
+	/**
+	 * Ecart-type des plus hauts blocs.
+	 */
     private final float highest_blocks_std;
+    
+    /**
+     * Ecart-type du nombre de trous.
+     */
     private final float holes_std;
+    
+    /**
+     * Ecart-type du nombre de blocs.
+     */
     private final float blocks_std;
 
 	/**
@@ -96,12 +120,27 @@ public class GridState implements Comparable<GridState>, Comparator<GridState>
         return result;
     }
 
-	
+	/**
+	 * Calcule d'un écart-type à partir d'un tableau d'entiers.
+	 * 
+	 * @param values
+	 * 			Tableau d'entiers.
+	 * @return Ecart-type.
+	 */
     private float standard_deviation(int[] values)
     {
         return standard_deviation(values, mean_value(values));
     }
 
+	/**
+	 * Calcule d'un écart-type à partir d'un tableau d'entiers et d'une moyenne.
+	 * 
+	 * @param values
+	 * 			Tableau d'entiers.
+	 * @param mean
+	 * 			Moyenne.
+	 * @return Ecart-type.
+	 */
     private float standard_deviation(int[] values, float mean)
     {
         float sum = 0;
@@ -112,6 +151,13 @@ public class GridState implements Comparable<GridState>, Comparator<GridState>
         return sum / values.length;
     }
 
+	/**
+	 * Calcule la moyenne d'un tableau d'entiers.
+	 * 
+	 * @param values
+	 * 			Tableau d'entiers.
+	 * @return Moyenne.
+	 */
     private float mean_value(int[] values)
     {
         float sum = 0;
