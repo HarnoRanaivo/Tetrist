@@ -41,6 +41,5 @@ public class KeySender
         if (direction != KeySender.NOTHING)
             for (int i = 0; i < orders.shift(); i++)
                 send_key(direction);
-
     }
 }

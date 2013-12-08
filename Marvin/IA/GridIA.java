@@ -9,6 +9,7 @@ public class GridIA extends Grid
     private int blocks;
     private int holes;
     private int highest_block;
+    private int smallest_column_size;
     private int[] blocks_array;
     private int[] highest_blocks_array;
     private int[] holes_array;
@@ -35,6 +36,7 @@ public class GridIA extends Grid
         blocks = 0;
         holes = 0;
         highest_block = -1;
+        smallest_column_size = -1;
         highest_blocks_array = new int[width];
         holes_array = new int[width];
         blocks_array = new int[width];
@@ -77,6 +79,7 @@ public class GridIA extends Grid
             check_highest();
         }
         count_holes(x);
+        check_smallest_size();
     }
 
     public synchronized int check(Point[] y)
@@ -87,6 +90,7 @@ public class GridIA extends Grid
         {
             check_highest();
             count_holes();
+            check_smallest_size();
         }
 
         return destroyed;
@@ -205,5 +209,20 @@ public class GridIA extends Grid
         }
 
         put(piece);
+    }
+
+    protected synchronized void check_smallest_size()
+    {
+        int smallest = height() - 1;
+        for (int size : highest_blocks_array)
+            if (size < smallest)
+                smallest = size;
+
+        smallest_column_size = smallest;
+    }
+
+    public int smallest_column_size()
+    {
+        return smallest_column_size;
     }
 }

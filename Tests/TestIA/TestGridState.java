@@ -82,7 +82,7 @@ public class TestGridState
     private void assert_order(GridIA[] grids, int[] order, String message)
     {
         for (int i = 0; i < grids.length - 1; i++)
-            assert_better_than(grids[order[i]], grids[order[i+1]], message);
+            assert_better_than(grids[order[i]], grids[order[i+1]], message + ", " + i);
     }
 
     @Test

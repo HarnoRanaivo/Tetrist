@@ -170,8 +170,8 @@ public class Marvin
             {
                 Orders orders = Eval.eval_possibilities(grid, piece);
                 sender.send_key(orders);
-                if (orders.direction() != KeySender.NOTHING)
-                    print_grid();
+                // if (orders.direction() != KeySender.NOTHING)
+                //     print_grid();
                 last_ordinate = center_ordinate;
                 sender.send_key(KeySender.DOWN);
             }
