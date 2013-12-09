@@ -32,6 +32,8 @@ tests : testbytecodedir
 tetristdoc :
 	@javadoc -charset "UTF-8" -sourcepath $(TETRIST_SPATH) -classpath $(TETRIST_BPATH) -d $(TETRIST_DPATH) $(TETRIST_SPATH)/*.java \
 		-subpackages $(shell find $(TETRIST_SPATH) -mindepth 1 -type d -iname "*" -printf "%f ")
+	@javadoc -charset "UTF-8" -sourcepath $(MARVIN_SPATH) -classpath $(MARVIN_BPATH) -d $(MARVIN_DPATH) $(MARVIN_SPATH)/*.java \
+		-subpackages $(shell find $(MARVIN_SPATH) -mindepth 1 -type d -iname "*" -printf "%f ")
 
 doc : docdir tetristdoc
 
