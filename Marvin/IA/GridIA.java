@@ -9,27 +9,27 @@ import Component.Piece;
  */
 public class GridIA extends Grid
 {
-	/**
-	 * Nombre de blocs.
-	 * 
-	 * @see GridIA#init_grid()
-	 * @see GridIA#put(int,int,int)
-	 * @see GridIA#blocks()
-	 */
-    private int blocks;
-    
     /**
-	 * Nombre de trous.
-	 * 
-	 * @see GridIA#init_grid()
-	 * @see GridIA#count_holes(int)
-	 * @see GridIA#holes()
-	 */
+     * Nombre de blocs.
+     *
+     * @see GridIA#init_grid()
+     * @see GridIA#put(int,int,int)
+     * @see GridIA#blocks()
+     */
+    private int blocks;
+
+    /**
+     * Nombre de trous.
+     *
+     * @see GridIA#init_grid()
+     * @see GridIA#count_holes(int)
+     * @see GridIA#holes()
+     */
     private int holes;
-    
+
     /**
      * Bloc le plus haut.
-     * 
+     *
      * @see GridIA#init_grid()
      * @see GridIA#put(int,int,int)
      * @see GridIA#count_holes(int)
@@ -38,41 +38,41 @@ public class GridIA extends Grid
      * @see GridIA#check_highest(int)
      */
     private int highest_block;
-    
+
     /**
      * Colonne la moins haute.
-     * 
+     *
      * @see GridIA#init_grid()
      * @see GridIA#check_smallest_size()
      * @see GridIA#smallest_size()
      */
     private int smallest_column_size;
-    
+
     /**
      * Tableau de blocs.
-     * 
+     *
      * @see GridIA#init_grid()
      * @see GridIA#put(int,int,int)
      * @see GridIA#blocks_array()
      * @see GridIA#blocks()
      */
     private int[] blocks_array;
-    
+
     /**
      * Tableau des plus hauts blocs.
-     * 
+     *
      * @see GridIA#init_grid()
-     * @see GridIA#put(int,int,int) 
+     * @see GridIA#put(int,int,int)
      * @see GridIA#check_highest(int)
      * @see GridIA#highest_block(int)
      * @see GridIA#highest_blocks_array()
      * @see GridIA#smallest_size()
      */
     private int[] highest_blocks_array;
-    
+
     /**
      * Tableau de trous.
-     * 
+     *
      * @see GridIA#init_grid()
      * @see GridIA#holes(int)
      * @see GridIA#holes_array()
@@ -80,45 +80,45 @@ public class GridIA extends Grid
      */
     private int[] holes_array;
 
-	/**
-	 * Constructeur d'une grille d'IA.</br>
-	 * <i>(pour le robot)</i>
-	 */
+    /**
+     * Constructeur d'une grille d'IA.</br>
+     * <i>(pour le robot)</i>
+     */
     public GridIA()
     {
         super();
     }
 
-	/**
-	 * Constructeur d'une grille d'IA.</br>
-	 * <i>(pour le robot)</i>
-	 * 
-	 * @param width
-	 * 			Largeur de la grille.
-	 * @param height
-	 * 			Hauteur de la grille.
-	 */
+    /**
+     * Constructeur d'une grille d'IA.</br>
+     * <i>(pour le robot)</i>
+     *
+     * @param width
+     *          Largeur de la grille.
+     * @param height
+     *          Hauteur de la grille.
+     */
     public GridIA(int width, int height)
     {
         super(width, height);
     }
 
-	/**
-	 * Constructeur d'une grille d'IA.</br>
-	 * <i>(pour le robot)</i>
-	 * 
-	 * @param grid
-	 * 			Une grille.
-	 */
+    /**
+     * Constructeur d'une grille d'IA.</br>
+     * <i>(pour le robot)</i>
+     *
+     * @param grid
+     *          Une grille.
+     */
     public GridIA(Grid grid)
     {
         this(grid.width(), grid.height());
         copy(grid);
     }
 
-	/**
-	 * Initialisation de la grille de l'IA.
-	 */
+    /**
+     * Initialisation de la grille de l'IA.
+     */
     protected synchronized void init_grid()
     {
         int width = width();
@@ -140,7 +140,7 @@ public class GridIA extends Grid
         check_highest();
     }
 
-	/**
+    /**
      * Place une valeur dans la case {x;y}.
      *
      * @param x
@@ -181,7 +181,7 @@ public class GridIA extends Grid
         check_smallest_size();
     }
 
-	/**
+    /**
      * Vérifie le nombre de ligne supprimée quand elles sont pleines.
      *
      * @param y
@@ -201,54 +201,54 @@ public class GridIA extends Grid
         return destroyed;
     }
 
-	/**
-	 * Retourne le nombre de trous.
-	 * 
-	 * @return nombre de trous.
-	 */
+    /**
+     * Retourne le nombre de trous.
+     *
+     * @return nombre de trous.
+     */
     public int holes()
     {
         return holes;
     }
 
-	/**
-	 * Retourne le nombre de trous dans une colonne.
-	 * 
-	 * @param column
-	 * 			Colonne étudiée.
-	 * @return nombre de trous dans column.
-	 */
+    /**
+     * Retourne le nombre de trous dans une colonne.
+     *
+     * @param column
+     *          Colonne étudiée.
+     * @return nombre de trous dans column.
+     */
     public int holes(int column)
     {
         return holes_array[column];
     }
 
-	/**
-	 * Retourne un tableau de trous.
-	 * 
-	 * @return Tableau de trous.
-	 */
+    /**
+     * Retourne un tableau de trous.
+     *
+     * @return Tableau de trous.
+     */
     public int[] holes_array()
     {
         return holes_array;
     }
 
-	/**
-	 * Retourne un tableau de blocs.
-	 * 
-	 * @return Tableau de blocs.
-	 */
+    /**
+     * Retourne un tableau de blocs.
+     *
+     * @return Tableau de blocs.
+     */
     public int[] blocks_array()
     {
         return blocks_array;
     }
 
-	/**
-	 * Assigne le plus haut bloc actuel d'une colonne.
-	 * 
-	 * @param column
-	 * 			Colonne à vérifier.
-	 */
+    /**
+     * Assigne le plus haut bloc actuel d'une colonne.
+     *
+     * @param column
+     *          Colonne à vérifier.
+     */
     protected synchronized void check_highest(int column)
     {
         int highest;
@@ -261,9 +261,9 @@ public class GridIA extends Grid
             highest_block = highest;
     }
 
-	/**
-	 * Assigne les plus hauts blocs de toutes les colonnes.
-	 */ 
+    /**
+     * Assigne les plus hauts blocs de toutes les colonnes.
+     */
     protected synchronized void check_highest()
     {
         highest_block = -1;
@@ -271,7 +271,7 @@ public class GridIA extends Grid
             check_highest(i);
     }
 
-	/**
+    /**
      * Copie une grille dans celle actuelle.
      *
      * @param grid
@@ -286,66 +286,66 @@ public class GridIA extends Grid
         }
     }
 
-	/**
-	 * Retourne le nombre de blocs.
-	 * 
-	 * @return nombre de blocs.
-	 */
+    /**
+     * Retourne le nombre de blocs.
+     *
+     * @return nombre de blocs.
+     */
     public int blocks()
     {
         return blocks;
     }
 
-	/**
-	 * Retourne le nombre de blocs pour une colonne.
-	 * 
-	 * @param column
-	 * 			Colonne étudiée.
-	 * @return nombre de blocs de column.
-	 */
+    /**
+     * Retourne le nombre de blocs pour une colonne.
+     *
+     * @param column
+     *          Colonne étudiée.
+     * @return nombre de blocs de column.
+     */
     public int blocks(int column)
     {
         return blocks_array[column];
     }
 
-	/**
-	 * Retourne le tableau des plus hauts blocs.
-	 * 
-	 * @return Tableau des plus hauts blocs.
-	 */
+    /**
+     * Retourne le tableau des plus hauts blocs.
+     *
+     * @return Tableau des plus hauts blocs.
+     */
     public int[] highest_blocks_array()
     {
         return highest_blocks_array;
     }
 
-	/**
-	 * Retourne le plus haut bloc d'une colonne.
-	 * 
-	 * @param column
-	 * 			Colonne étudiée.
-	 * @return Le plus haut bloc de column.
-	 */
+    /**
+     * Retourne le plus haut bloc d'une colonne.
+     *
+     * @param column
+     *          Colonne étudiée.
+     * @return Le plus haut bloc de column.
+     */
     public int highest_block(int column)
     {
         return highest_blocks_array[column];
     }
 
-	/**
-	 * Retourne le plus haut bloc.
-	 * 
-	 * @return Le plus haut bloc.
-	 */
+    /**
+     * Retourne le plus haut bloc.
+     *
+     * @return Le plus haut bloc.
+     */
     public int highest_block()
     {
         return highest_block;
     }
 
-	/**
-	 * Compte le nombre de trous dans une colonne.
-	 * 
-	 * @param column
-	 * 			Colonne étudiée.
-	 */
+    /**
+     * Compte le nombre de trous dans une colonne.
+     *
+     * @param column
+     *          Colonne étudiée.
+     */
     protected synchronized void count_holes(int column)
     {
         int local_holes = 0;
@@ -361,32 +361,32 @@ public class GridIA extends Grid
         }
     }
 
-	/**
-	 * Compte le nombre de trous.
-	 */
+    /**
+     * Compte le nombre de trous.
+     */
     protected synchronized void count_holes()
     {
         for (int i = 0; i < width(); i++)
             count_holes(i);
     }
 
-	/**
-	 * Evalue la grille.
-	 * 
-	 * @return L'état de la grille.
-	 */
+    /**
+     * Evalue la grille.
+     *
+     * @return L'état de la grille.
+     */
     public synchronized GridState eval()
     {
         return new GridState(this);
     }
 
-	/**
-	 * Fait tomber la pièce.</br>
-	 * Maximise la vitesse de jeu de l'IA.
-	 * 
-	 * @param piece
-	 * 			Pièce à faire tomber.
-	 */
+    /**
+     * Fait tomber la pièce.</br>
+     * Maximise la vitesse de jeu de l'IA.
+     *
+     * @param piece
+     *          Pièce à faire tomber.
+     */
     public synchronized void brute_fall(Piece piece)
     {
         Point[] needed_space = new Point[4];
@@ -403,9 +403,9 @@ public class GridIA extends Grid
         put(piece);
     }
 
-	/**
-	 * Assigne la plus petite colonne.
-	 */
+    /**
+     * Assigne la plus petite colonne.
+     */
     protected synchronized void check_smallest_size()
     {
         int smallest = height() - 1;
@@ -416,11 +416,11 @@ public class GridIA extends Grid
         smallest_column_size = smallest;
     }
 
-	/**
-	 * Retourne la plus "petite" colonne.
-	 * 
-	 * @return Le plus bas des indices de hauteurs.
-	 */
+    /**
+     * Retourne la plus "petite" colonne.
+     *
+     * @return Le plus bas des indices de hauteurs.
+     */
     public int smallest_column_size()
     {
         return smallest_column_size;

@@ -25,15 +25,15 @@ import Component.GameInterface;
  */
 public class Marvin
 {
-	///Robot
+    ///Robot
     static Robot robot;
-    
+
     ///Attributs du jeu
     static GameInterface game;
     static KeySender sender;
     static Grid grid;
     static Piece piece;
-    
+
     ///Attente du robot
     static int attempts;
     ///Attente maximale du robot
@@ -41,12 +41,12 @@ public class Marvin
     ///Dernière ordonnée
     static int last_ordinate;
 
-	/**
-	 * Endort le thread courant
-	 * 
-	 * @param ms
-	 * 			Temps en milliseconde.
-	 */
+    /**
+     * Endort le thread courant
+     *
+     * @param ms
+     *          Temps en milliseconde.
+     */
     static void my_sleep(int ms)
     {
         try
@@ -59,12 +59,12 @@ public class Marvin
         }
     }
 
-	/**
-	 * Lance l'IA.
-	 * 
-	 * @param exec
-	 * 			Commande d'exécution.
-	 */
+    /**
+     * Lance l'IA.
+     *
+     * @param exec
+     *          Commande d'exécution.
+     */
     static public void run(String exec)
     {
         try
@@ -79,12 +79,12 @@ public class Marvin
         }
     }
 
-	/**
-	 * Affiche la matrice. <i>(true = [], false = --)</i>
-	 * 
-	 * @param t
-	 * 			Matrice de booléen représentant le jeu.
-	 */
+    /**
+     * Affiche la matrice. <i>(true = [], false = --)</i>
+     *
+     * @param t
+     *          Matrice de booléen représentant le jeu.
+     */
     public static void display_matrice(boolean t[][])
     {
         int x, y;
@@ -101,9 +101,9 @@ public class Marvin
         }
     }
 
-	/**
-	 * Lance le jeu après une attente.
-	 */
+    /**
+     * Lance le jeu après une attente.
+     */
     public static void get_game()
     {
         boolean got_game = false;
@@ -143,9 +143,9 @@ public class Marvin
         }
     }
 
-	/**
-	 * Affiche la grille.
-	 */
+    /**
+     * Affiche la grille.
+     */
     private static void print_grid()
     {
         for (int j = grid.height() - 1; j >= 0; j--)
@@ -164,9 +164,9 @@ public class Marvin
         System.out.println("");
     }
 
-	/**
-	 * Main
-	 */
+    /**
+     * Main
+     */
     public static void main(String[] args) throws AWTException, IOException
     {
         // Execution

@@ -13,29 +13,29 @@ import IA.Orders;
  */
 public class Eval
 {
-	/**
-	 * Evalutation d'un mouvement à gauche.
-	 * 
-	 * @see Eval#eval_possibilities(Grid,Piece)
-	 */
-    static EvalMove LEFT = new EvalMoveLeft();
-    
     /**
-	 * Evalutation d'un mouvement à droite.
-	 * 
-	 * @see Eval#eval_possibilities(Grid,Piece)
-	 */
+     * Evalutation d'un mouvement à gauche.
+     *
+     * @see Eval#eval_possibilities(Grid,Piece)
+     */
+    static EvalMove LEFT = new EvalMoveLeft();
+
+    /**
+     * Evalutation d'un mouvement à droite.
+     *
+     * @see Eval#eval_possibilities(Grid,Piece)
+     */
     static EvalMove RIGHT = new EvalMoveRight();
 
-	/**
-	 * Retourne un ordre à donner en fonction de l'évaluation des possibilités.
-	 * 
-	 * @param piece
-	 * 			Pièce courante.
-	 * @param grid
-	 * 			Grille courante.
-	 * @return Ordre pour l'IA.
-	 */
+    /**
+     * Retourne un ordre à donner en fonction de l'évaluation des possibilités.
+     *
+     * @param piece
+     *          Pièce courante.
+     * @param grid
+     *          Grille courante.
+     * @return Ordre pour l'IA.
+     */
     public static Orders eval_possibilities(Grid grid, Piece piece)
     {
         boolean go_on = true;
@@ -65,15 +65,15 @@ public class Eval
         return orders;
     }
 
-	/**
-	 * Evaluation de l'état d'une colonne.
-	 * 
-	 * @param piece
-	 * 			Pièce courante.
-	 * @param grid
-	 * 			Grille courante.
-	 * @return l'état de la grille.
-	 */
+    /**
+     * Evaluation de l'état d'une colonne.
+     *
+     * @param piece
+     *          Pièce courante.
+     * @param grid
+     *          Grille courante.
+     * @return l'état de la grille.
+     */
     private static GridState eval_column(Grid grid, Piece piece)
     {
         GridIA grid_buffer = new GridIA(grid);
@@ -85,25 +85,25 @@ public class Eval
         return grid_buffer.eval();
     }
 
-	/**
-	 * Retourne le meilleur état après un test de placement de pièce.
-	 * 
-	 * @param current
-	 * 			Etat courant.
-	 * @param candidate_state
-	 * 			Etat à tester.
-	 * @param original
-	 * 			Pièce courante.
-	 * @param candidate_piece
-	 * 			Pièce à tester.
-	 * @param orders
-	 * 			Ordre à donner pour tester.
-	 * @param rotation
-	 * 			Rotation de la pièce.
-	 * @param key
-	 * 			Touche assignée.
-	 * @return Le meilleur état entre le courant et le testé.
-	 */
+    /**
+     * Retourne le meilleur état après un test de placement de pièce.
+     *
+     * @param current
+     *          Etat courant.
+     * @param candidate_state
+     *          Etat à tester.
+     * @param original
+     *          Pièce courante.
+     * @param candidate_piece
+     *          Pièce à tester.
+     * @param orders
+     *          Ordre à donner pour tester.
+     * @param rotation
+     *          Rotation de la pièce.
+     * @param key
+     *          Touche assignée.
+     * @return Le meilleur état entre le courant et le testé.
+     */
     private static GridState check_state(GridState current, GridState candidate_state, Piece original, Piece candidate_piece, Orders orders, int rotation, int key)
     {
         GridState best = current;
@@ -117,25 +117,25 @@ public class Eval
         return best;
     }
 
-	/**
-	 * Recherche du meilleur état en mouvement.
-	 * 
-	 * @param grid
-	 * 			Grille.
-	 * @param piece
-	 * 			Pièce courante.
-	 * @param current
-	 * 			Etat de la grille d'IA courante.
-	 * @param orders
-	 * 			Ordre à donner.
-	 * @param rotation
-	 * 			Rotation de la pièce.
-	 * @param e_move
-	 * 			Evaluation d'un mouvement.
-	 * @param points_buffer
-	 * 			Buffer de points.
-	 * @return Le meilleur état parmis tous ceux testés constamment.
-	 */
+    /**
+     * Recherche du meilleur état en mouvement.
+     *
+     * @param grid
+     *          Grille.
+     * @param piece
+     *          Pièce courante.
+     * @param current
+     *          Etat de la grille d'IA courante.
+     * @param orders
+     *          Ordre à donner.
+     * @param rotation
+     *          Rotation de la pièce.
+     * @param e_move
+     *          Evaluation d'un mouvement.
+     * @param points_buffer
+     *          Buffer de points.
+     * @return Le meilleur état parmis tous ceux testés constamment.
+     */
     private static GridState loop_move(Grid grid, Piece piece, GridState current, Orders orders, int rotation, EvalMove e_move, Point[] points_buffer)
     {
         GridState best_state = current;
@@ -153,15 +153,15 @@ public class Eval
         return best_state;
     }
 
-	/**
-	 * Evaluation d'un état.
-	 * 
-	 * @param score
-	 * 			Le score.
-	 * @param evaluation
-	 * 			Evaluation.
-	 * @return 0
-	 */
+    /**
+     * Evaluation d'un état.
+     *
+     * @param score
+     *          Le score.
+     * @param evaluation
+     *          Evaluation.
+     * @return 0
+     */
     public static int eval_state(int score, int evaluation)
     {
         return 0;
@@ -173,39 +173,39 @@ public class Eval
  */
 abstract class EvalMove
 {
-	/**
-	 * Touche à presser.
-	 * 
-	 * @see EvalMove#Constructor(int)
-	 */
+    /**
+     * Touche à presser.
+     *
+     * @see EvalMove#Constructor(int)
+     */
     public final int key;
-    
+
     /**
      * Constructeur d'une évaluation d'un mouvement.
-     * 
+     *
      * @param k
-     * 			Touche pressée.
+     *          Touche pressée.
      */
     public EvalMove(int k)
     {
         key = k;
     }
-    
+
     /**
      * Teste de la place dans une direction.
-     * 
+     *
      * @param piece
-     * 			Pièce à tester.
+     *          Pièce à tester.
      * @param buffer
-     * 			Tableau de points.
+     *          Tableau de points.
      */
     public abstract void needed_space(Piece piece, Point[] buffer);
-    
+
     /**
      * Déplacement d'une pièce dans une direction.
-     * 
+     *
      * @param piece
-     * 			Pièce à déplacer.
+     *          Pièce à déplacer.
      */
     public abstract void move(Piece piece);
 }
@@ -220,17 +220,17 @@ class EvalMoveLeft extends EvalMove
         super(KeySender.LEFT);
     }
 
-	/**
-	 * @see EvalMove#needed_space(Piece,Point[])
-	 */
+    /**
+     * @see EvalMove#needed_space(Piece,Point[])
+     */
     public void needed_space(Piece piece, Point[] buffer)
     {
         piece.needed_space_left(buffer);
     }
 
-	/**
-	 * @see EvalMove#move(Piece)
-	 */
+    /**
+     * @see EvalMove#move(Piece)
+     */
     public void move(Piece piece)
     {
         piece.left();
@@ -247,17 +247,17 @@ class EvalMoveRight extends EvalMove
         super(KeySender.RIGHT);
     }
 
-	/**
-	 * @see EvalMove#needed_space(Piece,Point[])
-	 */
+    /**
+     * @see EvalMove#needed_space(Piece,Point[])
+     */
     public void needed_space(Piece piece, Point[] buffer)
     {
         piece.needed_space_right(buffer);
     }
 
-	/**
-	 * @see EvalMove#move(Piece)
-	 */
+    /**
+     * @see EvalMove#move(Piece)
+     */
     public void move(Piece piece)
     {
         piece.right();
