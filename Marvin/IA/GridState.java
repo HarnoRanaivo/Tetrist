@@ -11,18 +11,23 @@ public class GridState implements Comparable<GridState>, Comparator<GridState>
     private final int blocks;
     private final int highest_block;
     private final int smallest_size;
+    private final int range;
 
     private final int[] blocks_array;
     private final int[] highest_blocks_array;
     private final int[] holes_array;
 
-    private final float highest_blocks_mean;
-    private final float holes_mean;
-    private final float blocks_mean;
+    private final double highest_blocks_mean;
+    private final double holes_mean;
+    private final double blocks_mean;
 
-    private final float highest_blocks_std;
-    private final float holes_std;
-    private final float blocks_std;
+    private final int highest_blocks_median;
+    private final int holes_median;
+    private final int blocks_median;
+
+    private final double highest_blocks_std;
+    private final double holes_std;
+    private final double blocks_std;
 
     public GridState(GridIA grid)
     {
@@ -30,6 +35,7 @@ public class GridState implements Comparable<GridState>, Comparator<GridState>
         blocks = grid.blocks();
         highest_block = grid.highest_block();
         smallest_size = grid.smallest_column_size();
+        range = highest_block - smallest_size;
 
         blocks_array = grid.blocks_array();
         highest_blocks_array = grid.highest_blocks_array();
@@ -39,39 +45,43 @@ public class GridState implements Comparable<GridState>, Comparator<GridState>
         holes_mean = mean_value(holes_array);
         blocks_mean = mean_value(blocks_array);
 
+        highest_blocks_median = median_value(highest_blocks_array);
+        holes_median = median_value(holes_array);
+        blocks_median = median_value(blocks_array);
+
         highest_blocks_std = standard_deviation(highest_blocks_array, highest_blocks_mean);
         holes_std = standard_deviation(holes_array, holes_mean);
         blocks_std = standard_deviation(blocks_array, blocks_mean);
     }
 
-    private float[] int_array_to_float(int[] array)
+    private double[] int_array_to_double(int[] array)
     {
-        float[] result = new float[array.length];
+        double[] result = new double[array.length];
 
         for (int i = 0; i < result.length; i++)
-            result[i] = (float) array[i];
+            result[i] = (double) array[i];
 
         return result;
     }
 
-    private float standard_deviation(int[] values)
+    private double standard_deviation(int[] values)
     {
         return standard_deviation(values, mean_value(values));
     }
 
-    private float standard_deviation(int[] values, float mean)
+    private double standard_deviation(int[] values, double mean)
     {
-        float sum = 0;
+        double sum = 0;
 
         for (int value : values)
             sum += Math.pow(value - mean, 2);
 
-        return sum / values.length;
+        return Math.sqrt(sum / values.length);
     }
 
-    private float mean_value(int[] values)
+    private double mean_value(int[] values)
     {
-        float sum = 0;
+        double sum = 0;
 
         for (int value : values)
             sum += value;
@@ -86,24 +96,12 @@ public class GridState implements Comparable<GridState>, Comparator<GridState>
         if (! equals(o))
         {
             result = -1;
-            int blocks_diff = Math.abs(blocks - o.blocks);
-            int highest_diff = Math.abs(highest_block - o.highest_block);
-            int holes_diff = Math.abs(holes - o.holes);
-
             if (blocks < o.blocks)
-            {
                 result = blocks_lower_than_compared(o);
-            }
-            else if (blocks_diff == 0)
-            {
+            else if (blocks == o.blocks)
                 result = blocks_equals_compared(o);
-            }
             else
-            {
-                result = - blocks_lower_than_compared(o);
-                // if (highest_block < o.highest_block && holes_diff < 3)
-                //     result = 1;
-            }
+                result = (-1) * blocks_lower_than_compared(o);
         }
 
         return result;
@@ -138,13 +136,12 @@ public class GridState implements Comparable<GridState>, Comparator<GridState>
     {
         int result = -1;
         int blocks_diff = Math.abs(blocks - o.blocks);
-        int highest_diff = Math.abs(highest_block - o.highest_block);
         int holes_diff = Math.abs(holes - o.holes);
 
         if (holes <= o.holes)
             result = 1;
-        // else if (highest_block < 6 && holes_diff < 3)
-        //     result = 1;
+        else if (highest_block > 8 && holes_diff < 6);
+            result = 1;
 
         return result;
     }
@@ -152,42 +149,41 @@ public class GridState implements Comparable<GridState>, Comparator<GridState>
     public int blocks_equals_compared(GridState o)
     {
         int result = -1;
-        int blocks_diff = Math.abs(blocks - o.blocks);
         int highest_diff = Math.abs(highest_block - o.highest_block);
         int holes_diff = Math.abs(holes - o.holes);
 
         if (holes < o.holes)
-            result = 1;
+        {
+            if (highest_block <= o.highest_block + 1)
+                result = 1;
+        }
         else if (holes == o.holes)
         {
             if (highest_block < o.highest_block)
                 result = 1;
             else if (highest_block == o.highest_block)
             {
-                int smallest_comparisons = compare_tabs_lower(highest_blocks_array, o.highest_blocks_array);
-                if (smallest_comparisons == 1)
+                if (highest_blocks_median < o.highest_blocks_median)
                     result = 1;
-                else if (smallest_comparisons == 0)
+                else if (range < o.range)
+                    result = 1;
+                else if (range == o.range)
                 {
-                    if (highest_blocks_mean < o.highest_blocks_mean)
+                    if (highest_blocks_std < o.highest_blocks_std)
                         result = 1;
-                    else if (highest_blocks_mean == o.highest_blocks_mean)
-                    {
-                        if (blocks_std < o.blocks_std)
-                            result = 1;
-                        else if (blocks_std == o.blocks_std)
-                        {
-                            if (holes_std < o.holes_std)
-                                result = 1;
-                            else if (holes_std == o.holes_std)
-                                result = 0;
-                        }
-                    }
                 }
             }
         }
 
         return result;
+    }
+
+    private int median_value(int[] array)
+    {
+        int[] copy = Arrays.copyOf(array, array.length);
+        Arrays.sort(copy);
+
+        return copy[copy.length/2];
     }
 
     private int compare_tabs_lower(int[] local, int[] compared)
@@ -201,7 +197,6 @@ public class GridState implements Comparable<GridState>, Comparator<GridState>
         Arrays.sort(compared_copy);
 
         for (int i = 0; result == 0 && i < length; i++)
-        // for (int i = length -1; result == 0 && i >= 0; i--)
         {
             if (local_copy[i] < compared_copy[i])
                 result = 1;

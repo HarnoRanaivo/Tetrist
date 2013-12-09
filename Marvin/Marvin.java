@@ -140,7 +140,7 @@ public class Marvin
         try
         {
             robot = new Robot();
-            robot.setAutoDelay(0); // 100 ms
+            robot.setAutoDelay(5); // 100 ms
             robot.setAutoWaitForIdle(false);
         }
         catch (AWTException ex)
@@ -173,7 +173,7 @@ public class Marvin
                 // if (orders.direction() != KeySender.NOTHING)
                 //     print_grid();
                 last_ordinate = center_ordinate;
-                sender.send_key(KeySender.DOWN);
+                // sender.send_key(KeySender.DOWN);
             }
         }
     }
