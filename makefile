@@ -66,4 +66,4 @@ cleanall : clean cleandoc
 	@echo "Clean."
 
 archive :
-	tar -cvzf archive.tar.gz src makefile
+	tar -cvzf archive.tar.gz AUTHORS COPYING LICENSE README* Marvin marvin Tetrist tetrist Tests runtests scripts sujet.pdf exemple-sujet
