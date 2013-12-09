@@ -48,12 +48,12 @@ public class Eval
         Piece piece_buffer = new Piece(piece);
         for (int i = 0; go_on && i < Piece.ROTATIONS[piece.id()] + 1; i++)
         {
-            best_state = loop_move(grid, piece_buffer, best_state, orders, i, LEFT, points_buffer);
-            best_state = loop_move(grid, piece_buffer, best_state, orders, i, RIGHT, points_buffer);
-
             Piece piece_buffer_nothing = new Piece(piece_buffer);
             GridState current_state = eval_column(grid, piece_buffer_nothing);
+
+            best_state = loop_move(grid, piece_buffer, best_state, orders, i, LEFT, points_buffer);
             best_state = check_state(best_state, current_state, piece_buffer, piece_buffer_nothing, orders, i, KeySender.NOTHING);
+            best_state = loop_move(grid, piece_buffer, best_state, orders, i, RIGHT, points_buffer);
 
             piece_buffer.needed_space_rotation(points_buffer);
             if (grid.in_bonds(points_buffer) && grid.is_free(points_buffer))
