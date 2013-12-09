@@ -13,7 +13,6 @@ import java.util.*;
 
 import IA.KeySender;
 import IA.Eval;
-import IA.Predict;
 import IA.Orders;
 import Component.Point;
 import Component.Grid;
